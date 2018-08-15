@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** | name string | 
 **color** | **String** | Hexadecimal string representing label color, in RGB format | [optional] [default to &#39;#ffffff&#39;]
+**name** | **String** | name string | 
 
 
 <a name="ColorEnum"></a>

@@ -3,15 +3,15 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**medalId** | **Number** | medal_id integer | 
-**title** | **String** | title string | 
-**description** | **String** | description string | 
 **corporationId** | **Number** | corporation_id integer | 
-**issuerId** | **Number** | issuer_id integer | 
 **_date** | **Date** | date string | 
+**description** | **String** | description string | 
+**graphics** | [**[GetCharactersCharacterIdMedalsGraphic]**](GetCharactersCharacterIdMedalsGraphic.md) | graphics array | 
+**issuerId** | **Number** | issuer_id integer | 
+**medalId** | **Number** | medal_id integer | 
 **reason** | **String** | reason string | 
 **status** | **String** | status string | 
-**graphics** | [**[GetCharactersCharacterIdMedalsGraphic]**](GetCharactersCharacterIdMedalsGraphic.md) | graphics array | 
+**title** | **String** | title string | 
 
 
 <a name="StatusEnum"></a>

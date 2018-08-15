@@ -3,14 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**transactionId** | **Number** | Unique transaction ID | 
-**_date** | **Date** | Date and time of transaction | 
-**typeId** | **Number** | type_id integer | 
-**locationId** | **Number** | location_id integer | 
-**unitPrice** | **Number** | Amount paid per unit | 
-**quantity** | **Number** | quantity integer | 
 **clientId** | **Number** | client_id integer | 
+**_date** | **Date** | Date and time of transaction | 
 **isBuy** | **Boolean** | is_buy boolean | 
-**journalRefId** | **Number** | journal_ref_id integer | 
+**journalRefId** | **Number** | -1 if there is no corresponding wallet journal entry | 
+**locationId** | **Number** | location_id integer | 
+**quantity** | **Number** | quantity integer | 
+**transactionId** | **Number** | Unique transaction ID | 
+**typeId** | **Number** | type_id integer | 
+**unitPrice** | **Number** | Amount paid per unit | 
 
 

@@ -3,18 +3,18 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**stationId** | **Number** | station_id integer | 
+**maxDockableShipVolume** | **Number** | max_dockable_ship_volume number | 
 **name** | **String** | name string | 
+**officeRentalCost** | **Number** | office_rental_cost number | 
 **owner** | **Number** | ID of the corporation that controls this station | [optional] 
-**typeId** | **Number** | type_id integer | 
-**raceId** | **Number** | race_id integer | [optional] 
 **position** | [**GetUniverseStationsStationIdPosition**](GetUniverseStationsStationIdPosition.md) |  | 
-**systemId** | **Number** | The solar system this station is in | 
+**raceId** | **Number** | race_id integer | [optional] 
 **reprocessingEfficiency** | **Number** | reprocessing_efficiency number | 
 **reprocessingStationsTake** | **Number** | reprocessing_stations_take number | 
-**maxDockableShipVolume** | **Number** | max_dockable_ship_volume number | 
-**officeRentalCost** | **Number** | office_rental_cost number | 
 **services** | **[String]** | services array | 
+**stationId** | **Number** | station_id integer | 
+**systemId** | **Number** | The solar system this station is in | 
+**typeId** | **Number** | type_id integer | 
 
 
 <a name="[ServicesEnum]"></a>

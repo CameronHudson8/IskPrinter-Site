@@ -1,6 +1,6 @@
 # EveSwaggerInterface.RoutesApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -30,8 +30,7 @@ var opts = {
   'connections': [new EveSwaggerInterface.[Number]()], // [[Number]] | connected solar system pairs
   'datasource': "tranquility", // String | The server name you would like data from
   'flag': "shortest", // String | route security preference
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -54,8 +53,7 @@ Name | Type | Description  | Notes
  **connections** | [**[[Number]]**]([Number].md)| connected solar system pairs | [optional] 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **flag** | **String**| route security preference | [optional] [default to shortest]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -67,6 +65,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

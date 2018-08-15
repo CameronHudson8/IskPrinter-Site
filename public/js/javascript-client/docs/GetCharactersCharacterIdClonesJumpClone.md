@@ -3,11 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**implants** | **[Number]** | implants array | 
 **jumpCloneId** | **Number** | jump_clone_id integer | 
-**name** | **String** | name string | [optional] 
 **locationId** | **Number** | location_id integer | 
 **locationType** | **String** | location_type string | 
-**implants** | **[Number]** | implants array | 
+**name** | **String** | name string | [optional] 
 
 
 <a name="LocationTypeEnum"></a>

@@ -1,11 +1,11 @@
 # EveSwaggerInterface.KillmailsApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**getCharactersCharacterIdKillmailsRecent**](KillmailsApi.md#getCharactersCharacterIdKillmailsRecent) | **GET** /v1/characters/{character_id}/killmails/recent/ | Get character kills and losses
-[**getCorporationsCorporationIdKillmailsRecent**](KillmailsApi.md#getCorporationsCorporationIdKillmailsRecent) | **GET** /v1/corporations/{corporation_id}/killmails/recent/ | Get corporation kills and losses
+[**getCharactersCharacterIdKillmailsRecent**](KillmailsApi.md#getCharactersCharacterIdKillmailsRecent) | **GET** /v1/characters/{character_id}/killmails/recent/ | Get a character&#39;s recent kills and losses
+[**getCorporationsCorporationIdKillmailsRecent**](KillmailsApi.md#getCorporationsCorporationIdKillmailsRecent) | **GET** /v1/corporations/{corporation_id}/killmails/recent/ | Get a corporation&#39;s recent kills and losses
 [**getKillmailsKillmailIdKillmailHash**](KillmailsApi.md#getKillmailsKillmailIdKillmailHash) | **GET** /v1/killmails/{killmail_id}/{killmail_hash}/ | Get a single killmail
 
 
@@ -13,9 +13,9 @@ Method | HTTP request | Description
 # **getCharactersCharacterIdKillmailsRecent**
 > [GetCharactersCharacterIdKillmailsRecent200Ok] getCharactersCharacterIdKillmailsRecent(characterId, opts)
 
-Get character kills and losses
+Get a character&#39;s recent kills and losses
 
-Return a list of character&#39;s recent kills and losses  ---  This route is cached for up to 120 seconds
+Return a list of a character&#39;s kills and losses going back 90 days  ---  This route is cached for up to 300 seconds
 
 ### Example
 ```javascript
@@ -32,11 +32,9 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'maxCount': 50, // Number | How many killmails to return at maximum
-  'maxKillId': 56, // Number | Only return killmails with ID smaller than this. 
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'page': 1, // Number | Which page of results to return
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -55,11 +53,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **maxCount** | **Number**| How many killmails to return at maximum | [optional] [default to 50]
- **maxKillId** | **Number**| Only return killmails with ID smaller than this.  | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -71,16 +67,16 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationsCorporationIdKillmailsRecent"></a>
 # **getCorporationsCorporationIdKillmailsRecent**
-> [GetCorporationsCorporationIdKillmailsRecent200Ok] getCorporationsCorporationIdKillmailsRecent(corporationId, , opts)
+> [GetCorporationsCorporationIdKillmailsRecent200Ok] getCorporationsCorporationIdKillmailsRecent(corporationId, opts)
 
-Get corporation kills and losses
+Get a corporation&#39;s recent kills and losses
 
-Get a list of corporation&#39;s recent kills and losses  ---  This route is cached for up to 300 seconds  --- Requires one of the following EVE corporation role(s): Director
+Get a list of a corporation&#39;s kills and losses going back 90 days  ---  This route is cached for up to 300 seconds  --- Requires one of the following EVE corporation role(s): Director
 
 ### Example
 ```javascript
@@ -97,10 +93,9 @@ var corporationId = 56; // Number | An EVE corporation ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'maxKillId': 56, // Number | Only return killmails with ID smaller than this
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'page': 1, // Number | Which page of results to return
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -110,7 +105,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationsCorporationIdKillmailsRecent(corporationId, , opts, callback);
+apiInstance.getCorporationsCorporationIdKillmailsRecent(corporationId, opts, callback);
 ```
 
 ### Parameters
@@ -119,10 +114,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **corporationId** | **Number**| An EVE corporation ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **maxKillId** | **Number**| Only return killmails with ID smaller than this | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -134,7 +128,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getKillmailsKillmailIdKillmailHash"></a>
@@ -157,8 +151,7 @@ var killmailId = 56; // Number | The killmail ID to be queried
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -178,8 +171,7 @@ Name | Type | Description  | Notes
  **killmailHash** | **String**| The killmail hash for verification | 
  **killmailId** | **Number**| The killmail ID to be queried | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -191,6 +183,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

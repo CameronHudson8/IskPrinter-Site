@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**division** | **Number** | division integer | 
 **balance** | **Number** | balance number | 
+**division** | **Number** | division integer | 
 
 

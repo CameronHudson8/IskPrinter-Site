@@ -3,10 +3,10 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**unreadCount** | **Number** | unread_count integer | [optional] 
+**color** | **String** | color string | [optional] [default to &#39;#ffffff&#39;]
 **labelId** | **Number** | label_id integer | [optional] 
 **name** | **String** | name string | [optional] 
-**color** | **String** | color string | [optional] [default to &#39;#ffffff&#39;]
+**unreadCount** | **Number** | unread_count integer | [optional] 
 
 
 <a name="ColorEnum"></a>

@@ -3,10 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**flag** | **Number** | Flag for the location of the item  | 
 **itemTypeId** | **Number** | item_type_id integer | 
-**quantityDestroyed** | **Number** | quantity_destroyed integer | [optional] 
-**quantityDropped** | **Number** | quantity_dropped integer | [optional] 
+**items** | [**[GetKillmailsKillmailIdKillmailHashItemsItem]**](GetKillmailsKillmailIdKillmailHashItemsItem.md) | items array | [optional] 
+**quantityDestroyed** | **Number** | How many of the item were destroyed if any  | [optional] 
+**quantityDropped** | **Number** | How many of the item were dropped if any  | [optional] 
 **singleton** | **Number** | singleton integer | 
-**flag** | **Number** | flag integer | 
 
 

@@ -4,6 +4,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **error** | **String** | Forbidden message | 
-**ssoStatus** | **Number** | Status code received from SSO | [optional] 
+**ssoStatus** | **Number** | status code received from SSO | [optional] 
 
 

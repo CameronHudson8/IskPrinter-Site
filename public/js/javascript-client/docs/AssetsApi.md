@@ -1,6 +1,6 @@
 # EveSwaggerInterface.AssetsApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -35,10 +35,9 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -57,10 +56,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -72,12 +70,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationsCorporationIdAssets"></a>
 # **getCorporationsCorporationIdAssets**
-> [GetCorporationsCorporationIdAssets200Ok] getCorporationsCorporationIdAssets(corporationId, , opts)
+> [GetCorporationsCorporationIdAssets200Ok] getCorporationsCorporationIdAssets(corporationId, opts)
 
 Get corporation assets
 
@@ -98,10 +96,9 @@ var corporationId = 56; // Number | An EVE corporation ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -111,7 +108,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationsCorporationIdAssets(corporationId, , opts, callback);
+apiInstance.getCorporationsCorporationIdAssets(corporationId, opts, callback);
 ```
 
 ### Parameters
@@ -120,10 +117,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **corporationId** | **Number**| An EVE corporation ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -135,7 +131,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCharactersCharacterIdAssetsLocations"></a>
@@ -163,9 +159,7 @@ var itemIds = [new EveSwaggerInterface.[Number]()]; // [Number] | A list of item
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -186,8 +180,6 @@ Name | Type | Description  | Notes
  **itemIds** | **[Number]**| A list of item ids | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -199,7 +191,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCharactersCharacterIdAssetsNames"></a>
@@ -227,9 +219,7 @@ var itemIds = [new EveSwaggerInterface.[Number]()]; // [Number] | A list of item
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -250,8 +240,6 @@ Name | Type | Description  | Notes
  **itemIds** | **[Number]**| A list of item ids | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -263,12 +251,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCorporationsCorporationIdAssetsLocations"></a>
 # **postCorporationsCorporationIdAssetsLocations**
-> [PostCorporationsCorporationIdAssetsLocations200Ok] postCorporationsCorporationIdAssetsLocations(corporationId, itemIds, opts)
+> [PostCorporationsCorporationIdAssetsLocations200Ok] postCorporationsCorporationIdAssetsLocations(corporationIditemIds, opts)
 
 Get corporation asset locations
 
@@ -291,9 +279,7 @@ var itemIds = [new EveSwaggerInterface.[Number]()]; // [Number] | A list of item
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -303,7 +289,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.postCorporationsCorporationIdAssetsLocations(corporationId, itemIds, opts, callback);
+apiInstance.postCorporationsCorporationIdAssetsLocations(corporationIditemIds, opts, callback);
 ```
 
 ### Parameters
@@ -314,8 +300,6 @@ Name | Type | Description  | Notes
  **itemIds** | **[Number]**| A list of item ids | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -327,12 +311,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCorporationsCorporationIdAssetsNames"></a>
 # **postCorporationsCorporationIdAssetsNames**
-> [PostCorporationsCorporationIdAssetsNames200Ok] postCorporationsCorporationIdAssetsNames(corporationId, itemIds, opts)
+> [PostCorporationsCorporationIdAssetsNames200Ok] postCorporationsCorporationIdAssetsNames(corporationIditemIds, opts)
 
 Get coporation asset names
 
@@ -355,9 +339,7 @@ var itemIds = [new EveSwaggerInterface.[Number]()]; // [Number] | A list of item
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -367,7 +349,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.postCorporationsCorporationIdAssetsNames(corporationId, itemIds, opts, callback);
+apiInstance.postCorporationsCorporationIdAssetsNames(corporationIditemIds, opts, callback);
 ```
 
 ### Parameters
@@ -378,8 +360,6 @@ Name | Type | Description  | Notes
  **itemIds** | **[Number]**| A list of item ids | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -391,6 +371,6 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

@@ -4,9 +4,9 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **fleetId** | **Number** | The character&#39;s current fleet ID | 
-**wingId** | **Number** | ID of the wing the member is in. If not applicable, will be set to -1 | 
-**squadId** | **Number** | ID of the squad the member is in. If not applicable, will be set to -1 | 
 **role** | **String** | Member’s role in fleet | 
+**squadId** | **Number** | ID of the squad the member is in. If not applicable, will be set to -1 | 
+**wingId** | **Number** | ID of the wing the member is in. If not applicable, will be set to -1 | 
 
 
 <a name="RoleEnum"></a>

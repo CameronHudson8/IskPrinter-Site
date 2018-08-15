@@ -3,13 +3,13 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**solarSystemId** | **Number** | solar_system_id integer | 
-**planetId** | **Number** | planet_id integer | 
-**ownerId** | **Number** | owner_id integer | 
-**upgradeLevel** | **Number** | upgrade_level integer | 
-**numPins** | **Number** | num_pins integer | 
 **lastUpdate** | **Date** | last_update string | 
+**numPins** | **Number** | num_pins integer | 
+**ownerId** | **Number** | owner_id integer | 
+**planetId** | **Number** | planet_id integer | 
 **planetType** | **String** | planet_type string | 
+**solarSystemId** | **Number** | solar_system_id integer | 
+**upgradeLevel** | **Number** | upgrade_level integer | 
 
 
 <a name="PlanetTypeEnum"></a>

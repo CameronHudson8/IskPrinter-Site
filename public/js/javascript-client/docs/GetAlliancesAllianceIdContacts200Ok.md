@@ -3,10 +3,10 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**standing** | **Number** | Standing of the contact | 
-**contactType** | **String** | contact_type string | 
 **contactId** | **Number** | contact_id integer | 
-**labelId** | **Number** | Custom label of the contact | [optional] 
+**contactType** | **String** | contact_type string | 
+**labelIds** | **[Number]** | label_ids array | [optional] 
+**standing** | **Number** | Standing of the contact | 
 
 
 <a name="ContactTypeEnum"></a>

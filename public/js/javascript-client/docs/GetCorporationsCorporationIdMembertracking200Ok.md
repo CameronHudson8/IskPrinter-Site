@@ -3,12 +3,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**characterId** | **Number** | character_id integer | 
-**startDate** | **Date** | start_date string | [optional] 
 **baseId** | **Number** | base_id integer | [optional] 
-**logonDate** | **Date** | logon_date string | [optional] 
-**logoffDate** | **Date** | logoff_date string | [optional] 
+**characterId** | **Number** | character_id integer | 
 **locationId** | **Number** | location_id integer | [optional] 
+**logoffDate** | **Date** | logoff_date string | [optional] 
+**logonDate** | **Date** | logon_date string | [optional] 
 **shipTypeId** | **Number** | ship_type_id integer | [optional] 
+**startDate** | **Date** | start_date string | [optional] 
 
 

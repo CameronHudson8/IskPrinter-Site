@@ -3,11 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**eventId** | **Number** | event_id integer | [optional] 
 **eventDate** | **Date** | event_date string | [optional] 
-**title** | **String** | title string | [optional] 
-**importance** | **Number** | importance integer | [optional] 
+**eventId** | **Number** | event_id integer | [optional] 
 **eventResponse** | **String** | event_response string | [optional] 
+**importance** | **Number** | importance integer | [optional] 
+**title** | **String** | title string | [optional] 
 
 
 <a name="EventResponseEnum"></a>
