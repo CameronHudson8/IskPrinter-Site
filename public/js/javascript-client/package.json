@@ -1,0 +1,20 @@
+{
+  "name": "eve_swagger_interface",
+  "version": "0.7.6",
+  "description": "An_OpenAPI_for_EVE_Online",
+  "license": "Unlicense",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "./node_modules/mocha/bin/mocha --recursive"
+  },
+  "browser": {
+    "fs": false
+  },
+  "dependencies": {
+    "superagent": "3.5.2"
+  },
+  "devDependencies": {
+    "expect.js": "~0.3.1",
+    "sinon": "1.17.3"
+  }
+}
