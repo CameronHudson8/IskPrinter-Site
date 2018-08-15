@@ -3,26 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**typeId** | **Number** | type_id integer | 
-**quantity** | **Number** | quantity integer | 
+**isBlueprintCopy** | **Boolean** | is_blueprint_copy boolean | [optional] 
+**isSingleton** | **Boolean** | is_singleton boolean | 
+**itemId** | **Number** | item_id integer | 
+**locationFlag** | **String** | location_flag string | 
 **locationId** | **Number** | location_id integer | 
 **locationType** | **String** | location_type string | 
-**itemId** | **Number** | item_id integer | 
-**isSingleton** | **Boolean** | is_singleton boolean | 
-**locationFlag** | **String** | location_flag string | 
-
-
-<a name="LocationTypeEnum"></a>
-## Enum: LocationTypeEnum
-
-
-* `station` (value: `"station"`)
-
-* `solar_system` (value: `"solar_system"`)
-
-* `other` (value: `"other"`)
-
-
+**quantity** | **Number** | quantity integer | 
+**typeId** | **Number** | type_id integer | 
 
 
 <a name="LocationFlagEnum"></a>
@@ -258,6 +246,19 @@ Name | Type | Description | Notes
 * `Wallet` (value: `"Wallet"`)
 
 * `Wardrobe` (value: `"Wardrobe"`)
+
+
+
+
+<a name="LocationTypeEnum"></a>
+## Enum: LocationTypeEnum
+
+
+* `station` (value: `"station"`)
+
+* `solar_system` (value: `"solar_system"`)
+
+* `other` (value: `"other"`)
 
 
 

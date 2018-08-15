@@ -3,12 +3,12 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**isRead** | **Boolean** | is_read boolean | [optional] 
 **notificationId** | **Number** | notification_id integer | 
 **senderId** | **Number** | sender_id integer | 
 **senderType** | **String** | sender_type string | 
-**timestamp** | **Date** | timestamp string | 
-**isRead** | **Boolean** | is_read boolean | [optional] 
 **text** | **String** | text string | [optional] 
+**timestamp** | **Date** | timestamp string | 
 **type** | **String** | type string | 
 
 
@@ -358,6 +358,8 @@ Name | Type | Description | Notes
 * `StructureFuelAlert` (value: `"StructureFuelAlert"`)
 
 * `StructureItemsDelivered` (value: `"StructureItemsDelivered"`)
+
+* `StructureItemsMovedToSafety` (value: `"StructureItemsMovedToSafety"`)
 
 * `StructureLostArmor` (value: `"StructureLostArmor"`)
 

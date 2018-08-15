@@ -3,9 +3,9 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**category** | **String** | category string | 
 **id** | **Number** | id integer | 
 **name** | **String** | name string | 
-**category** | **String** | category string | 
 
 
 <a name="CategoryEnum"></a>

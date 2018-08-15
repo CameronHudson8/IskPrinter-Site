@@ -3,7 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**planetId** | **Number** | planet_id integer | 
+**asteroidBelts** | **[Number]** | asteroid_belts array | [optional] 
 **moons** | **[Number]** | moons array | [optional] 
+**planetId** | **Number** | planet_id integer | 
 
 

@@ -3,43 +3,41 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**contractId** | **Number** | contract_id integer | 
-**issuerId** | **Number** | Character ID for the issuer | 
-**issuerCorporationId** | **Number** | Character&#39;s corporation ID for the issuer | 
-**assigneeId** | **Number** | ID to whom the contract is assigned, can be corporation or character ID | 
 **acceptorId** | **Number** | Who will accept the contract | 
-**startLocationId** | **Number** | Start location ID (for Couriers contract) | [optional] 
-**endLocationId** | **Number** | End location ID (for Couriers contract) | [optional] 
-**type** | **String** | Type of the contract | 
-**status** | **String** | Status of the the contract | 
-**title** | **String** | Title of the contract | [optional] 
-**forCorporation** | **Boolean** | true if the contract was issued on behalf of the issuer&#39;s corporation | 
+**assigneeId** | **Number** | ID to whom the contract is assigned, can be corporation or character ID | 
 **availability** | **String** | To whom the contract is available | 
-**dateIssued** | **Date** | Сreation date of the contract | 
-**dateExpired** | **Date** | Expiration date of the contract | 
+**buyout** | **Number** | Buyout price (for Auctions only) | [optional] 
+**collateral** | **Number** | Collateral price (for Couriers only) | [optional] 
+**contractId** | **Number** | contract_id integer | 
 **dateAccepted** | **Date** | Date of confirmation of contract | [optional] 
-**daysToComplete** | **Number** | Number of days to perform the contract | [optional] 
 **dateCompleted** | **Date** | Date of completed of contract | [optional] 
+**dateExpired** | **Date** | Expiration date of the contract | 
+**dateIssued** | **Date** | Сreation date of the contract | 
+**daysToComplete** | **Number** | Number of days to perform the contract | [optional] 
+**endLocationId** | **Number** | End location ID (for Couriers contract) | [optional] 
+**forCorporation** | **Boolean** | true if the contract was issued on behalf of the issuer&#39;s corporation | 
+**issuerCorporationId** | **Number** | Character&#39;s corporation ID for the issuer | 
+**issuerId** | **Number** | Character ID for the issuer | 
 **price** | **Number** | Price of contract (for ItemsExchange and Auctions) | [optional] 
 **reward** | **Number** | Remuneration for contract (for Couriers only) | [optional] 
-**collateral** | **Number** | Collateral price (for Couriers only) | [optional] 
-**buyout** | **Number** | Buyout price (for Auctions only) | [optional] 
+**startLocationId** | **Number** | Start location ID (for Couriers contract) | [optional] 
+**status** | **String** | Status of the the contract | 
+**title** | **String** | Title of the contract | [optional] 
+**type** | **String** | Type of the contract | 
 **volume** | **Number** | Volume of items in the contract | [optional] 
 
 
-<a name="TypeEnum"></a>
-## Enum: TypeEnum
+<a name="AvailabilityEnum"></a>
+## Enum: AvailabilityEnum
 
 
-* `unknown` (value: `"unknown"`)
+* `public` (value: `"public"`)
 
-* `item_exchange` (value: `"item_exchange"`)
+* `personal` (value: `"personal"`)
 
-* `auction` (value: `"auction"`)
+* `corporation` (value: `"corporation"`)
 
-* `courier` (value: `"courier"`)
-
-* `loan` (value: `"loan"`)
+* `alliance` (value: `"alliance"`)
 
 
 
@@ -71,17 +69,19 @@ Name | Type | Description | Notes
 
 
 
-<a name="AvailabilityEnum"></a>
-## Enum: AvailabilityEnum
+<a name="TypeEnum"></a>
+## Enum: TypeEnum
 
 
-* `public` (value: `"public"`)
+* `unknown` (value: `"unknown"`)
 
-* `personal` (value: `"personal"`)
+* `item_exchange` (value: `"item_exchange"`)
 
-* `corporation` (value: `"corporation"`)
+* `auction` (value: `"auction"`)
 
-* `alliance` (value: `"alliance"`)
+* `courier` (value: `"courier"`)
+
+* `loan` (value: `"loan"`)
 
 
 

@@ -4,15 +4,15 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **bloodlineId** | **Number** | bloodline_id integer | 
-**name** | **String** | name string | 
+**charisma** | **Number** | charisma integer | 
+**corporationId** | **Number** | corporation_id integer | 
 **description** | **String** | description string | 
+**intelligence** | **Number** | intelligence integer | 
+**memory** | **Number** | memory integer | 
+**name** | **String** | name string | 
+**perception** | **Number** | perception integer | 
 **raceId** | **Number** | race_id integer | 
 **shipTypeId** | **Number** | ship_type_id integer | 
-**corporationId** | **Number** | corporation_id integer | 
-**perception** | **Number** | perception integer | 
 **willpower** | **Number** | willpower integer | 
-**charisma** | **Number** | charisma integer | 
-**memory** | **Number** | memory integer | 
-**intelligence** | **Number** | intelligence integer | 
 
 

@@ -1,10 +1,11 @@
 # EveSwaggerInterface.UniverseApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getUniverseAncestries**](UniverseApi.md#getUniverseAncestries) | **GET** /v1/universe/ancestries/ | Get ancestries
+[**getUniverseAsteroidBeltsAsteroidBeltId**](UniverseApi.md#getUniverseAsteroidBeltsAsteroidBeltId) | **GET** /v1/universe/asteroid_belts/{asteroid_belt_id}/ | Get asteroid belt information
 [**getUniverseBloodlines**](UniverseApi.md#getUniverseBloodlines) | **GET** /v1/universe/bloodlines/ | Get bloodlines
 [**getUniverseCategories**](UniverseApi.md#getUniverseCategories) | **GET** /v1/universe/categories/ | Get item categories
 [**getUniverseCategoriesCategoryId**](UniverseApi.md#getUniverseCategoriesCategoryId) | **GET** /v1/universe/categories/{category_id}/ | Get item category information
@@ -24,11 +25,11 @@ Method | HTTP request | Description
 [**getUniverseStarsStarId**](UniverseApi.md#getUniverseStarsStarId) | **GET** /v1/universe/stars/{star_id}/ | Get star information
 [**getUniverseStationsStationId**](UniverseApi.md#getUniverseStationsStationId) | **GET** /v2/universe/stations/{station_id}/ | Get station information
 [**getUniverseStructures**](UniverseApi.md#getUniverseStructures) | **GET** /v1/universe/structures/ | List all public structures
-[**getUniverseStructuresStructureId**](UniverseApi.md#getUniverseStructuresStructureId) | **GET** /v1/universe/structures/{structure_id}/ | Get structure information
+[**getUniverseStructuresStructureId**](UniverseApi.md#getUniverseStructuresStructureId) | **GET** /v2/universe/structures/{structure_id}/ | Get structure information
 [**getUniverseSystemJumps**](UniverseApi.md#getUniverseSystemJumps) | **GET** /v1/universe/system_jumps/ | Get system jumps
 [**getUniverseSystemKills**](UniverseApi.md#getUniverseSystemKills) | **GET** /v2/universe/system_kills/ | Get system kills
 [**getUniverseSystems**](UniverseApi.md#getUniverseSystems) | **GET** /v1/universe/systems/ | Get solar systems
-[**getUniverseSystemsSystemId**](UniverseApi.md#getUniverseSystemsSystemId) | **GET** /v3/universe/systems/{system_id}/ | Get solar system information
+[**getUniverseSystemsSystemId**](UniverseApi.md#getUniverseSystemsSystemId) | **GET** /v4/universe/systems/{system_id}/ | Get solar system information
 [**getUniverseTypes**](UniverseApi.md#getUniverseTypes) | **GET** /v1/universe/types/ | Get types
 [**getUniverseTypesTypeId**](UniverseApi.md#getUniverseTypesTypeId) | **GET** /v3/universe/types/{type_id}/ | Get type information
 [**postUniverseIds**](UniverseApi.md#postUniverseIds) | **POST** /v1/universe/ids/ | Bulk names to IDs
@@ -50,10 +51,10 @@ var EveSwaggerInterface = require('eve_swagger_interface');
 var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -70,10 +71,10 @@ apiInstance.getUniverseAncestries(opts, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -85,7 +86,59 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+<a name="getUniverseAsteroidBeltsAsteroidBeltId"></a>
+# **getUniverseAsteroidBeltsAsteroidBeltId**
+> GetUniverseAsteroidBeltsAsteroidBeltIdOk getUniverseAsteroidBeltsAsteroidBeltId(asteroidBeltId, opts)
+
+Get asteroid belt information
+
+Get information on an asteroid belt  ---  This route expires daily at 11:05
+
+### Example
+```javascript
+var EveSwaggerInterface = require('eve_swagger_interface');
+
+var apiInstance = new EveSwaggerInterface.UniverseApi();
+
+var asteroidBeltId = 56; // Number | asteroid_belt_id integer
+
+var opts = { 
+  'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+};
+
+var callback = function(error, data, response) {
+  if (error) {
+    console.error(error);
+  } else {
+    console.log('API called successfully. Returned data: ' + data);
+  }
+};
+apiInstance.getUniverseAsteroidBeltsAsteroidBeltId(asteroidBeltId, opts, callback);
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **asteroidBeltId** | **Number**| asteroid_belt_id integer | 
+ **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+
+### Return type
+
+[**GetUniverseAsteroidBeltsAsteroidBeltIdOk**](GetUniverseAsteroidBeltsAsteroidBeltIdOk.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseBloodlines"></a>
@@ -103,10 +156,10 @@ var EveSwaggerInterface = require('eve_swagger_interface');
 var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -123,10 +176,10 @@ apiInstance.getUniverseBloodlines(opts, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -138,7 +191,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseCategories"></a>
@@ -157,8 +210,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -176,8 +228,7 @@ apiInstance.getUniverseCategories(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -189,7 +240,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseCategoriesCategoryId"></a>
@@ -209,10 +260,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var categoryId = 56; // Number | An Eve item category ID
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -230,10 +281,10 @@ apiInstance.getUniverseCategoriesCategoryId(categoryId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **categoryId** | **Number**| An Eve item category ID | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -245,7 +296,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseConstellations"></a>
@@ -264,8 +315,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -283,8 +333,7 @@ apiInstance.getUniverseConstellations(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -296,7 +345,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseConstellationsConstellationId"></a>
@@ -316,10 +365,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var constellationId = 56; // Number | constellation_id integer
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -337,10 +386,10 @@ apiInstance.getUniverseConstellationsConstellationId(constellationId, opts, call
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **constellationId** | **Number**| constellation_id integer | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -352,7 +401,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseFactions"></a>
@@ -370,10 +419,10 @@ var EveSwaggerInterface = require('eve_swagger_interface');
 var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -390,10 +439,10 @@ apiInstance.getUniverseFactions(opts, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -405,7 +454,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseGraphics"></a>
@@ -424,8 +473,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -443,8 +491,7 @@ apiInstance.getUniverseGraphics(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -456,7 +503,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseGraphicsGraphicId"></a>
@@ -477,8 +524,7 @@ var graphicId = 56; // Number | graphic_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -497,8 +543,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **graphicId** | **Number**| graphic_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -510,7 +555,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseGroups"></a>
@@ -529,9 +574,8 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
 };
 
 var callback = function(error, data, response) {
@@ -549,9 +593,8 @@ apiInstance.getUniverseGroups(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -563,7 +606,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseGroupsGroupId"></a>
@@ -583,10 +626,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var groupId = 56; // Number | An Eve item group ID
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -604,10 +647,10 @@ apiInstance.getUniverseGroupsGroupId(groupId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **groupId** | **Number**| An Eve item group ID | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -619,7 +662,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseMoonsMoonId"></a>
@@ -640,8 +683,7 @@ var moonId = 56; // Number | moon_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -660,8 +702,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **moonId** | **Number**| moon_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -673,7 +714,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniversePlanetsPlanetId"></a>
@@ -694,8 +735,7 @@ var planetId = 56; // Number | planet_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -714,8 +754,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **planetId** | **Number**| planet_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -727,7 +766,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseRaces"></a>
@@ -745,10 +784,10 @@ var EveSwaggerInterface = require('eve_swagger_interface');
 var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -765,10 +804,10 @@ apiInstance.getUniverseRaces(opts, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -780,7 +819,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseRegions"></a>
@@ -799,8 +838,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -818,8 +856,7 @@ apiInstance.getUniverseRegions(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -831,7 +868,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseRegionsRegionId"></a>
@@ -851,10 +888,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var regionId = 56; // Number | region_id integer
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -872,10 +909,10 @@ apiInstance.getUniverseRegionsRegionId(regionId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **regionId** | **Number**| region_id integer | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -887,7 +924,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseStargatesStargateId"></a>
@@ -908,8 +945,7 @@ var stargateId = 56; // Number | stargate_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -928,8 +964,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **stargateId** | **Number**| stargate_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -941,7 +976,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseStarsStarId"></a>
@@ -962,8 +997,7 @@ var starId = 56; // Number | star_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -982,8 +1016,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **starId** | **Number**| star_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -995,7 +1028,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseStationsStationId"></a>
@@ -1004,7 +1037,7 @@ No authorization required
 
 Get station information
 
-Get information on a station  ---  This route is cached for up to 300 seconds
+Get information on a station  ---  This route expires daily at 11:05
 
 ### Example
 ```javascript
@@ -1016,8 +1049,7 @@ var stationId = 56; // Number | station_id integer
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -1036,8 +1068,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **stationId** | **Number**| station_id integer | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -1049,7 +1080,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseStructures"></a>
@@ -1068,8 +1099,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -1087,8 +1117,7 @@ apiInstance.getUniverseStructures(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -1100,7 +1129,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseStructuresStructureId"></a>
@@ -1109,7 +1138,7 @@ No authorization required
 
 Get structure information
 
-Returns information on requested structure, if you are on the ACL. Otherwise, returns \&quot;Forbidden\&quot; for all inputs.  ---  This route is cached for up to 3600 seconds
+Returns information on requested structure if you are on the ACL. Otherwise, returns \&quot;Forbidden\&quot; for all inputs.  ---  This route is cached for up to 3600 seconds
 
 ### Example
 ```javascript
@@ -1126,9 +1155,8 @@ var structureId = 789; // Number | An Eve structure ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -1147,9 +1175,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **structureId** | **Number**| An Eve structure ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -1161,7 +1188,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseSystemJumps"></a>
@@ -1180,8 +1207,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -1199,8 +1225,7 @@ apiInstance.getUniverseSystemJumps(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -1212,7 +1237,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseSystemKills"></a>
@@ -1231,8 +1256,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -1250,8 +1274,7 @@ apiInstance.getUniverseSystemKills(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -1263,7 +1286,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseSystems"></a>
@@ -1282,8 +1305,7 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -1301,8 +1323,7 @@ apiInstance.getUniverseSystems(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -1314,7 +1335,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseSystemsSystemId"></a>
@@ -1323,7 +1344,7 @@ No authorization required
 
 Get solar system information
 
-Get information on a solar system  ---  This route expires daily at 11:05
+Get information on a solar system.  ---  This route expires daily at 11:05
 
 ### Example
 ```javascript
@@ -1334,10 +1355,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var systemId = 56; // Number | system_id integer
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -1355,10 +1376,10 @@ apiInstance.getUniverseSystemsSystemId(systemId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **systemId** | **Number**| system_id integer | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -1370,7 +1391,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseTypes"></a>
@@ -1389,9 +1410,8 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
 };
 
 var callback = function(error, data, response) {
@@ -1409,9 +1429,8 @@ apiInstance.getUniverseTypes(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -1423,7 +1442,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getUniverseTypesTypeId"></a>
@@ -1443,10 +1462,10 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var typeId = 56; // Number | An Eve item type ID
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -1464,10 +1483,10 @@ apiInstance.getUniverseTypesTypeId(typeId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **typeId** | **Number**| An Eve item type ID | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -1479,7 +1498,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUniverseIds"></a>
@@ -1499,10 +1518,9 @@ var apiInstance = new EveSwaggerInterface.UniverseApi();
 var names = [new EveSwaggerInterface.[String]()]; // [String] | The names to resolve
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -1520,10 +1538,9 @@ apiInstance.postUniverseIds(names, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **names** | **[String]**| The names to resolve | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -1535,7 +1552,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUniverseNames"></a>
@@ -1556,8 +1573,6 @@ var ids = [new EveSwaggerInterface.[Number]()]; // [Number] | The ids to resolve
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
 };
 
 var callback = function(error, data, response) {
@@ -1576,8 +1591,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **ids** | **[Number]**| The ids to resolve | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -1589,6 +1602,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

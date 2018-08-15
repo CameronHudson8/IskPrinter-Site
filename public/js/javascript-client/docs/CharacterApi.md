@@ -1,13 +1,12 @@
 # EveSwaggerInterface.CharacterApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**getCharactersCharacterId**](CharacterApi.md#getCharactersCharacterId) | **GET** /v4/characters/{character_id}/ | Get character&#39;s public information
 [**getCharactersCharacterIdAgentsResearch**](CharacterApi.md#getCharactersCharacterIdAgentsResearch) | **GET** /v1/characters/{character_id}/agents_research/ | Get agents research
 [**getCharactersCharacterIdBlueprints**](CharacterApi.md#getCharactersCharacterIdBlueprints) | **GET** /v2/characters/{character_id}/blueprints/ | Get blueprints
-[**getCharactersCharacterIdChatChannels**](CharacterApi.md#getCharactersCharacterIdChatChannels) | **GET** /v1/characters/{character_id}/chat_channels/ | Get chat channels
 [**getCharactersCharacterIdCorporationhistory**](CharacterApi.md#getCharactersCharacterIdCorporationhistory) | **GET** /v1/characters/{character_id}/corporationhistory/ | Get corporation history
 [**getCharactersCharacterIdFatigue**](CharacterApi.md#getCharactersCharacterIdFatigue) | **GET** /v1/characters/{character_id}/fatigue/ | Get jump fatigue
 [**getCharactersCharacterIdMedals**](CharacterApi.md#getCharactersCharacterIdMedals) | **GET** /v1/characters/{character_id}/medals/ | Get medals
@@ -18,7 +17,6 @@ Method | HTTP request | Description
 [**getCharactersCharacterIdStandings**](CharacterApi.md#getCharactersCharacterIdStandings) | **GET** /v1/characters/{character_id}/standings/ | Get standings
 [**getCharactersCharacterIdStats**](CharacterApi.md#getCharactersCharacterIdStats) | **GET** /v2/characters/{character_id}/stats/ | Yearly aggregate stats
 [**getCharactersCharacterIdTitles**](CharacterApi.md#getCharactersCharacterIdTitles) | **GET** /v1/characters/{character_id}/titles/ | Get character corporation titles
-[**getCharactersNames**](CharacterApi.md#getCharactersNames) | **GET** /v1/characters/names/ | Get character names
 [**postCharactersAffiliation**](CharacterApi.md#postCharactersAffiliation) | **POST** /v1/characters/affiliation/ | Character affiliation
 [**postCharactersCharacterIdCspa**](CharacterApi.md#postCharactersCharacterIdCspa) | **POST** /v4/characters/{character_id}/cspa/ | Calculate a CSPA charge cost
 
@@ -41,8 +39,7 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -61,8 +58,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -74,7 +70,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdAgentsResearch"></a>
@@ -100,9 +96,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -121,9 +116,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -135,7 +129,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdBlueprints"></a>
@@ -161,10 +155,9 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -183,10 +176,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -198,68 +190,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-<a name="getCharactersCharacterIdChatChannels"></a>
-# **getCharactersCharacterIdChatChannels**
-> [GetCharactersCharacterIdChatChannels200Ok] getCharactersCharacterIdChatChannels(characterId, opts)
-
-Get chat channels
-
-Return chat channels that a character is the owner or operator of  ---  This route is cached for up to 300 seconds
-
-### Example
-```javascript
-var EveSwaggerInterface = require('eve_swagger_interface');
-var defaultClient = EveSwaggerInterface.ApiClient.instance;
-
-// Configure OAuth2 access token for authorization: evesso
-var evesso = defaultClient.authentications['evesso'];
-evesso.accessToken = 'YOUR ACCESS TOKEN';
-
-var apiInstance = new EveSwaggerInterface.CharacterApi();
-
-var characterId = 56; // Number | An EVE character ID
-
-var opts = { 
-  'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
-};
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-apiInstance.getCharactersCharacterIdChatChannels(characterId, opts, callback);
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **characterId** | **Number**| An EVE character ID | 
- **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
-
-### Return type
-
-[**[GetCharactersCharacterIdChatChannels200Ok]**](GetCharactersCharacterIdChatChannels200Ok.md)
-
-### Authorization
-
-[evesso](../README.md#evesso)
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdCorporationhistory"></a>
@@ -280,8 +211,7 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -300,8 +230,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -313,7 +242,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdFatigue"></a>
@@ -339,9 +268,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -360,9 +288,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -374,7 +301,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdMedals"></a>
@@ -400,9 +327,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -421,9 +347,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -435,7 +360,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdNotifications"></a>
@@ -444,7 +369,7 @@ Name | Type | Description  | Notes
 
 Get character notifications
 
-Return character notifications  ---  This route is cached for up to 600 seconds
+Return character notifications  ---  This route is cached for up to 600 seconds  --- Warning: This route has an upgrade available.  --- [Diff of the upcoming changes](https://esi.evetech.net/diff/latest/dev/#GET-/characters/{character_id}/notifications/)
 
 ### Example
 ```javascript
@@ -461,9 +386,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -482,9 +406,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -496,7 +419,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdNotificationsContacts"></a>
@@ -522,9 +445,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -543,9 +465,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -557,7 +478,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdPortrait"></a>
@@ -578,8 +499,7 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -598,8 +518,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -611,7 +530,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdRoles"></a>
@@ -637,9 +556,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -658,9 +576,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -672,7 +589,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdStandings"></a>
@@ -698,9 +615,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -719,9 +635,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -733,7 +648,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdStats"></a>
@@ -759,9 +674,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -780,9 +694,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -794,7 +707,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdTitles"></a>
@@ -820,9 +733,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -841,9 +753,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -855,61 +766,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
- - **Accept**: application/json
-
-<a name="getCharactersNames"></a>
-# **getCharactersNames**
-> [GetCharactersNames200Ok] getCharactersNames(characterIds, opts)
-
-Get character names
-
-Resolve a set of character IDs to character names  ---  This route is cached for up to 3600 seconds
-
-### Example
-```javascript
-var EveSwaggerInterface = require('eve_swagger_interface');
-
-var apiInstance = new EveSwaggerInterface.CharacterApi();
-
-var characterIds = [3.4]; // [Number] | A comma separated list of character IDs
-
-var opts = { 
-  'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
-};
-
-var callback = function(error, data, response) {
-  if (error) {
-    console.error(error);
-  } else {
-    console.log('API called successfully. Returned data: ' + data);
-  }
-};
-apiInstance.getCharactersNames(characterIds, opts, callback);
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **characterIds** | [**[Number]**](Number.md)| A comma separated list of character IDs | 
- **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
-
-### Return type
-
-[**[GetCharactersNames200Ok]**](GetCharactersNames200Ok.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCharactersAffiliation"></a>
@@ -930,8 +787,6 @@ var characters = [new EveSwaggerInterface.[Number]()]; // [Number] | The charact
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
 };
 
 var callback = function(error, data, response) {
@@ -950,8 +805,6 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characters** | **[Number]**| The character IDs to fetch affiliations for. All characters must exist, or none will be returned. | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -963,7 +816,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postCharactersCharacterIdCspa"></a>
@@ -991,9 +844,7 @@ var characters = [new EveSwaggerInterface.[Number]()]; // [Number] | The target 
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -1014,8 +865,6 @@ Name | Type | Description  | Notes
  **characters** | **[Number]**| The target characters to calculate the charge for | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -1027,6 +876,6 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

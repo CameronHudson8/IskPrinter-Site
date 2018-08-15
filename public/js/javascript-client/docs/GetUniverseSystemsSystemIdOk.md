@@ -3,15 +3,15 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**starId** | **Number** | star_id integer | 
-**systemId** | **Number** | system_id integer | 
-**name** | **String** | name string | 
-**position** | [**GetUniverseSystemsSystemIdPosition**](GetUniverseSystemsSystemIdPosition.md) |  | 
-**securityStatus** | **Number** | security_status number | 
-**securityClass** | **String** | security_class string | [optional] 
 **constellationId** | **Number** | The constellation this solar system is in | 
-**planets** | [**[GetUniverseSystemsSystemIdPlanet]**](GetUniverseSystemsSystemIdPlanet.md) | planets array | 
+**name** | **String** | name string | 
+**planets** | [**[GetUniverseSystemsSystemIdPlanet]**](GetUniverseSystemsSystemIdPlanet.md) | planets array | [optional] 
+**position** | [**GetUniverseSystemsSystemIdPosition**](GetUniverseSystemsSystemIdPosition.md) |  | 
+**securityClass** | **String** | security_class string | [optional] 
+**securityStatus** | **Number** | security_status number | 
+**starId** | **Number** | star_id integer | [optional] 
 **stargates** | **[Number]** | stargates array | [optional] 
 **stations** | **[Number]** | stations array | [optional] 
+**systemId** | **Number** | system_id integer | 
 
 

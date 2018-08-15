@@ -1,6 +1,6 @@
 # EveSwaggerInterface.IndustryApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -37,10 +37,9 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'includeCompleted': true, // Boolean | Whether retrieve completed character industry jobs as well
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -59,10 +58,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **includeCompleted** | **Boolean**| Whether retrieve completed character industry jobs as well | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -74,7 +72,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCharactersCharacterIdMining"></a>
@@ -100,10 +98,9 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -122,10 +119,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -137,12 +133,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationCorporationIdMiningExtractions"></a>
 # **getCorporationCorporationIdMiningExtractions**
-> [GetCorporationCorporationIdMiningExtractions200Ok] getCorporationCorporationIdMiningExtractions(corporationId, , opts)
+> [GetCorporationCorporationIdMiningExtractions200Ok] getCorporationCorporationIdMiningExtractions(corporationId, opts)
 
 Moon extraction timers
 
@@ -163,10 +159,9 @@ var corporationId = 56; // Number | An EVE corporation ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -176,7 +171,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationCorporationIdMiningExtractions(corporationId, , opts, callback);
+apiInstance.getCorporationCorporationIdMiningExtractions(corporationId, opts, callback);
 ```
 
 ### Parameters
@@ -185,10 +180,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **corporationId** | **Number**| An EVE corporation ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -200,12 +194,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationCorporationIdMiningObservers"></a>
 # **getCorporationCorporationIdMiningObservers**
-> [GetCorporationCorporationIdMiningObservers200Ok] getCorporationCorporationIdMiningObservers(corporationId, , opts)
+> [GetCorporationCorporationIdMiningObservers200Ok] getCorporationCorporationIdMiningObservers(corporationId, opts)
 
 Corporation mining observers
 
@@ -226,10 +220,9 @@ var corporationId = 56; // Number | An EVE corporation ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -239,7 +232,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationCorporationIdMiningObservers(corporationId, , opts, callback);
+apiInstance.getCorporationCorporationIdMiningObservers(corporationId, opts, callback);
 ```
 
 ### Parameters
@@ -248,10 +241,9 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **corporationId** | **Number**| An EVE corporation ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -263,12 +255,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationCorporationIdMiningObserversObserverId"></a>
 # **getCorporationCorporationIdMiningObserversObserverId**
-> [GetCorporationCorporationIdMiningObserversObserverId200Ok] getCorporationCorporationIdMiningObserversObserverId(corporationId, observerId, opts)
+> [GetCorporationCorporationIdMiningObserversObserverId200Ok] getCorporationCorporationIdMiningObserversObserverId(corporationIdobserverId, opts)
 
 Observed corporation mining
 
@@ -291,10 +283,9 @@ var observerId = 789; // Number | A mining observer id
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -304,7 +295,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationCorporationIdMiningObserversObserverId(corporationId, observerId, opts, callback);
+apiInstance.getCorporationCorporationIdMiningObserversObserverId(corporationIdobserverId, opts, callback);
 ```
 
 ### Parameters
@@ -314,10 +305,9 @@ Name | Type | Description  | Notes
  **corporationId** | **Number**| An EVE corporation ID | 
  **observerId** | **Number**| A mining observer id | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -329,12 +319,12 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getCorporationsCorporationIdIndustryJobs"></a>
 # **getCorporationsCorporationIdIndustryJobs**
-> [GetCorporationsCorporationIdIndustryJobs200Ok] getCorporationsCorporationIdIndustryJobs(corporationId, , opts)
+> [GetCorporationsCorporationIdIndustryJobs200Ok] getCorporationsCorporationIdIndustryJobs(corporationId, opts)
 
 List corporation industry jobs
 
@@ -355,11 +345,10 @@ var corporationId = 56; // Number | An EVE corporation ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
   'includeCompleted': false, // Boolean | Whether retrieve completed industry jobs as well
   'page': 1, // Number | Which page of results to return
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -369,7 +358,7 @@ var callback = function(error, data, response) {
     console.log('API called successfully. Returned data: ' + data);
   }
 };
-apiInstance.getCorporationsCorporationIdIndustryJobs(corporationId, , opts, callback);
+apiInstance.getCorporationsCorporationIdIndustryJobs(corporationId, opts, callback);
 ```
 
 ### Parameters
@@ -378,11 +367,10 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **corporationId** | **Number**| An EVE corporation ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **includeCompleted** | **Boolean**| Whether retrieve completed industry jobs as well | [optional] [default to false]
  **page** | **Number**| Which page of results to return | [optional] [default to 1]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -394,7 +382,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getIndustryFacilities"></a>
@@ -413,8 +401,7 @@ var apiInstance = new EveSwaggerInterface.IndustryApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -432,8 +419,7 @@ apiInstance.getIndustryFacilities(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -445,7 +431,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getIndustrySystems"></a>
@@ -464,8 +450,7 @@ var apiInstance = new EveSwaggerInterface.IndustryApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -483,8 +468,7 @@ apiInstance.getIndustrySystems(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -496,6 +480,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

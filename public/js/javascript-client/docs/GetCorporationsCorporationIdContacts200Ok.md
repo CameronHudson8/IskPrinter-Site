@@ -3,11 +3,11 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**standing** | **Number** | Standing of the contact | 
-**contactType** | **String** | contact_type string | 
 **contactId** | **Number** | contact_id integer | 
+**contactType** | **String** | contact_type string | 
 **isWatched** | **Boolean** | Whether this contact is being watched | [optional] 
-**labelId** | **Number** | Custom label of the contact | [optional] 
+**labelIds** | **[Number]** | label_ids array | [optional] 
+**standing** | **Number** | Standing of the contact | 
 
 
 <a name="ContactTypeEnum"></a>

@@ -4,8 +4,8 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **roles** | **[String]** | roles array | [optional] 
-**rolesAtHq** | **[String]** | roles_at_hq array | [optional] 
 **rolesAtBase** | **[String]** | roles_at_base array | [optional] 
+**rolesAtHq** | **[String]** | roles_at_hq array | [optional] 
 **rolesAtOther** | **[String]** | roles_at_other array | [optional] 
 
 
@@ -116,8 +116,8 @@ Name | Type | Description | Notes
 
 
 
-<a name="[RolesAtHqEnum]"></a>
-## Enum: [RolesAtHqEnum]
+<a name="[RolesAtBaseEnum]"></a>
+## Enum: [RolesAtBaseEnum]
 
 
 * `Account_Take_1` (value: `"Account_Take_1"`)
@@ -223,8 +223,8 @@ Name | Type | Description | Notes
 
 
 
-<a name="[RolesAtBaseEnum]"></a>
-## Enum: [RolesAtBaseEnum]
+<a name="[RolesAtHqEnum]"></a>
+## Enum: [RolesAtHqEnum]
 
 
 * `Account_Take_1` (value: `"Account_Take_1"`)

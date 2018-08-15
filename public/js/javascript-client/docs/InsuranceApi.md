@@ -1,6 +1,6 @@
 # EveSwaggerInterface.InsuranceApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -22,10 +22,10 @@ var EveSwaggerInterface = require('eve_swagger_interface');
 var apiInstance = new EveSwaggerInterface.InsuranceApi();
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -42,10 +42,10 @@ apiInstance.getInsurancePrices(opts, callback);
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -57,6 +57,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

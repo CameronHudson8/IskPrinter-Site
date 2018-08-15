@@ -3,18 +3,18 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**loggedAt** | **Date** | Timestamp when this log was created | 
+**action** | **String** | action string | 
+**characterId** | **Number** | ID of the character who performed the action. | 
 **containerId** | **Number** | ID of the container | 
 **containerTypeId** | **Number** | Type ID of the container | 
-**characterId** | **Number** | ID of the character who performed the action. | 
-**locationId** | **Number** | location_id integer | 
-**action** | **String** | action string | 
-**passwordType** | **String** | Type of password set if action is of type SetPassword or EnterPassword | [optional] 
-**typeId** | **Number** | Type ID of the item being acted upon | [optional] 
-**quantity** | **Number** | Quantity of the item being acted upon | [optional] 
-**oldConfigBitmask** | **Number** | old_config_bitmask integer | [optional] 
-**newConfigBitmask** | **Number** | new_config_bitmask integer | [optional] 
 **locationFlag** | **String** | location_flag string | 
+**locationId** | **Number** | location_id integer | 
+**loggedAt** | **Date** | Timestamp when this log was created | 
+**newConfigBitmask** | **Number** | new_config_bitmask integer | [optional] 
+**oldConfigBitmask** | **Number** | old_config_bitmask integer | [optional] 
+**passwordType** | **String** | Type of password set if action is of type SetPassword or EnterPassword | [optional] 
+**quantity** | **Number** | Quantity of the item being acted upon | [optional] 
+**typeId** | **Number** | Type ID of the item being acted upon | [optional] 
 
 
 <a name="ActionEnum"></a>
@@ -40,17 +40,6 @@ Name | Type | Description | Notes
 * `set_password` (value: `"set_password"`)
 
 * `unlock` (value: `"unlock"`)
-
-
-
-
-<a name="PasswordTypeEnum"></a>
-## Enum: PasswordTypeEnum
-
-
-* `config` (value: `"config"`)
-
-* `general` (value: `"general"`)
 
 
 
@@ -288,6 +277,17 @@ Name | Type | Description | Notes
 * `Wallet` (value: `"Wallet"`)
 
 * `Wardrobe` (value: `"Wardrobe"`)
+
+
+
+
+<a name="PasswordTypeEnum"></a>
+## Enum: PasswordTypeEnum
+
+
+* `config` (value: `"config"`)
+
+* `general` (value: `"general"`)
 
 
 

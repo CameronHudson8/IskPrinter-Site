@@ -3,21 +3,21 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**typeId** | **Number** | type_id integer | 
-**name** | **String** | name string | 
-**description** | **String** | description string | 
-**published** | **Boolean** | published boolean | 
-**groupId** | **Number** | group_id integer | 
-**marketGroupId** | **Number** | This only exists for types that can be put on the market | [optional] 
-**radius** | **Number** | radius number | [optional] 
-**volume** | **Number** | volume number | [optional] 
-**packagedVolume** | **Number** | packaged_volume number | [optional] 
-**iconId** | **Number** | icon_id integer | [optional] 
 **capacity** | **Number** | capacity number | [optional] 
-**portionSize** | **Number** | portion_size integer | [optional] 
-**mass** | **Number** | mass number | [optional] 
-**graphicId** | **Number** | graphic_id integer | [optional] 
+**description** | **String** | description string | 
 **dogmaAttributes** | [**[GetUniverseTypesTypeIdDogmaAttribute]**](GetUniverseTypesTypeIdDogmaAttribute.md) | dogma_attributes array | [optional] 
 **dogmaEffects** | [**[GetUniverseTypesTypeIdDogmaEffect]**](GetUniverseTypesTypeIdDogmaEffect.md) | dogma_effects array | [optional] 
+**graphicId** | **Number** | graphic_id integer | [optional] 
+**groupId** | **Number** | group_id integer | 
+**iconId** | **Number** | icon_id integer | [optional] 
+**marketGroupId** | **Number** | This only exists for types that can be put on the market | [optional] 
+**mass** | **Number** | mass number | [optional] 
+**name** | **String** | name string | 
+**packagedVolume** | **Number** | packaged_volume number | [optional] 
+**portionSize** | **Number** | portion_size integer | [optional] 
+**published** | **Boolean** | published boolean | 
+**radius** | **Number** | radius number | [optional] 
+**typeId** | **Number** | type_id integer | 
+**volume** | **Number** | volume number | [optional] 
 
 

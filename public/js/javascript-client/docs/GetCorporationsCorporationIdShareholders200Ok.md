@@ -3,9 +3,9 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**shareCount** | **Number** | share_count integer | 
 **shareholderId** | **Number** | shareholder_id integer | 
 **shareholderType** | **String** | shareholder_type string | 
-**shareCount** | **Number** | share_count integer | 
 
 
 <a name="ShareholderTypeEnum"></a>

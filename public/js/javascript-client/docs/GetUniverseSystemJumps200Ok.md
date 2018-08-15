@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**systemId** | **Number** | system_id integer | 
 **shipJumps** | **Number** | ship_jumps integer | 
+**systemId** | **Number** | system_id integer | 
 
 

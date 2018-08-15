@@ -1,6 +1,6 @@
 # EveSwaggerInterface.OpportunitiesApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -34,9 +34,8 @@ var characterId = 56; // Number | An EVE character ID
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -55,9 +54,8 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **characterId** | **Number**| An EVE character ID | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -69,7 +67,7 @@ Name | Type | Description  | Notes
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getOpportunitiesGroups"></a>
@@ -88,8 +86,7 @@ var apiInstance = new EveSwaggerInterface.OpportunitiesApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -107,8 +104,7 @@ apiInstance.getOpportunitiesGroups(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -120,7 +116,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getOpportunitiesGroupsGroupId"></a>
@@ -140,10 +136,10 @@ var apiInstance = new EveSwaggerInterface.OpportunitiesApi();
 var groupId = 56; // Number | ID of an opportunities group
 
 var opts = { 
+  'acceptLanguage': "en-us", // String | Language to use in the response
   'datasource': "tranquility", // String | The server name you would like data from
-  'language': "en-us", // String | Language to use in the response
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
+  'language': "en-us" // String | Language to use in the response, takes precedence over Accept-Language
 };
 
 var callback = function(error, data, response) {
@@ -161,10 +157,10 @@ apiInstance.getOpportunitiesGroupsGroupId(groupId, opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **groupId** | **Number**| ID of an opportunities group | 
+ **acceptLanguage** | **String**| Language to use in the response | [optional] [default to en-us]
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **language** | **String**| Language to use in the response | [optional] [default to en-us]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
+ **language** | **String**| Language to use in the response, takes precedence over Accept-Language | [optional] [default to en-us]
 
 ### Return type
 
@@ -176,7 +172,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getOpportunitiesTasks"></a>
@@ -195,8 +191,7 @@ var apiInstance = new EveSwaggerInterface.OpportunitiesApi();
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -214,8 +209,7 @@ apiInstance.getOpportunitiesTasks(opts, callback);
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -227,7 +221,7 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="getOpportunitiesTasksTaskId"></a>
@@ -248,8 +242,7 @@ var taskId = 56; // Number | ID of an opportunities task
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'ifNoneMatch': "ifNoneMatch_example", // String | ETag from a previous request. A 304 will be returned if this matches the current ETag
 };
 
 var callback = function(error, data, response) {
@@ -268,8 +261,7 @@ Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
  **taskId** | **Number**| ID of an opportunities task | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
+ **ifNoneMatch** | **String**| ETag from a previous request. A 304 will be returned if this matches the current ETag | [optional] 
 
 ### Return type
 
@@ -281,6 +273,6 @@ No authorization required
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

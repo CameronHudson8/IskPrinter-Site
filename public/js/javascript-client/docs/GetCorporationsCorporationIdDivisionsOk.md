@@ -3,7 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**hangar** | [**[GetCorporationsCorporationIdDivisionsHangar]**](GetCorporationsCorporationIdDivisionsHangar.md) | hangar array | [optional] 
-**wallet** | [**[GetCorporationsCorporationIdDivisionsWallet]**](GetCorporationsCorporationIdDivisionsWallet.md) | wallet array | [optional] 
+**hangar** | [**[GetCorporationsCorporationIdDivisionsHangarHangar]**](GetCorporationsCorporationIdDivisionsHangarHangar.md) | hangar array | [optional] 
+**wallet** | [**[GetCorporationsCorporationIdDivisionsWalletWallet]**](GetCorporationsCorporationIdDivisionsWalletWallet.md) | wallet array | [optional] 
 
 
