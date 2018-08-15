@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**recipientType** | **String** | recipient_type string | 
 **recipientId** | **Number** | recipient_id integer | 
+**recipientType** | **String** | recipient_type string | 
 
 
 <a name="RecipientTypeEnum"></a>

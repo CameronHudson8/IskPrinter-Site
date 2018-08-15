@@ -3,17 +3,17 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**orderId** | **Number** | order_id integer | 
-**typeId** | **Number** | type_id integer | 
-**locationId** | **Number** | location_id integer | 
-**volumeTotal** | **Number** | volume_total integer | 
-**volumeRemain** | **Number** | volume_remain integer | 
-**minVolume** | **Number** | min_volume integer | 
-**price** | **Number** | price number | 
-**isBuyOrder** | **Boolean** | is_buy_order boolean | 
 **duration** | **Number** | duration integer | 
+**isBuyOrder** | **Boolean** | is_buy_order boolean | 
 **issued** | **Date** | issued string | 
+**locationId** | **Number** | location_id integer | 
+**minVolume** | **Number** | min_volume integer | 
+**orderId** | **Number** | order_id integer | 
+**price** | **Number** | price number | 
 **range** | **String** | range string | 
+**typeId** | **Number** | type_id integer | 
+**volumeRemain** | **Number** | volume_remain integer | 
+**volumeTotal** | **Number** | volume_total integer | 
 
 
 <a name="RangeEnum"></a>

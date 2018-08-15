@@ -1,6 +1,6 @@
 # EveSwaggerInterface.UserInterfaceApi
 
-All URIs are relative to *https://esi.tech.ccp.is*
+All URIs are relative to *https://esi.evetech.net*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
@@ -38,9 +38,7 @@ var destinationId = 789; // Number | The destination to travel to, can be solar 
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -62,8 +60,6 @@ Name | Type | Description  | Notes
  **destinationId** | **Number**| The destination to travel to, can be solar system, station or structure&#39;s id | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -75,7 +71,7 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUiOpenwindowContract"></a>
@@ -101,9 +97,7 @@ var contractId = 56; // Number | The contract to open
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -123,8 +117,6 @@ Name | Type | Description  | Notes
  **contractId** | **Number**| The contract to open | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -136,7 +128,7 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUiOpenwindowInformation"></a>
@@ -162,9 +154,7 @@ var targetId = 56; // Number | The target to open
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -184,8 +174,6 @@ Name | Type | Description  | Notes
  **targetId** | **Number**| The target to open | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -197,7 +185,7 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUiOpenwindowMarketdetails"></a>
@@ -223,9 +211,7 @@ var typeId = 56; // Number | The item type to open in market window
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -245,8 +231,6 @@ Name | Type | Description  | Notes
  **typeId** | **Number**| The item type to open in market window | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -258,7 +242,7 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 
 <a name="postUiOpenwindowNewmail"></a>
@@ -284,9 +268,7 @@ var newMail = new EveSwaggerInterface.PostUiOpenwindowNewmailNewMail(); // PostU
 
 var opts = { 
   'datasource': "tranquility", // String | The server name you would like data from
-  'token': "token_example", // String | Access token to use if unable to set a header
-  'userAgent': "userAgent_example", // String | Client identifier, takes precedence over headers
-  'xUserAgent': "xUserAgent_example" // String | Client identifier, takes precedence over User-Agent
+  'token': "token_example" // String | Access token to use if unable to set a header
 };
 
 var callback = function(error, data, response) {
@@ -306,8 +288,6 @@ Name | Type | Description  | Notes
  **newMail** | [**PostUiOpenwindowNewmailNewMail**](PostUiOpenwindowNewmailNewMail.md)| The details of mail to create | 
  **datasource** | **String**| The server name you would like data from | [optional] [default to tranquility]
  **token** | **String**| Access token to use if unable to set a header | [optional] 
- **userAgent** | **String**| Client identifier, takes precedence over headers | [optional] 
- **xUserAgent** | **String**| Client identifier, takes precedence over User-Agent | [optional] 
 
 ### Return type
 
@@ -319,6 +299,6 @@ null (empty response body)
 
 ### HTTP request headers
 
- - **Content-Type**: Not defined
+ - **Content-Type**: application/json
  - **Accept**: application/json
 

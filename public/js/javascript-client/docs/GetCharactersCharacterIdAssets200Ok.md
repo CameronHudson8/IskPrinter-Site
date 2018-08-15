@@ -3,26 +3,14 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**typeId** | **Number** | type_id integer | 
-**quantity** | **Number** | quantity integer | 
-**locationId** | **Number** | location_id integer | 
-**locationType** | **String** | location_type string | 
+**isBlueprintCopy** | **Boolean** | is_blueprint_copy boolean | [optional] 
+**isSingleton** | **Boolean** | is_singleton boolean | 
 **itemId** | **Number** | item_id integer | 
 **locationFlag** | **String** | location_flag string | 
-**isSingleton** | **Boolean** | is_singleton boolean | 
-
-
-<a name="LocationTypeEnum"></a>
-## Enum: LocationTypeEnum
-
-
-* `station` (value: `"station"`)
-
-* `solar_system` (value: `"solar_system"`)
-
-* `other` (value: `"other"`)
-
-
+**locationId** | **Number** | location_id integer | 
+**locationType** | **String** | location_type string | 
+**quantity** | **Number** | quantity integer | 
+**typeId** | **Number** | type_id integer | 
 
 
 <a name="LocationFlagEnum"></a>
@@ -32,6 +20,8 @@ Name | Type | Description | Notes
 * `AssetSafety` (value: `"AssetSafety"`)
 
 * `AutoFit` (value: `"AutoFit"`)
+
+* `BoosterBay` (value: `"BoosterBay"`)
 
 * `Cargo` (value: `"Cargo"`)
 
@@ -184,6 +174,19 @@ Name | Type | Description | Notes
 * `Unlocked` (value: `"Unlocked"`)
 
 * `Wardrobe` (value: `"Wardrobe"`)
+
+
+
+
+<a name="LocationTypeEnum"></a>
+## Enum: LocationTypeEnum
+
+
+* `station` (value: `"station"`)
+
+* `solar_system` (value: `"solar_system"`)
+
+* `other` (value: `"other"`)
 
 
 

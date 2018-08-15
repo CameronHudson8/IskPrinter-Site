@@ -3,8 +3,8 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**name** | **String** | name string | 
 **id** | **Number** | id integer | 
+**name** | **String** | name string | 
 **squads** | [**[GetFleetsFleetIdWingsSquad]**](GetFleetsFleetIdWingsSquad.md) | squads array | 
 
 

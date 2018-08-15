@@ -3,16 +3,16 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**_date** | **Date** | date string | 
+**duration** | **Number** | Length in minutes | 
 **eventId** | **Number** | event_id integer | 
+**importance** | **Number** | importance integer | 
 **ownerId** | **Number** | owner_id integer | 
 **ownerName** | **String** | owner_name string | 
-**_date** | **Date** | date string | 
-**title** | **String** | title string | 
-**duration** | **Number** | Length in minutes | 
-**importance** | **Number** | importance integer | 
+**ownerType** | **String** | owner_type string | 
 **response** | **String** | response string | 
 **text** | **String** | text string | 
-**ownerType** | **String** | owner_type string | 
+**title** | **String** | title string | 
 
 
 <a name="OwnerTypeEnum"></a>

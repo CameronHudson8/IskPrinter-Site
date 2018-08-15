@@ -3,9 +3,9 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**part** | **Number** | part integer | 
-**layer** | **Number** | layer integer | 
-**graphic** | **String** | graphic string | 
 **color** | **Number** | color integer | [optional] 
+**graphic** | **String** | graphic string | 
+**layer** | **Number** | layer integer | 
+**part** | **Number** | part integer | 
 
 
