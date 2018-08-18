@@ -30,7 +30,7 @@
             "App\\": "app/"
         },
         "files": [
-            "vendor/SwaggerClient-php/vendor/autoload.php"
+            "vendor/php-client/SwaggerClient-php/vendor/autoload.php"
         ]
     },
     "autoload-dev": {
