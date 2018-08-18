@@ -6,7 +6,9 @@
 /resources/assets/sde.zip
 /storage/*.key
 /storage/logs
-/vendor
+/vendor/*
+!/vendor/php-client-generated.zip
+!/vendor/php-client
 /.idea
 /.vscode
 /.vagrant

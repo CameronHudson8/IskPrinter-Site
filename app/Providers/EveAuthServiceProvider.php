@@ -39,9 +39,6 @@ class EveAuthServiceProvider extends ServiceProvider
     {
         $IS_LOCAL = !(false === strpos($_SERVER['HTTP_HOST'], 'localhost'));
     
-        $CLIENT_ID = $IS_LOCAL ?
-                '66c2e9a0e1164a9ab88006abe1e8c7ab' :
-                'bf9674bde4cd432193ac5644daf38b07';
         $REDIRECT_URI = $IS_LOCAL ? 
                 'http://localhost:8080/api/characters/create' :
                 'https://iskprinter.com/api/characters/create';
@@ -145,7 +142,7 @@ class EveAuthServiceProvider extends ServiceProvider
         return 'https://' . $BASE_URL . '/oauth/authorize?'
                 . 'response_type=' . $RESPONSE_TYPE
                 . '&redirect_uri=' . $REDIRECT_URI
-                . '&client_id=' . $CLIENT_ID
+                . '&client_id=' . env('CLIENT_ID')
                 . '&scope=' . implode(' ', $SCOPES)
                 . '&state=' . $STATE;
     }
