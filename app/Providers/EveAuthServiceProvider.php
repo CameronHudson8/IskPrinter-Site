@@ -37,12 +37,6 @@ class EveAuthServiceProvider extends ServiceProvider
      */
     public static function LOGON_URL()
     {
-        $IS_LOCAL = !(false === strpos($_SERVER['HTTP_HOST'], 'localhost'));
-    
-        $REDIRECT_URI = $IS_LOCAL ? 
-                'http://localhost:8080/api/characters/create' :
-                'https://iskprinter.com/api/characters/create';
-                        
         $BASE_URL = 'login.eveonline.com';
 
         // Get an authorization code for permanent access (as opposed to an
@@ -141,7 +135,7 @@ class EveAuthServiceProvider extends ServiceProvider
         $STATE = encrypt(json_encode(['id' => $user->id, 'nonce' => $user->state]));
         return 'https://' . $BASE_URL . '/oauth/authorize?'
                 . 'response_type=' . $RESPONSE_TYPE
-                . '&redirect_uri=' . $REDIRECT_URI
+                . '&redirect_uri=' . env('REDIRECT_URI')
                 . '&client_id=' . env('CLIENT_ID')
                 . '&scope=' . implode(' ', $SCOPES)
                 . '&state=' . $STATE;
