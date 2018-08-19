@@ -26,7 +26,7 @@ return [
     |
     */
 
-    'env' => env('APP_ENV', 'production'),
+    'env' => env('APP_ENV', 'local'),
 
     /*
     |--------------------------------------------------------------------------
@@ -108,7 +108,8 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
-    // Client ID and Client Secret for eve authentication flow.
+    // Callback, Client ID and Client Secret for eve authentication flow.
+    'redirectUri' => env('REDIRECT_URI'),
     'clientId' => env('CLIENT_ID'),
     'clientSecret' => env('CLIENT_SECRET'),
 
