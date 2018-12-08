@@ -159,6 +159,11 @@ class TypeController extends Controller
 
     public static function materialsIndex()
     {
+        // TODO Make sure the SDE is up to date and in the database by running this:
+        // App\Http\Controllers\ActivityController::initialize();
+        // But it's poor form (and potentially not possible) to run
+        // one controller's functions from another. Need another solution.
+
         $reprocessings = DB::table('inv_type_materials')
                 ->join('types',
                 'inv_type_materials.typeID',
