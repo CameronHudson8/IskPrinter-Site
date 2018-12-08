@@ -16,6 +16,5 @@ Homestead.json
 Homestead.yaml
 npm-debug.log
 yarn-error.log
-.local.env
-.production.env
+*.env*
 .gitsecret/keys/random_seed
