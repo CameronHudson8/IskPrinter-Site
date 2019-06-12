@@ -12,7 +12,7 @@ curl \
     | xargs curl -o client-generated.zip
 mkdir vendor
 unzip client-generated.zip -d vendor
-rm client-generated.zi
+rm client-generated.zip
 composer install -d "vendor/php-client/SwaggerClient-php"
 
 # Install the main app dependencies
