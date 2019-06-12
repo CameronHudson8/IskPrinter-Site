@@ -1,0 +1,37 @@
+version: "3.7"
+services:
+
+  iskprinter_site:
+    image: richarvey/nginx-php-fpm
+
+    
+    environment:
+      - WEBROOT=/var/www/html/public
+    tty: true
+    ports:
+      - "380:80"
+      - "3443:443"
+    volumes:
+      - app:/var/www/html
+
+  app_db:
+    image: mysql
+    tty: true
+    expose:
+      - 3306
+    volumes:
+     - app_db_data:/var/lib/mysql
+
+volumes:
+  app:
+    driver_opts:
+      device: ${PWD}
+      o: bind
+  app_db_data:
+    driver_opts:
+      device: /databases/iskprinter.com
+      o: bind
+      
+networks:
+  default:
+    name: reverse_proxy
