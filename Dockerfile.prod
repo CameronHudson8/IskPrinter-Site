@@ -1,3 +1,16 @@
+
+## Install frontend
+
+FROM node AS node
+WORKDIR /app
+COPY ./frontend .
+RUN rm -rf package-lock.json node_modules \
+  && npm install -g @angular/cli \
+  && npm install \
+  && ng build --configuration="production"
+
+## Install backend
+
 # Download the ESI client.
 FROM alpine AS alpine
 WORKDIR /
@@ -5,23 +18,23 @@ RUN apk add --no-cache \
         curl \
         jq \
         unzip \
-    && mkdir ./eve-sde \
+    && mkdir /eve-sde \
     && curl https://www.fuzzwork.co.uk/dump/mysql-latest.tar.bz2 \
-        | tar xjv -C ./eve-sde \
+        | tar xjv -C /eve-sde \
     && curl \
             -X POST "http://generator.swagger.io/api/gen/clients/php" \
             -H "Content-Type: application/json" \
             -d "{ \"swaggerUrl\": \"https://esi.evetech.net/latest/swagger.json\"}" \
         | jq -r '.link' \
-        | xargs curl -o client-generated.zip \
-    && unzip client-generated.zip -d php-client \
-    && rm client-generated.zip
+        | xargs curl -o /client-generated.zip \
+    && unzip /client-generated.zip -d /php-client \
+    && rm /client-generated.zip
 
 # Transfer the Eve API. Install dependencies using composer
 FROM composer AS composer
 WORKDIR /app
 # Copy in all files, including an obsolete vendor directory.
-COPY . .
+COPY ./backend .
 # Remove the obsolete vendor directory (we can't have it in the .dockerignore, because we copy this directory into the nginx image, later)
 RUN rm -rf composer.lock vendor
 # Copy the ESI client into a new, empty vendor directory
@@ -35,8 +48,10 @@ RUN rm -rf composer.lock vendor \
 WORKDIR /app
 RUN composer install \
     && php artisan key:generate
+# Copy in the prebuilt frontend
+COPY --from=node /app/dist/frontend /app/public
 
-# Start the nginx server
+# Copy in the backend and frontend to the nginx server
 FROM richarvey/nginx-php-fpm
 WORKDIR /databases/eve-sde
 COPY --from=alpine /eve-sde/* .
