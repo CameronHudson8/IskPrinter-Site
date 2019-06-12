@@ -6,7 +6,7 @@ services:
 
     
     environment:
-      - WEBROOT=/var/www/html/public
+      - WEBROOT=/var/www/html/frontend/dist/frontend
     tty: true
     ports:
       - "380:80"

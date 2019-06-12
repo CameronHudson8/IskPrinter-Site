@@ -22,3 +22,5 @@ yarn-error.log
 vendor/
 
 logs/
+
+backend/public/
