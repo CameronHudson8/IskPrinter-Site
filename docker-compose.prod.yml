@@ -3,10 +3,11 @@ services:
 
   iskprinter_site:
     build:
-      context: .
+      context: ./iskprinter_site
       dockerfile: Dockerfile.prod
     environment:
       - WEBROOT=/var/www/html/public
+
     tty: true
     ports:
       - "380:80"
@@ -14,23 +15,40 @@ services:
 
 
 
-  app_db:
+  iskprinter_db:
     image: mysql
+    env_file:
+      - ./iskprinter_db/.env
     tty: true
     expose:
       - 3306
     volumes:
-     - app_db_data:/var/lib/mysql
+     - iskprinter_db_data:/var/lib/mysql
+
+  # eve_sde_db:
+  #   build:
+  #     context: ./eve_sde_db
+  #   env_file:
+  #     - ./eve_sde_db/.env
+  #   tty: true
+  #   expose:
+  #     - 3306
+
+
 
 volumes:
 
 
 
 
-  app_db_data:
+  iskprinter_db_data:
     driver_opts:
       device: /databases/iskprinter.com
       o: bind
+
+
+
+
 
 networks:
   default:

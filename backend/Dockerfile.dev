@@ -1,0 +1,3 @@
+FROM richarvey/nginx-php-fpm
+WORKDIR /etc/nginx/sites-available
+COPY ./etc/nginx/sites-available/ .
