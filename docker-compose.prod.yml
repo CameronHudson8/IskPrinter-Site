@@ -1,6 +1,14 @@
 version: "3.7"
 services:
 
+  db:
+    image: mysql
+    env_file:
+      - ./db/.env
+    tty: true
+    volumes:
+     - db_data:/var/lib/mysql
+
   iskprinter_site:
     build:
       context: ./iskprinter_site
@@ -15,15 +23,7 @@ services:
 
 
 
-  iskprinter_db:
-    image: mysql
-    env_file:
-      - ./iskprinter_db/.env
-    tty: true
-    expose:
-      - 3306
-    volumes:
-     - iskprinter_db_data:/var/lib/mysql
+
 
   # eve_sde_db:
   #   build:
@@ -41,7 +41,7 @@ volumes:
 
 
 
-  iskprinter_db_data:
+  db_data:
     driver_opts:
       device: /databases/iskprinter.com
       o: bind

@@ -31,8 +31,6 @@ services:
     env_file:
       - ./db/.env
     tty: true
-    # expose:
-    #   - 3306
     volumes:
      - db_data:/var/lib/mysql
 
@@ -52,8 +50,6 @@ services:
 
   nginx:
     image: nginx
-    # environment:
-    #   - PHP_ERRORS_STDERR=true
     command: [nginx-debug, '-g', 'daemon off;']
     tty: true
     ports:
@@ -62,17 +58,15 @@ services:
     volumes:
       - frontend_data:/var/www/frontend/public
       - backend_data:/var/www/backend
+      - nginx_sites:/etc/nginx/conf.d
+
       # Due to a bug in docker-compose, we must mount single files as hardcoded paths;
       # a named volume will not work.
       - ${PWD}/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
 
-      - nginx_sites:/etc/nginx/conf.d
-
   php:
     image: php:fpm
     tty: true
-    # expose:
-    #   - 9000
     volumes:
       - backend_data:/var/www/backend
 
@@ -98,11 +92,6 @@ volumes:
       device: /databases/iskprinter.com
       o: bind
 
-#   frontend_data:
-#     driver_opts:
-#       device: ${PWD}/frontend
-#       o: bind
-
   frontend_data:
     driver_opts:
       device: ${PWD}/frontend/dist/frontend
@@ -110,7 +99,7 @@ volumes:
 
   nginx_sites:
     driver_opts:
-      device: ${PWD}/nginx/etc/nginx/sites-enabled
+      device: ${PWD}/nginx/etc/nginx/conf.d
       o: bind
 
 networks:
