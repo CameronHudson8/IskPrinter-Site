@@ -24,3 +24,5 @@ vendor/
 logs/
 
 backend/public/
+
+backend/lib/
