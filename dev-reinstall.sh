@@ -5,26 +5,26 @@ set -x
 
 # Remove installed dependencies
 rm -rf \
-    iskprinter_site/backend/vendor \
-    iskprinter_site/backend/composer.lock
+    ./backend/vendor \
+    ./backend/composer.lock
 
 # Download the ESI client, extract it, and install its dependencies
 curl \
         -X POST "http://generator.swagger.io/api/gen/clients/php" \
         -H "Content-Type: application/json" \
-        -d "{ \"swaggerUrl\": \"https://esi.evetech.net/latest/swagger.json\"}" \
+        -d '{ "swaggerUrl": "https://esi.evetech.net/latest/swagger.json"}' \
     | jq -r '.link' \
-    | xargs curl -o iskprinter_site/backend/client-generated.zip
-mkdir iskprinter_site/backend/vendor
-unzip iskprinter_site/backend/client-generated.zip -d iskprinter_site/backend/vendor
-rm iskprinter_site/backend/client-generated.zip
-composer install -d "iskprinter_site/backend/vendor/php-client/SwaggerClient-php"
+    | xargs curl -o backend/client-generated.zip
+mkdir backend/vendor
+unzip backend/client-generated.zip -d backend/vendor
+rm backend/client-generated.zip
+composer install -d "backend/vendor/php-client/SwaggerClient-php"
 
 # Install the main app dependencies
-composer install -d "iskprinter_site/backend"
+composer install -d "backend"
 
 # Generate a secret key for Laravel
-php iskprinter_site/backend/artisan key:generate
+php backend/artisan key:generate
 
 # # Download a fresh SDE
 # rm -rf /databases/eve-sde/*
@@ -32,6 +32,6 @@ php iskprinter_site/backend/artisan key:generate
 
 ## Reinstall frontend stuff
 rm -rf \
-    iskprinter_site/frontend/node_modules \
-    iskprinter_site/frontend/package-lock.json
-npm install --prefix ./iskprinter_site/frontend
+    frontend/node_modules \
+    frontend/package-lock.json
+npm install --prefix frontend

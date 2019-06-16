@@ -1,2 +1,4 @@
 .git
 Storage/framework/sessions/*
+vendor
+node_modules
