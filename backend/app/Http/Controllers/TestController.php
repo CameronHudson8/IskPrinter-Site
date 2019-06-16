@@ -9,13 +9,29 @@ use Exception;
 
 class TestController extends Controller
 {
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function get(Request $request)
     {
-        return '{"message": "test success"}';
+        return $this->getWithParams($request, "");
     }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function getWithParams(Request $request, $route_params)
+    {
+        return response()->json([
+          'message' => 'success',
+          'path' => $route_params,
+          'query_params' => $request->query()
+      ]);
+    }
+
 }

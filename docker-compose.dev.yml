@@ -1,29 +1,19 @@
 version: "3.7"
 services:
 
-  iskprinter_site:
-    build:
-      context: ./iskprinter_site
-      dockerfile: Dockerfile.dev
-    environment:
-      - WEBROOT=/var/www/html/frontend/dist/frontend
-      - PHP_ERRORS_STDERR=true
-    tty: true
-    ports:
-      - "380:80"
-      - "3443:443"
-    volumes:
-      - iskprinter_site_data:/var/www/html
-
-  iskprinter_db:
-    image: mysql
-    env_file:
-      - ./iskprinter_db/.env
-    tty: true
-    expose:
-      - 3306
-    volumes:
-     - iskprinter_db_data:/var/lib/mysql
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile.dev
+    # environment:
+    #   - WEBROOT=/var/www/frontend/dist/frontend
+    #   - PHP_ERRORS_STDERR=true
+    # tty: true
+    # ports:
+    #   - "380:80"
+    #   - "3443:443"
+    # volumes:
+      # - backend_data:/var/www/backend
 
   # eve_sde_db:
   #   build:
@@ -36,20 +26,82 @@ services:
     # volumes:
     #  - eve_sde_db_data:/var/lib/mysql
 
+  db:
+    image: mysql
+    env_file:
+      - ./db/.env
+    tty: true
+    expose:
+      - 3306
+    volumes:
+     - db_data:/var/lib/mysql
+
+#   frontend:
+#     build:
+#       context: ./frontend
+#       dockerfile: Dockerfile.dev
+#     environment:
+#       - WEBROOT=/var/www/frontend/dist/frontend
+#       - PHP_ERRORS_STDERR=true
+#     tty: true
+#     ports:
+#       - "380:80"
+#       - "3443:443"
+#     volumes:
+#       - frontend_data:/var/www/frontend
+
+  nginx:
+    image: richarvey/nginx-php-fpm
+    environment:
+      - PHP_ERRORS_STDERR=true
+    # command: [nginx-debug, '-g', 'daemon off;']
+    tty: true
+    ports:
+      - "380:80"
+      - "3443:443"
+    volumes:
+      - frontend_data:/var/www/frontend/public
+      - backend_data:/var/www/backend
+      - nginx_sites:/etc/nginx/sites-available
+      - nginx_sites:/etc/nginx/sites-enabled
+
 volumes:
-  iskprinter_site_data:
+
+  backend_data:
     driver_opts:
-      device: ${PWD}/iskprinter_site
+      device: ${PWD}/backend
       o: bind
-  iskprinter_db_data:
-    driver_opts:
-      device: /databases/iskprinter.com
-      o: bind
+
+  # backend_public:
+  #   driver_opts:
+  #     device: ${PWD}/backend/public
+  #     o: bind
+
   # eve_sde_db_data:
   #   driver_opts:
   #     device: /databases/eve-sde
   #     o: bind
-      
+
+  db_data:
+    driver_opts:
+      device: /databases/iskprinter.com
+      o: bind
+
+#   frontend_data:
+#     driver_opts:
+#       device: ${PWD}/frontend
+#       o: bind
+
+  frontend_data:
+    driver_opts:
+      device: ${PWD}/frontend/dist/frontend
+      o: bind
+
+  nginx_sites:
+    driver_opts:
+      device: ${PWD}/nginx/etc/nginx/sites-enabled
+      o: bind
+
 networks:
   default:
     name: reverse_proxy
