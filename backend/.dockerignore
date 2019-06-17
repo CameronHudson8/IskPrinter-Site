@@ -1,0 +1,4 @@
+storage/framework/sessions/*
+vendor
+**/*.log
+**/cache/*

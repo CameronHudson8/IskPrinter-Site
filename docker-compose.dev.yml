@@ -1,6 +1,36 @@
 version: "3.7"
 services:
 
+  nginx:
+    image: nginx
+    command: [nginx-debug, '-g', 'daemon off;']
+    tty: true
+    ports:
+      - "380:80"
+      - "3443:443"
+    volumes:
+      - nginx_sites:/etc/nginx/conf.d
+      - backend_data:/var/www/backend
+      - frontend_data:/var/www/frontend/public
+
+      # Due to a bug in docker-compose, we must mount single files as hardcoded paths;
+      # a named volume will not work.
+      - ${PWD}/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  php:
+    image: php:fpm
+    tty: true
+    volumes:
+      - backend_data:/var/www/backend
+
+  db:
+    image: mysql
+    env_file:
+      - ./db/.env
+    tty: true
+    volumes:
+     - db_data:/var/lib/mysql
+
   # backend:
   #   build:
   #     context: ./backend
@@ -26,14 +56,6 @@ services:
     # volumes:
     #  - eve_sde_db_data:/var/lib/mysql
 
-  db:
-    image: mysql
-    env_file:
-      - ./db/.env
-    tty: true
-    volumes:
-     - db_data:/var/lib/mysql
-
 #   frontend:
 #     build:
 #       context: ./frontend
@@ -48,33 +70,26 @@ services:
 #     volumes:
 #       - frontend_data:/var/www/frontend
 
-  nginx:
-    image: nginx
-    command: [nginx-debug, '-g', 'daemon off;']
-    tty: true
-    ports:
-      - "380:80"
-      - "3443:443"
-    volumes:
-      - frontend_data:/var/www/frontend/public
-      - backend_data:/var/www/backend
-      - nginx_sites:/etc/nginx/conf.d
-
-      # Due to a bug in docker-compose, we must mount single files as hardcoded paths;
-      # a named volume will not work.
-      - ${PWD}/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
-
-  php:
-    image: php:fpm
-    tty: true
-    volumes:
-      - backend_data:/var/www/backend
-
 volumes:
+
+  nginx_sites:
+    driver_opts:
+      device: ${PWD}/nginx/etc/nginx/conf.d
+      o: bind
 
   backend_data:
     driver_opts:
       device: ${PWD}/backend
+      o: bind
+
+  frontend_data:
+    driver_opts:
+      device: ${PWD}/frontend/dist/frontend
+      o: bind
+
+  db_data:
+    driver_opts:
+      device: /databases/iskprinter.com
       o: bind
 
   # backend_public:
@@ -86,21 +101,6 @@ volumes:
   #   driver_opts:
   #     device: /databases/eve-sde
   #     o: bind
-
-  db_data:
-    driver_opts:
-      device: /databases/iskprinter.com
-      o: bind
-
-  frontend_data:
-    driver_opts:
-      device: ${PWD}/frontend/dist/frontend
-      o: bind
-
-  nginx_sites:
-    driver_opts:
-      device: ${PWD}/nginx/etc/nginx/conf.d
-      o: bind
 
 networks:
   default:
