@@ -4,4 +4,6 @@ WORKDIR /app
 ## 33 is the userid (and also the groupid) of the www-data user in the nginx image.
 ## This number was found by running "id www-data" inside then nginx image.
 COPY --chown=33:33 . .
-RUN npm install
+RUN npm install -g @angular/cli \
+    && npm install \
+    && ng build --configuration="production"
