@@ -1,6 +1,27 @@
 version: "3.7"
 services:
 
+  nginx:
+    image: nginx
+    tty: true
+    ports:
+      - "380:80"
+      - "3443:443"
+    volumes:
+      - nginx_sites:/etc/nginx/conf.d
+      - backend_data:/var/www/backend
+      - frontend_data:/var/www/frontend/public
+
+      # Due to a bug in docker-compose, we must mount single files as hardcoded paths;
+      # a named volume will not work.
+      - ${PWD}/nginx/etc/nginx/nginx.conf:/etc/nginx/nginx.conf
+
+  php:
+    image: php:fpm
+    tty: true
+    volumes:
+      - backend_data:/var/www/backend
+
   db:
     image: mysql
     env_file:
@@ -9,21 +30,12 @@ services:
     volumes:
      - db_data:/var/lib/mysql
 
-  iskprinter_site:
+  backend:
     build:
-      context: ./iskprinter_site
-      dockerfile: Dockerfile.prod
-    environment:
-      - WEBROOT=/var/www/html/public
-
-    tty: true
-    ports:
-      - "380:80"
-      - "3443:443"
-
-
-
-
+      context: ./backend
+    # tty: true
+    volumes:
+    - backend_data:/app
 
   # eve_sde_db:
   #   build:
@@ -34,21 +46,27 @@ services:
   #   expose:
   #     - 3306
 
-
-
 volumes:
 
+  nginx_sites:
+    driver_opts:
+      device: ${PWD}/nginx/etc/nginx/conf.d
+      o: bind
 
+  backend_data:
+    # driver_opts:
+    #   device: ${PWD}/backend
+    #   o: bind
 
+  frontend_data:
+    driver_opts:
+      device: ${PWD}/frontend/dist/frontend
+      o: bind
 
   db_data:
     driver_opts:
       device: /databases/iskprinter.com
       o: bind
-
-
-
-
 
 networks:
   default:
