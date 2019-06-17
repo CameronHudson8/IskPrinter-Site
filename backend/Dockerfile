@@ -20,6 +20,7 @@ FROM composer AS composer
 WORKDIR /app
 # Copy in files. Note that the "vendor" directory and the "composer.lock" file are ignored by the ".dockerignore".
 ## 33 is the userid (and also the groupid) of the www-data user in the nginx image.
+## This number was found by running "id www-data" inside then nginx image.
 COPY --chown=33:33 . .
 # Copy the ESI client into the /lib directory.
 WORKDIR /app/lib

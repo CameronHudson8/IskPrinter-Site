@@ -33,9 +33,16 @@ services:
   backend:
     build:
       context: ./backend
-    # tty: true
+    tty: true
     volumes:
     - backend_data:/app
+
+  frontend:
+    build:
+      context: ./frontend
+    tty: true
+    volumes:
+    - frontend_data:/app/dist/frontend
 
   # eve_sde_db:
   #   build:
@@ -59,9 +66,9 @@ volumes:
     #   o: bind
 
   frontend_data:
-    driver_opts:
-      device: ${PWD}/frontend/dist/frontend
-      o: bind
+    # driver_opts:
+    #   device: ${PWD}/frontend/dist/frontend
+    #   o: bind
 
   db_data:
     driver_opts:

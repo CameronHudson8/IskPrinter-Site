@@ -31,20 +31,6 @@ services:
     volumes:
      - db_data:/var/lib/mysql
 
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile.dev
-    # environment:
-    #   - WEBROOT=/var/www/frontend/dist/frontend
-    #   - PHP_ERRORS_STDERR=true
-    # tty: true
-    # ports:
-    #   - "380:80"
-    #   - "3443:443"
-    # volumes:
-      # - backend_data:/var/www/backend
-
   # eve_sde_db:
   #   build:
   #     context: ./eve_sde_db
@@ -55,20 +41,6 @@ services:
   #     - 3306
     # volumes:
     #  - eve_sde_db_data:/var/lib/mysql
-
-#   frontend:
-#     build:
-#       context: ./frontend
-#       dockerfile: Dockerfile.dev
-#     environment:
-#       - WEBROOT=/var/www/frontend/dist/frontend
-#       - PHP_ERRORS_STDERR=true
-#     tty: true
-#     ports:
-#       - "380:80"
-#       - "3443:443"
-#     volumes:
-#       - frontend_data:/var/www/frontend
 
 volumes:
 
@@ -91,11 +63,6 @@ volumes:
     driver_opts:
       device: /databases/iskprinter.com
       o: bind
-
-  # backend_public:
-  #   driver_opts:
-  #     device: ${PWD}/backend/public
-  #     o: bind
 
   # eve_sde_db_data:
   #   driver_opts:
