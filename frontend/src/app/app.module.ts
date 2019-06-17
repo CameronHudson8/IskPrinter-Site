@@ -1,4 +1,4 @@
-import { BrowserModule } from '@angular/platform-browser';
+import { BrowserModule, Title } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -10,13 +10,21 @@ import {
   MatButtonModule,
   MatCardModule,
   MatCheckboxModule,
+  MatInputModule,
   MatGridListModule,
   MatIconModule,
   MatListModule,
   MatMenuModule,
   MatSidenavModule,
-  MatToolbarModule, MatTableModule, MatPaginatorModule, MatSortModule, MatTreeModule,
+  MatToolbarModule,
+  MatTableModule,
+  MatPaginatorModule,
+  MatSortModule,
+  MatTreeModule,
+  ErrorStateMatcher,
+  ShowOnDirtyErrorStateMatcher,
 } from '@angular/material';
+
 import { NavComponent } from './components/nav/nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
@@ -41,6 +49,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     LayoutModule,
     MatButtonModule,
     MatCheckboxModule,
+    MatInputModule,
     MatIconModule,
     MatListModule,
     MatSidenavModule,
@@ -51,9 +60,12 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTreeModule,
+    MatTreeModule
   ],
-  providers: [],
+  providers: [
+    { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
+    Title,
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

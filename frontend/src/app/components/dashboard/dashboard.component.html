@@ -1,24 +1,30 @@
-<div class="grid-container">
-  <h1 class="mat-h1">Dashboard</h1>
-  <mat-grid-list cols="2" rowHeight="350px">
-    <mat-grid-tile *ngFor="let card of cards | async" [colspan]="card.cols" [rowspan]="card.rows">
-      <mat-card class="dashboard-card">
-        <mat-card-header>
-          <mat-card-title>
-            {{card.title}}
-            <button mat-icon-button class="more-button" [matMenuTriggerFor]="menu" aria-label="Toggle menu">
-              <mat-icon>more_vert</mat-icon>
-            </button>
-            <mat-menu #menu="matMenu" xPosition="before">
-              <button mat-menu-item>Expand</button>
-              <button mat-menu-item>Remove</button>
-            </mat-menu>
-          </mat-card-title>
-        </mat-card-header>
-        <mat-card-content class="dashboard-card-content">
-          <div>Card Content Here</div>
-        </mat-card-content>
-      </mat-card>
-    </mat-grid-tile>
-  </mat-grid-list>
+<div class="center-content">
+  <mat-card class="login-form">
+    <mat-card-title>
+      Log In
+    </mat-card-title>
+    <form>
+      <mat-form-field>
+        <input matInput placeholder="Email" type="email" />
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput placeholder="Password" type="password" />
+      </mat-form-field>
+      <br>
+      <button mat-raised-button type="submit" color="primary" style="margin-bottom: 8px;">
+        Log In
+      </button>
+      <br>
+      <div style="display: flex; align-items: center; justify-content: space-around;">
+        <a href="#">
+          <mat-card-subtitle>Register</mat-card-subtitle>
+        </a>
+        <a href="#">
+          <mat-card-subtitle>Forgot Password</mat-card-subtitle>
+        </a>
+      </div>
+    </form>
+
+  </mat-card>
 </div>
