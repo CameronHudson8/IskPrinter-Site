@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
 import { BreakpointObserver, Breakpoints } from '@angular/cdk/layout';
-import { Observable } from 'rxjs';
+import { Component } from '@angular/core';
 import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { Title } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-nav',
@@ -10,11 +11,18 @@ import { map } from 'rxjs/operators';
 })
 export class NavComponent {
 
+  title: string;
+
+  constructor(
+    private breakpointObserver: BreakpointObserver,
+    private titleService: Title
+  ) {
+    this.title = this.titleService.getTitle();
+  }
+
   isHandset$: Observable<boolean> = this.breakpointObserver.observe(Breakpoints.Handset)
     .pipe(
       map(result => result.matches)
     );
-
-  constructor(private breakpointObserver: BreakpointObserver) { }
 
 }

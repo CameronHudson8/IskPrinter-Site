@@ -6,11 +6,7 @@ import { TreeComponent } from './components/tree/tree.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 const routes: Routes = [
-  {
-    path: '',
-    redirectTo: '/dashboard',
-    pathMatch: 'full'
-  },
+  { path: '', component: DashboardComponent },
   { path: 'dashboard', component: DashboardComponent },
   { path: 'table', component: TableComponent },
   { path: 'tree', component: TreeComponent },
