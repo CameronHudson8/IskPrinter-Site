@@ -31,7 +31,7 @@ import { LayoutModule } from '@angular/cdk/layout';
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
-import { LoaderModule } from 'src/app/modules/Loader';
+import { LoaderModule } from 'src/app/modules/Interceptor';
 
 import { NavComponent } from 'src/app/components/nav/nav.component';
 import { LoginComponent } from 'src/app/components/login/login.component';

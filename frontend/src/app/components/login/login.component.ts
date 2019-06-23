@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Loader } from 'src/app/modules/Loader/loader.service';
+import { Loader } from 'src/app/services/Loader/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -31,9 +31,12 @@ export class LoginComponent {
         response => {
         },
         error => {
-          const snackbar: MatSnackBarRef<SimpleSnackBar> = this.errorMessage.open(error.message, 'Dismiss', {
-            duration: 8000,
-          });
+          console.error(error);
+          const snackbar: MatSnackBarRef<SimpleSnackBar> = this.errorMessage.open(
+            error.error ? `${error.status}: ${error.error}` : error.message,
+            'Dismiss', {
+              duration: 8000,
+            });
           snackbar.onAction().subscribe(() => {
             snackbar.dismiss();
           });
