@@ -24,7 +24,7 @@ button {
 }
 
 .inline-links {
-    width: 100%;
-    table-layout: fixed;
+    /* width: 100%; */
+    /* table-layout: fixed; */
     text-align: center;
 }
