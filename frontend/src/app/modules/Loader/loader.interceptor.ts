@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Loader } from 'src/app/services/Loader/loader.service';
+import { Loader } from 'src/app/modules/Loader/loader.service';
 
 /**
  * This class is based on the example by jornare on Stackoverflow.

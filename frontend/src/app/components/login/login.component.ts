@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Loader } from 'src/app/services/Loader/loader.service';
+import { Loader } from 'src/app/modules/Loader/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -26,13 +26,9 @@ export class LoginComponent {
   });
 
   onSubmit(): void {
-    console.log(this.loginForm.value);
-
-    console.log(location.origin);
     this.http.post(`${location.origin}/api/tokens`, this.loginForm.value, { observe: 'response' })
       .subscribe(
         response => {
-          console.log(response);
         },
         error => {
           const snackbar: MatSnackBarRef<SimpleSnackBar> = this.errorMessage.open(error.message, 'Dismiss', {
