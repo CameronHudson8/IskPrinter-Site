@@ -14,3 +14,11 @@ body {
 router-outlet {
   flex: 1;
 } */
+
+.mat-progress-spinner {
+  margin: 8px;
+}
+
+/* .mat-progress-spinner circle, .mat-spinner circle {
+  stroke: #FFF !important;
+} */

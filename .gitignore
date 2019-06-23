@@ -7,9 +7,8 @@
 /storage/*.key
 /storage/logs
 /vendor/*
-!/vendor/php-client-generated.zip
-!/vendor/php-client
-/.idea
+**/.idea
+**/*.iml
 /.vscode
 /.vagrant
 Homestead.json
