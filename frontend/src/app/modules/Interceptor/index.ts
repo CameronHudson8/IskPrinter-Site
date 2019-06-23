@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Loader } from './loader.service';
-import { Interceptor } from './loader.interceptor';
+import { Loader } from '../../services/Loader/loader.service';
+import { Interceptor } from './interceptor.module';
 
 @NgModule({
   providers: [
@@ -15,4 +15,4 @@ import { Interceptor } from './loader.interceptor';
 })
 export class LoaderModule { }
 
-export * from './loader.service';
+export * from '../../services/Loader/loader.service';

@@ -11,7 +11,4 @@
 |
 */
 
-Route::get('/', 'HomeController@index');
-Route::get('/connections', function() {return view('connections');});
-
-Auth::routes();
+//Route::get('/', 'HomeController@index');
