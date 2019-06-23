@@ -7,7 +7,7 @@ pipeline {
             steps {
                 wrap(withColor) {
                     sh 'echo "Building..."'
-                    sh 'cp /environments/IskPrinter-Site/backend/.env .'
+                    sh 'cp /environments/IskPrinter-Site/backend/.env ./backend/.'
                     sh 'docker-compose -f docker-compose.prod.yml build'
                 }   
             }
