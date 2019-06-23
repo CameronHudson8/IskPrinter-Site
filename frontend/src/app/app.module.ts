@@ -16,6 +16,8 @@ import {
   MatListModule,
   MatMenuModule,
   MatSidenavModule,
+  MatSnackBarModule,
+  MatProgressSpinnerModule,
   MatToolbarModule,
   MatTableModule,
   MatPaginatorModule,
@@ -24,26 +26,32 @@ import {
   ErrorStateMatcher,
   ShowOnDirtyErrorStateMatcher,
 } from '@angular/material';
-
-import { NavComponent } from './components/nav/nav.component';
 import { LayoutModule } from '@angular/cdk/layout';
-import { DashboardComponent } from './components/dashboard/dashboard.component';
-import { TableComponent } from './components/table/table.component';
-import { TreeComponent } from './components/tree/tree.component';
-import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 /* End Material setup */
+
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { LoaderModule } from 'src/app/services/Loader';
+
+import { NavComponent } from 'src/app/components/nav/nav.component';
+import { LoginComponent } from 'src/app/components/login/login.component';
+import { TableComponent } from 'src/app/components/table/table.component';
+import { TreeComponent } from 'src/app/components/tree/tree.component';
+import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
-    DashboardComponent,
+    LoginComponent,
     TableComponent,
     TreeComponent,
-    PageNotFoundComponent
+    PageNotFoundComponent,
   ],
   imports: [
     AppRoutingModule,
+
+    /* Begin Material setup */
     BrowserAnimationsModule,
     BrowserModule, // Must be imported before any Mat*Module module.
     LayoutModule,
@@ -53,6 +61,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     MatIconModule,
     MatListModule,
     MatSidenavModule,
+    MatSnackBarModule,
+    MatProgressSpinnerModule,
     MatToolbarModule,
     MatGridListModule,
     MatCardModule,
@@ -60,7 +70,13 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     MatTableModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTreeModule
+    MatTreeModule,
+    /* End Material setup */
+
+    FormsModule,
+    HttpClientModule,
+    LoaderModule,
+    ReactiveFormsModule,
   ],
   providers: [
     { provide: ErrorStateMatcher, useClass: ShowOnDirtyErrorStateMatcher },
