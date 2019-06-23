@@ -25,7 +25,7 @@ services:
   db:
     image: mysql
     env_file:
-      - ./db/.env
+      - /environments/IskPrinter-Site/db/.env
     tty: true
     volumes:
      - db_data:/var/lib/mysql
