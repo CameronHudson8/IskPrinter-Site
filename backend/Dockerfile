@@ -32,4 +32,4 @@ RUN composer install
 WORKDIR /app
 RUN composer install \
   && php artisan key:generate \
-  && chown -R 33:33 vendor
+  && chown -R 33:33 .
