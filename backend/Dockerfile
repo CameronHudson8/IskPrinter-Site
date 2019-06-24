@@ -24,11 +24,12 @@ WORKDIR /app
 COPY --chown=33:33 . .
 # Copy the ESI client into the /lib directory.
 WORKDIR /app/lib
-COPY --from=alpine /php-client .
+COPY --from=alpine --chown=33:33 /php-client .
 WORKDIR /app/lib/php-client/SwaggerClient-php
 # Install the ESI client dependencies.
 RUN composer install
 # Go to the main app directory and install the main app dependencies.
 WORKDIR /app
 RUN composer install \
-  && php artisan key:generate
+  && php artisan key:generate \
+  && chown -R 33:33 vendor
