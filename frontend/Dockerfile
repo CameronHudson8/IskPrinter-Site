@@ -5,4 +5,4 @@ RUN npm install \
   && npm run ng build -- --configuration=production
 
 FROM nginx:1.17.1
-COPY --from=node /app/dist/frontend/* /usr/share/nginx/html/
+COPY --from=node /app/dist/* /usr/share/nginx/html/
