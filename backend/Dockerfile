@@ -1,10 +1,11 @@
-FROM node:12 AS nodeBuild
+FROM node:12 AS build-stage
 WORKDIR /app
+COPY ./package.json ./package-lock.json ./
+RUN npm install
 COPY . .
-RUN npm install \
-  && npx webpack
+RUN npx webpack
 
-FROM node:12
+FROM node:12 as package-stage
 WORKDIR /app
-COPY --from=nodeBuild /app/dist/* ./
+COPY --from=build-stage /app/dist/* ./
 CMD ["node", "app.js"]
