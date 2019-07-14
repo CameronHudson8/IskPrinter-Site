@@ -1,0 +1,17 @@
+steps:
+- name: 'gcr.io/cloud-builders/git'
+  args: ['clone', 'https://github.com/cameronhudson8/IskPrinter-Site']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['docker', 'build', '-t', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest', '.']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest']
+- name: 'gcr.io/cloud-builders/kubectl'
+  args:
+  - set
+  - image
+  - deployment
+  - backend
+  - backend-sha256=gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest
+  env:
+  - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
+  - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
