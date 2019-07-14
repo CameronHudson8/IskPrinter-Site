@@ -16,7 +16,7 @@ steps:
   - image
   - deployment
   - backend
-  - backend-sha256=gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:$REVISION_ID
+  - backend=gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:$REVISION_ID
   env:
   - 'CLOUDSDK_COMPUTE_ZONE=us-west1-a'
   - 'CLOUDSDK_CONTAINER_CLUSTER=cluster-1'
