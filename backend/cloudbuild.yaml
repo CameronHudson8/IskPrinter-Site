@@ -2,7 +2,7 @@ steps:
 - name: 'gcr.io/cloud-builders/git'
   args: ['clone', 'https://github.com/cameronhudson8/IskPrinter-Site']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['docker', 'build', '-t', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest', '.']
+  args: ['build', '-t', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest', '.']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest']
 - name: 'gcr.io/cloud-builders/kubectl'
