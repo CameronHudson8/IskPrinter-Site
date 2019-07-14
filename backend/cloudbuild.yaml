@@ -10,6 +10,8 @@ steps:
   args: ['push', 'gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest']
 - name: 'gcr.io/cloud-builders/kubectl'
   args:
+  - -n
+  - staging
   - set
   - image
   - deployment
