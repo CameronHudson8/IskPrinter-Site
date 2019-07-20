@@ -81,6 +81,15 @@ function onError(error: { syscall: string; code: any; }) {
 }
 
 /**
+ * Exit the process if CTRL+C is pressed.
+ */
+process.on('SIGINT', function() {
+  console.log( "\nGracefully shutting down from SIGINT (Ctrl+C)" );
+  // some other closing procedures go here
+  process.exit(1);
+});
+
+/**
  * Event listener for HTTP server "listening" event.
  */
 
