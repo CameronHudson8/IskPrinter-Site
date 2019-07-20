@@ -1,4 +1,4 @@
-FROM node:12 AS node
+FROM node:12.6.0 AS node
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm install
