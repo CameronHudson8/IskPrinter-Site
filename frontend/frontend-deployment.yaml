@@ -16,3 +16,5 @@ spec:
       containers:
       - name: frontend
         image: gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/frontend:latest
+        ports:
+        - containerPort: 80

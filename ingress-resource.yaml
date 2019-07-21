@@ -1,19 +1,19 @@
-apiVersion: networking.k8s.io/v1beta1
+apiVersion: extensions/v1beta1
 kind: Ingress
 metadata:
-  name: nginx-reverse-proxy
+  name: ingress-resource
   namespace: staging
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "false"
 spec:
   rules:
-  - host: iskprinter.com
-    http:
+  - http:
       paths:
       - path: /api
         backend:
           serviceName: backend
-          servicePort: 80
+          servicePort: 3000
       - path: /
         backend:
           serviceName: frontend
