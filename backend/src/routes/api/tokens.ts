@@ -2,11 +2,7 @@ import express from 'express';
 const router = express.Router();
 
 router.post('/', function (req, res, next) {
-  res.send('respond with a token');
-});
-
-router.get('/', function (req, res, next) {
-  res.send('respond with a token');
+  res.sendStatus(501);
 });
 
 export default router;
