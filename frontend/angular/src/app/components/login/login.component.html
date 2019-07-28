@@ -1,0 +1,30 @@
+<div class="center-content">
+  <mat-card class="form-card">
+    <mat-card-title>
+      Log In
+    </mat-card-title>
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <mat-form-field>
+        <input matInput formControlName="email" placeholder="Email" type="email" />
+      </mat-form-field>
+      <br>
+      <mat-form-field>
+        <input matInput formControlName="password" placeholder="Password" type="password" />
+      </mat-form-field>
+      <br>
+      <button mat-raised-button type="submit" color="accent"
+        [disabled]="!loginForm.valid || (loaderService.isLoading | async)">
+        <div class="loading-button">
+          <span>Log In</span>
+          <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
+        </div>
+      </button>
+      <br>
+      <div class="inline-links">
+        <a routerLink="/registration">Register</a><span> | </span><a routerLink="/password-reset">Forgot
+          Password</a>
+      </div>
+    </form>
+
+  </mat-card>
+</div>
