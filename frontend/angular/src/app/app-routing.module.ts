@@ -8,8 +8,8 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
 const routes: Routes = [
   { path: '', component: LoginComponent }, // Temporary, until authentication service is complete.
   { path: 'login', component: LoginComponent },
-  { path: 'table', component: TableComponent },
-  { path: 'tree', component: TreeComponent },
+  // { path: 'table', component: TableComponent },
+  // { path: 'tree', component: TreeComponent },
   { path: '**', component: PageNotFoundComponent },
 ];
 
