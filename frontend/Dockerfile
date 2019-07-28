@@ -1,10 +1,10 @@
-FROM node:12.6.0 AS node
+FROM node:12.6.0 AS package-stage
 WORKDIR /app
-COPY ./package.json ./package-lock.json ./
+COPY ./angular/package.json ./angular/package-lock.json ./
 RUN npm install
-COPY . .
+COPY ./angular/. ./
 RUN npm run ng build -- --configuration=production
 
 FROM nginx:1.17.1
-COPY --from=node /app/dist/* /usr/share/nginx/html/
-EXPOSE 80
+COPY --from=package-stage /app/dist/* /usr/share/nginx/html/
+COPY ./nginx/. /
