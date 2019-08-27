@@ -1,2 +1,2 @@
 **/.DS_Store
-tls-secret\.yaml
+certificates/tls-secret\.yaml
