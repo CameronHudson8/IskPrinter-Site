@@ -1,8 +1,8 @@
 FROM node:12.6.0 AS build-stage
 WORKDIR /app
-COPY ./package.json ./package-lock.json ./
+COPY ./express/package.json ./express/package-lock.json ./
 RUN npm install
-COPY . .
+COPY ./express/. ./
 RUN npx webpack
 
 FROM node:12.6.0 as package-stage
