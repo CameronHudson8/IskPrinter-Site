@@ -15,12 +15,16 @@ helm install \
   --set controller.publishService.enabled=true
 ```
 
-Then, create the ingress resources. This is done on a per-namespace basis.
+Then, create the namespaces and ingress resources. This is done on a per-namespace basis.
 ```
-kubectl apply -f dev-ingress.yaml \
-  && kubectl apply -f testing-ingress.yaml \
-  && kubectl apply -f staging-ingress.yaml \
-  && kubectl apply -f prod-ingress.yaml
+kubectl create namespace iskprinter-dev \
+  && kubectl create namespace iskprinter-testing \
+  && kubectl create namespace iskprinter-staging \
+  && kubectl create namespace iskprinter-prod
+kubectl apply -f ingresses/ingress-dev.yaml \
+  && kubectl apply -f ingresses/ingress-testing.yaml \
+  && kubectl apply -f ingresses/ingress-staging.yaml \
+  && kubectl apply -f ingresses/ingress-prod.yaml
 ```
 
 Set up the backend services.
@@ -53,6 +57,24 @@ kubectl -n iskprinter-dev apply -f frontend/frontend-deployment.yaml \
   && kubectl -n iskprinter-testing apply -f frontend/frontend-deployment.yaml \
   && kubectl -n iskprinter-staging apply -f frontend/frontend-deployment.yaml \
   && kubectl -n iskprinter-prod apply -f frontend/frontend-deployment.yaml
+```
+
+Finally, create the secrets for TLS certificates. First, copy the existing secret file.
+```
+cp certificates/tls-secret-example.yaml certificates/tls-secret.yaml
+```
+
+Next, encode the `.crt` and `.key` certificate files to base 64.
+```
+base64 iskprinter.com.crt
+base64 iskprinter.com.key
+```
+
+Place the base 64-encoded output into the respective secret file at the line indicated with the file.
+
+Then, create the secrets in Kubernetes.
+```
+kubectl apply -f certificates/tls-secret.yaml
 ```
 
 ## How to deploy sustainably

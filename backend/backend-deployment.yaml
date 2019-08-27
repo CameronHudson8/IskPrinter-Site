@@ -15,3 +15,4 @@ spec:
       containers:
       - name: backend
         image: gcr.io/isk-printer/github.com/cameronhudson8/iskprinter-site/backend:latest
+        imagePullPolicy: Always
