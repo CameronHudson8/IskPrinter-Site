@@ -19,8 +19,20 @@ spec:
         backend:
           serviceName: frontend
           servicePort: 80
+  - host: www.iskprinter.com
+    http:
+      paths:
+      - path: /api
+        backend:
+          serviceName: backend
+          servicePort: 3000
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 80
 
   tls:
     - hosts:
       - iskprinter.com
+      - www.iskprinter.com
       secretName: tls
