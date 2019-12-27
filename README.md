@@ -5,6 +5,8 @@ Suggests market deals in Eve Online.
 
 ## How to deploy the first time
 
+**TODO:** Create a helm chart.
+
 To install the cluster-wide ingress, follow the directions at https://cloud.google.com/community/tutorials/nginx-ingress-gke. If helm and tiller are already installed on your PC and cluster, then run
 
 ```
@@ -12,8 +14,24 @@ helm install \
   --name nginx-ingress \
   stable/nginx-ingress \
   --set rbac.create=true \
-  --set controller.publishService.enabled=true
+  --set controller.publishService.enabled=true \
+  --set controller.replicaCount=2
 ```
+
+*BEGIN Work in progress*
+```
+helm upgrade nginx-ingress \
+  stable/nginx-ingress \
+  --set rbac.create=true \
+  --set controller.publishService.enabled=true \
+  --set controller.service.type=ClusterIP \
+  --set controller.replicaCount=2 \
+  --set controller.service.externalIPs={34.83.12.159}
+  <!-- --set controller.service.externalIPs={10.138.0.13} -->
+  <!-- --set controller.service.nodePorts.http=30080 \
+  --set controller.service.nodePorts.https=30443 -->
+```
+*END Work in progress*
 
 Then, create the namespaces and ingress resources. This is done on a per-namespace basis.
 ```
