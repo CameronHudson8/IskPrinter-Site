@@ -1,7 +1,7 @@
 import express from 'express';
 import logger from 'morgan';
 
-import apiRoutes from 'src/routes/api';
+import indexRoutes from 'src/routes/index';
 
 let app = express();
 
@@ -9,6 +9,6 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
-app.use('/api', apiRoutes);
+app.use('/', indexRoutes);
 
 export default app;
