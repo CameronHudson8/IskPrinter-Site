@@ -21,4 +21,4 @@
 *.tmproj
 .vscode/
 
-templates/certificates/tls-secret-example.yaml
+templates/certificates/*example.yaml
