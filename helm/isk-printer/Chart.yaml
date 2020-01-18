@@ -1,0 +1,10 @@
+apiVersion: v1
+appVersion: "1.0"
+description: Suggests market orders in Eve Online
+name: isk-printer
+version: 0.1.0
+home: https://github.com/CameronHudson8/isk-printer
+maintainers:
+- name: Cameron Hudson
+  email: CameronHudson8@gmail.com
+  url: https://github.com/CameronHudson8
