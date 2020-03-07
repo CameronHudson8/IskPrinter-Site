@@ -8,12 +8,28 @@ Suggests market deals in Eve Online.
 **Assumptions:**
 * You already have a Kubernetes cluster running.
 * The cluster has an nginx ingress controller running in it. If not, see [these instructions](https://cloud.google.com/community/tutorials/nginx-ingress-gke) to set one up.
-* The cluster has tiller installed. If not, see the aforementioned link.
 
+1. Create certificate resource files. Examples are provided that you should copy in the following way.
 ```
-kubectl create namespace isk-printer
-helm install ./isk-printer --name isk-printer --namespace isk-printer
+(cd helm/templates/certificates/ && cp tls-iskprinter.com-secret-example.yaml tls-iskprinter.com-secret.yaml)
 ```
+
+1. Locate the TLS certificate(s) for your intended domain name(s). Each certificate will include a `crt` and a `key`. Encode each in base 64.
+    ```
+    cat 'my-certificate.crt' | base64
+    cat 'my-certificate.key' | base64
+    ```
+    
+1. Copy and paste the corresponding output into the certificate resource files.
+    ```
+    vim helm/templates/certificates/tls-iskprinter.com-secret.yaml
+    ```
+
+1. Deploy the application using `helm`. If necessary, create the namespace using `kubectl` first.
+    ```
+    kubectl create namespace <my-namespace>
+    helm install isk-printer ./isk-printer --namespace <my-namespace>
+    ```
 
 ## How to remove
 
@@ -21,5 +37,3 @@ helm install ./isk-printer --name isk-printer --namespace isk-printer
 helm del isk-printer
 kubectl delete namespace isk-printer
 ```
-
-**TODO**: Since Jenkins is not yet set up, I manually granted permission for the GKE cluster on which this release runs, so that it can pull images from the container registry of an old project. My goal for commits to trigger a Jenkins build that will assemble an image, push it to the registry, and then deploy it in the same Kubernetes cluster.
