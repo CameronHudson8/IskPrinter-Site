@@ -1,0 +1,76 @@
+# Default values for isk-printer.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+backend:
+  replicaCount: 1
+  image:
+    repository: docker.io/cameronhudson8/isk-printer-backend
+    tag: latest
+    pullPolicy: Always
+  containerPort: 
+  service:
+    type: ClusterIP
+    port: 3000
+
+frontend:
+  replicaCount: 1
+  image:
+    repository: docker.io/cameronhudson8/isk-printer-frontend
+    tag: latest
+    pullPolicy: Always
+  containerPort: 
+  service:
+    type: ClusterIP
+    port: 80
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+ingress:
+  enabled: true
+  annotations:
+    kubernetes.io/ingress.class: nginx
+  hosts:
+    - host: iskprinter.com
+      paths:
+      - path: /api
+        backend:
+          serviceName: backend
+          servicePort: 3000
+      - path: /
+        backend:
+          serviceName: frontend
+          servicePort: 80
+  tls:
+   - secretName: tls-iskprinter.com
+
+resources:
+  default:
+    limits:
+      cpu: &defaultCpuLimit 0
+      memory: &defaultMemoryLimit 128Mi
+    requests:
+      cpu: &defaultCpuRequest 0
+      memory: &defaultMemoryRequest 128Mi
+  backend:
+    limits:
+      cpu: *defaultCpuLimit
+      memory: *defaultMemoryLimit
+    requests:
+      cpu: *defaultCpuRequest
+      memory: *defaultMemoryRequest
+  frontend:
+    limits:
+      cpu: *defaultCpuLimit
+      memory: *defaultMemoryLimit
+    requests:
+      cpu: *defaultCpuRequest
+      memory: *defaultMemoryRequest
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
