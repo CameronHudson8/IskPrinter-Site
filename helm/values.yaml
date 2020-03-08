@@ -57,17 +57,17 @@ resources:
   backend:
     limits:
       cpu: *defaultCpuLimit
-      memory: *defaultMemoryLimit
+      memory: 64Mi
     requests:
       cpu: *defaultCpuRequest
-      memory: *defaultMemoryRequest
+      memory: 64Mi
   frontend:
     limits:
       cpu: *defaultCpuLimit
-      memory: *defaultMemoryLimit
+      memory: 16Mi
     requests:
       cpu: *defaultCpuRequest
-      memory: *defaultMemoryRequest
+      memory: 16Mi
 
 nodeSelector: {}
 
