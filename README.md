@@ -28,7 +28,7 @@ Suggests market deals in Eve Online.
 1. Deploy the application using `helm`. If necessary, create the namespace using `kubectl` first.
     ```
     kubectl create namespace <my-namespace>
-    helm install isk-printer ./isk-printer --namespace <my-namespace>
+    helm install isk-printer ./helm --namespace <my-namespace>
     ```
 
 ## How to remove
