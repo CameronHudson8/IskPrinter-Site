@@ -1,11 +1,11 @@
-FROM node:12.6.0 AS build-stage
+FROM node:14.9.0-alpine3.12 AS build-stage
 WORKDIR /app
 COPY ./express/package.json ./express/package-lock.json ./
 RUN npm install
 COPY ./express/. ./
 RUN npx webpack
 
-FROM node:12.6.0 as package-stage
+FROM node:14.9.0-alpine3.12 as package-stage
 WORKDIR /app
 COPY --from=build-stage /app/dist/* ./
 EXPOSE 3000

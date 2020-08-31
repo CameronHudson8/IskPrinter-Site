@@ -1,4 +1,4 @@
-FROM node:12.6.0 AS package-stage
+FROM node:14.9.0-alpine3.12 AS package-stage
 WORKDIR /app
 COPY ./angular/package.json ./angular/package-lock.json ./
 RUN npm install
