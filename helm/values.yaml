@@ -6,7 +6,7 @@ backend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: d8926b3
+    tag: ad59e22
     pullPolicy: Always
   containerPort: 
   service:
