@@ -6,27 +6,23 @@ import { AppComponent } from './app.component';
 
 /* Begin Material setup, per https://material.angular.io/guide/getting-started */
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {
-  MatButtonModule,
-  MatCardModule,
-  MatCheckboxModule,
-  MatInputModule,
-  MatGridListModule,
-  MatIconModule,
-  MatListModule,
-  MatMenuModule,
-  MatSidenavModule,
-  MatSnackBarModule,
-  MatProgressSpinnerModule,
-  MatToolbarModule,
-  MatTableModule,
-  MatPaginatorModule,
-  MatSortModule,
-  MatTreeModule,
-  ErrorStateMatcher,
-  ShowOnDirtyErrorStateMatcher,
-} from '@angular/material';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatListModule } from '@angular/material/list';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSortModule } from '@angular/material/sort';
+import { MatTableModule } from '@angular/material/table';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTreeModule } from '@angular/material/tree';
 /* End Material setup */
 
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -38,6 +34,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 import { TableComponent } from 'src/app/components/table/table.component';
 import { TreeComponent } from 'src/app/components/tree/tree.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
+import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 
 @NgModule({
   declarations: [
