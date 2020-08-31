@@ -3,9 +3,6 @@ import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
-
-/* Begin Material setup, per https://material.angular.io/guide/getting-started */
-import 'hammerjs';
 /* End Material setup */
 
 if (environment.production) {
