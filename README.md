@@ -3,7 +3,23 @@ https://iskprinter.com
 
 Suggests market deals in Eve Online.
 
-## How to install
+## How to build the images
+
+To build the backend and push it:
+```
+tag=$(git rev-parse --verify --short HEAD)
+docker build ./backend/ -t "cameronhudson8/isk-printer-backend:${tag}"
+docker push "cameronhudson8/isk-printer-backend:${tag}"
+```
+
+To build the frontend and push it:
+```
+tag=$(git rev-parse --verify --short HEAD)
+docker build ./frontend/ -t "cameronhudson8/isk-printer-frontend:${tag}"
+docker push "cameronhudson8/isk-printer-frontend:${tag}"
+```
+
+## How to deploy
 
 **Assumptions:**
 * You already have a Kubernetes cluster running.
