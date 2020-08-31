@@ -41,6 +41,11 @@ docker push "cameronhudson8/isk-printer-frontend:${tag}"
     vim helm/templates/certificates/tls-iskprinter.com-secret.yaml
     ```
 
+1. Verify that the frontend and backend images tags are what you intend. (They are not `latest`.)
+    ```
+    less helm/values.yaml
+    ```
+
 1. Deploy the application using `helm`. If necessary, create the namespace using `kubectl` first.
     ```
     kubectl create namespace <my-namespace>
