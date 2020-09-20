@@ -34,6 +34,7 @@ import { LoginComponent } from 'src/app/components/login/login.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { IskPrinterComponent } from './components/isk-printer/isk-printer.component';
+import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
 
 @NgModule({
   declarations: [
@@ -42,6 +43,7 @@ import { IskPrinterComponent } from './components/isk-printer/isk-printer.compon
     LoginComponent,
     PageNotFoundComponent,
     IskPrinterComponent,
+    CodeReceiverComponent,
   ],
   imports: [
     AppRoutingModule,

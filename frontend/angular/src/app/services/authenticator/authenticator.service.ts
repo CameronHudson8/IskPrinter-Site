@@ -9,8 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthenticatorService {
 
-  private token: string;
-  private code: string;
+  private accessToken: string;
 
   constructor(
     private location: Location,
@@ -18,17 +17,17 @@ export class AuthenticatorService {
   ) {
 
     const parsedUrl = this.router.parseUrl(this.location.path());
-    if (parsedUrl.queryParams.code) {
-      window.localStorage.setItem('code', parsedUrl.queryParams.code);
+    if (parsedUrl.queryParams.access_token) {
+      window.localStorage.setItem('accessToken', parsedUrl.queryParams.access_token);
     }
-    if (window.localStorage.getItem('code')) {
-      this.code = window.localStorage.getItem('code');
+    if (window.localStorage.getItem('accessToken')) {
+      this.accessToken = window.localStorage.getItem('accessToken');
     }
 
   }
 
   public isLoggedIn(): boolean {
-    return !!this.token || !!this.code;
+    return !!this.accessToken;
   }
 
   public getLoginUrl(): string {
@@ -44,19 +43,23 @@ export class AuthenticatorService {
       'esi-markets.read_character_orders.v1',
       'esi-characterstats.read.v1',
     ];
-        ;
     const state = undefined;
     return `https://${loginServerBaseUrl}/oauth/authorize`
         + `?response_type=${responseType}`
-        + `&redirect_uri=${environment.baseUrl}`
+        + `&redirect_uri=${environment.frontendBaseUrl}/code-receiver/`
         + `&client_id=${environment.clientId}`
         + `&scope=${scopes.join(' ')}`
         + `${state ? `&state={state}` : ''}`;
   }
 
   public logOut(): void {
-    window.localStorage.removeItem('code');
-    this.code = undefined;
+    window.localStorage.removeItem('accessToken');
+    this.accessToken = undefined;
+    this.router.navigate(['']);
+  }
+
+  public async getAccessToken(code: string): Promise<void> {
+
     this.router.navigate(['']);
   }
 
