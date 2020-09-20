@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
+import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+
 @Component({
   selector: 'app-isk-printer',
   templateUrl: './isk-printer.component.html',
@@ -7,7 +9,9 @@ import { Component, OnInit } from '@angular/core';
 })
 export class IskPrinterComponent implements OnInit {
 
-  constructor() { }
+  constructor(
+    public authenticatorService: AuthenticatorService, 
+  ) { }
 
   ngOnInit(): void {
   }
