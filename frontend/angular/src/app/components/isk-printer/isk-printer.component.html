@@ -1,1 +1,11 @@
-<p>isk-printer works!</p>
+<ng-container
+    *ngIf="this.authenticatorService.isLoggedIn(); then isLoggedIn; else isLoggedOut">
+</ng-container>
+
+<ng-template #isLoggedOut>
+    <p>false</p>
+</ng-template>
+
+<ng-template #isLoggedIn>
+    <p>true</p>
+</ng-template>
