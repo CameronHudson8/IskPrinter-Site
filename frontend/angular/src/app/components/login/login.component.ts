@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
+
 import { LoaderService } from 'src/app/services/loader/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
+
+import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
 @Component({
   selector: 'app-login',
@@ -10,10 +13,12 @@ import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/s
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent {
+
   constructor(
     private errorMessage: MatSnackBar,
     private fb: FormBuilder,
     private http: HttpClient,
+    public authenticatorService: AuthenticatorService, 
     public loaderService: LoaderService,
   ) { }
 
