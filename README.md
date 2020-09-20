@@ -16,7 +16,12 @@ npm --prefix frontend/angular run dev
 Activate webpack continuous compilation and serve the backend in development mode.
 ```
 npm --prefix backend/express install
-npm --prefix backend/express run dev
+npm --prefix backend/express run webpack-watch
+```
+
+Then, in a separate shell, start the server.
+```
+npm --prefix backend/express run serve
 ```
 
 ## How to build the images
