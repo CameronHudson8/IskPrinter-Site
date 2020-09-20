@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Loader } from 'src/app/services/loader/loader.service';
+import { LoaderService } from 'src/app/services/loader/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
@@ -14,7 +14,7 @@ export class LoginComponent {
     private errorMessage: MatSnackBar,
     private fb: FormBuilder,
     private http: HttpClient,
-    public loaderService: Loader,
+    public loaderService: LoaderService,
   ) { }
 
   loginForm: FormGroup = this.fb.group({

@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { Loader } from '../../services/loader/loader.service';
+import { LoaderService } from '../../services/loader/loader.service';
 import { Interceptor } from './interceptor.module';
 
 @NgModule({
   providers: [
-    Loader,
+    LoaderService,
     {
       provide: HTTP_INTERCEPTORS,
       useClass: Interceptor,
