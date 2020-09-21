@@ -46,7 +46,7 @@ export class AuthenticatorService {
     const state = undefined;
     return `https://${loginServerBaseUrl}/oauth/authorize`
         + `?response_type=${responseType}`
-        + `&redirect_uri=${environment.frontendBaseUrl}/code-receiver/`
+        + `&redirect_uri=${environment.frontendUrl}/code-receiver/`
         + `&client_id=${environment.clientId}`
         + `&scope=${scopes.join(' ')}`
         + `${state ? `&state={state}` : ''}`;
