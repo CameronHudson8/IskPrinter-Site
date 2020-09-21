@@ -18,8 +18,10 @@ export class IskPrinterComponent implements OnInit {
   ) { }
 
   async ngOnInit(): Promise<void> {
-    const character = await this.getCharacter();
-    this.character = character;
+    if (this.authenticatorService.isLoggedIn()) {
+      const character = await this.getCharacter();
+      this.character = character;
+    }
   }
 
   public async printIsk() {
