@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
@@ -10,7 +11,7 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 export class IskPrinterComponent implements OnInit {
 
   public displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-
+  public character: any;
   public dataSource: {
     position: number,
     name: string,
@@ -81,14 +82,51 @@ export class IskPrinterComponent implements OnInit {
 
   constructor(
     public authenticatorService: AuthenticatorService,
+    private http: HttpClient,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
+    const character = await this.getCharacter();
+    this.character = character;
   }
 
-  public printIsk() {
+  public async printIsk() {
     console.log('running...');
     console.log('done.');
+  }
+
+  public async getCharacter(): Promise<any> {
+
+    try {
+
+      return new Promise((resolve, reject) => {
+        this.http.get(
+          `https://login.eveonline.com/oauth/verify`,
+          {
+            headers: {
+              Authorization: `Bearer ${this.authenticatorService.getAccessToken()}`
+            },
+            observe: 'response'
+          }
+        )
+          .subscribe(
+            (response) => {
+              const rawCharacter: any = response.body;
+              const character = {
+                ...rawCharacter,
+                ExpiresOn: new Date(rawCharacter.ExpiresOn)
+              }
+              resolve(character)
+            },
+            (error) => reject(error)
+          );
+  
+      });
+
+    } catch (error) {
+      console.error(error);
+    }
+
   }
 
 }
