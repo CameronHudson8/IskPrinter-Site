@@ -1,10 +1,12 @@
-import express from 'express';
-const router = express.Router();
+import express, { Request, Response, NextFunction } from 'express';
 
 import apiRoutes from 'src/routes/api';
+
+const router = express.Router();
+
 router.use('/api', apiRoutes);
 
-router.get('/', (req: any, res: any, next: any) => {
+router.get('/', (req: Request, res: Response, next: NextFunction) => {
   res.sendStatus(200);
 });
 

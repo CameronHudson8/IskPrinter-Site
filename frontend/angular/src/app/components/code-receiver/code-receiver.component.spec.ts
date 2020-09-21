@@ -22,4 +22,5 @@ describe('CodeReceiverComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

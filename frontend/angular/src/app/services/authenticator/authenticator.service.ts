@@ -9,6 +9,7 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthenticatorService {
 
+  private jwt: string;
   private accessToken: string;
   private refreshToken: string;
 
@@ -18,7 +19,7 @@ export class AuthenticatorService {
   ) { }
 
   public isLoggedIn(): boolean {
-    return !!this.accessToken;
+    return !!this.accessToken && !!this.refreshToken;
   }
 
   public getLoginUrl(): string {
@@ -61,16 +62,18 @@ export class AuthenticatorService {
       })
         .subscribe((response) => {
 
-          const { accessToken, refreshToken } = response['body' as any];
+          const { access_token, refresh_token } = response['body' as any];
 
-          if (accessToken && refreshToken) {
-            this.accessToken = accessToken;
-            this.refreshToken = refreshToken;
-            window.localStorage.setItem('accessToken', accessToken);
-            window.localStorage.setItem('refreshToken', refreshToken);
+          if (access_token && refresh_token) {
+            this.jwt = response['body' as any];
+            this.accessToken = access_token;
+            this.refreshToken = refresh_token;
+            window.localStorage.setItem('jwt', JSON.stringify(this.jwt));
+            window.localStorage.setItem('accessToken', access_token);
+            window.localStorage.setItem('refreshToken', refresh_token);
             return resolve();
           }
-          return reject(new Error("Expected response body to contain accessToken and refreshToken, but it didn't."));
+          return reject(new Error("Expected response body to contain access_token and refresh_token, but it didn't."));
 
         }, (error) => reject(error));
 

@@ -16,6 +16,7 @@ export class CodeReceiverComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+
     const parsedUrl = this.router.parseUrl(this.router.url);
     if (parsedUrl.queryParams.code) {
 
@@ -26,6 +27,7 @@ export class CodeReceiverComponent implements OnInit {
     } else {
       console.error('No code found in URL.');
     }
+
   }
   
 }
