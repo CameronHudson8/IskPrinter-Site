@@ -18,7 +18,11 @@ export class CodeReceiverComponent implements OnInit {
   ngOnInit(): void {
     const parsedUrl = this.router.parseUrl(this.router.url);
     if (parsedUrl.queryParams.code) {
-      this.authenticatorService.getAccessToken(parsedUrl.queryParams.code);
+
+      this.authenticatorService.getAccessToken(parsedUrl.queryParams.code)
+        .then(() => this.router.navigate(['']))
+        .catch((error) => console.error(error));
+
     } else {
       console.error('No code found in URL.');
     }

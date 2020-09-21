@@ -1,5 +1,5 @@
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
@@ -10,21 +10,12 @@ import { environment } from 'src/environments/environment';
 export class AuthenticatorService {
 
   private accessToken: string;
+  private refreshToken: string;
 
   constructor(
-    private location: Location,
+    private http: HttpClient,
     private router: Router,
-  ) {
-
-    const parsedUrl = this.router.parseUrl(this.location.path());
-    if (parsedUrl.queryParams.access_token) {
-      window.localStorage.setItem('accessToken', parsedUrl.queryParams.access_token);
-    }
-    if (window.localStorage.getItem('accessToken')) {
-      this.accessToken = window.localStorage.getItem('accessToken');
-    }
-
-  }
+  ) { }
 
   public isLoggedIn(): boolean {
     return !!this.accessToken;
@@ -59,8 +50,33 @@ export class AuthenticatorService {
   }
 
   public async getAccessToken(code: string): Promise<void> {
+    return new Promise((resolve, reject) => {
+      // const body = 
+      this.http.post(`${environment.backendUrl}/api/tokens`, {
+        code,
+        clientId: environment.clientId
+      },
+      {
+        observe: 'response'
+      })
+        .subscribe((response) => {
 
-    this.router.navigate(['']);
+          const { accessToken, refreshToken } = response['body' as any];
+
+          if (accessToken && refreshToken) {
+            this.accessToken = accessToken;
+            this.refreshToken = refreshToken;
+            window.localStorage.setItem('accessToken', accessToken);
+            window.localStorage.setItem('refreshToken', refreshToken);
+            return resolve();
+          }
+          return reject(new Error("Expected response body to contain accessToken and refreshToken, but it didn't."));
+
+        }, (error) => reject(error));
+
+    });
+      
+    
   }
 
 }
