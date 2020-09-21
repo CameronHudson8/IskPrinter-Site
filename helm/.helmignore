@@ -21,4 +21,4 @@
 *.tmproj
 .vscode/
 
-templates/certificates/*example.yaml
+templates/*/*example.yaml

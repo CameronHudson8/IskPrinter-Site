@@ -50,11 +50,10 @@ export class IskPrinterComponent implements OnInit {
                 ...rawCharacter,
                 ExpiresOn: new Date(rawCharacter.ExpiresOn)
               }
-              resolve(character)
+              return resolve(character)
             },
             (error) => reject(error)
           );
-  
       });
 
     } catch (error) {

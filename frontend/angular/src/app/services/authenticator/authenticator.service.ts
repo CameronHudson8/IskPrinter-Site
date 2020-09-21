@@ -64,7 +64,7 @@ export class AuthenticatorService {
       
       return new Promise((resolve, reject) => {
         this.http.post(
-          `${environment.backendUrl}/api/tokens`,
+          `${environment.backendUrl}/tokens`,
           {
             code,
             clientId: environment.clientId
