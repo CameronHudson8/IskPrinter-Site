@@ -31,19 +31,19 @@ import { LoaderModule } from 'src/app/modules/Interceptor';
 
 import { NavComponent } from 'src/app/components/nav/nav.component';
 import { LoginComponent } from 'src/app/components/login/login.component';
-import { TableComponent } from 'src/app/components/table/table.component';
-import { TreeComponent } from 'src/app/components/tree/tree.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
+import { IskPrinterComponent } from './components/isk-printer/isk-printer.component';
+import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     LoginComponent,
-    TableComponent,
-    TreeComponent,
     PageNotFoundComponent,
+    IskPrinterComponent,
+    CodeReceiverComponent,
   ],
   imports: [
     AppRoutingModule,

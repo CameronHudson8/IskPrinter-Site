@@ -24,6 +24,12 @@ spec:
         - name: {{ .Chart.Name }}-backend
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
+          env:
+            - name: CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: eve-secrets
+                  key: CLIENT_SECRET
           ports:
             - name: http
               containerPort: {{ .Values.backend.service.port }}

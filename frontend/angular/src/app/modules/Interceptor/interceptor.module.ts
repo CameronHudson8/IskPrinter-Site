@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Loader } from 'src/app/services/Loader/loader.service';
+import { LoaderService } from 'src/app/services/loader/loader.service';
 
 /**
  * This class is based on the example by jornare on Stackoverflow.
@@ -15,7 +15,7 @@ export class Interceptor implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
 
   constructor(
-    private loaderService: Loader,
+    private loaderService: LoaderService,
   ) { }
 
   removeRequest(req: HttpRequest<any>) {

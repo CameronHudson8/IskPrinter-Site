@@ -17,12 +17,6 @@ button {
   margin: 8px;
 }
 
-.loading-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
 .inline-links {
     /* width: 100%; */
     /* table-layout: fixed; */

@@ -3,7 +3,7 @@ WORKDIR /app
 COPY ./express/package.json ./express/package-lock.json ./
 RUN npm install
 COPY ./express/. ./
-RUN npx webpack
+RUN npm run build
 
 FROM node:14.9.0-alpine3.12 as package-stage
 WORKDIR /app

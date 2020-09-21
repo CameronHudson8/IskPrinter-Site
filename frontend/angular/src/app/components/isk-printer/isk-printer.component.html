@@ -1,0 +1,25 @@
+<ng-container
+    *ngIf="this.authenticatorService.isLoggedIn(); then isLoggedIn; else isLoggedOut">
+</ng-container>
+
+<ng-template #isLoggedOut>
+    <app-login></app-login>
+</ng-template>
+
+<ng-template #isLoggedIn>
+
+    <mat-card class="form-card">
+        <mat-card-title>{{character?.CharacterName}}</mat-card-title>            
+        <mat-card-content>
+            <p>ID: {{character?.CharacterID}}</p>
+            <p>Expires: {{character?.ExpiresOn.toLocaleDateString()}}</p>
+        </mat-card-content>
+    </mat-card>
+
+    <div style="text-align: center;">
+        <button mat-raised-button (click)="printIsk();" color="accent">
+            Print ISK
+        </button>
+    </div>
+
+</ng-template>

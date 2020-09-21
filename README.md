@@ -3,6 +3,27 @@ https://iskprinter.com
 
 Suggests market deals in Eve Online.
 
+## Local development of frontend
+
+Start the Angular development server in development mode.
+```
+npm --prefix frontend/angular install
+npm --prefix frontend/angular run dev
+```
+
+## Local development of the backend
+
+Activate webpack continuous compilation and serve the backend in development mode.
+```
+npm --prefix backend/express install
+npm --prefix backend/express run webpack-watch
+```
+
+Then, in a separate shell, start the server.
+```
+npm --prefix backend/express run serve
+```
+
 ## How to build the images
 
 To build the backend and push it:
