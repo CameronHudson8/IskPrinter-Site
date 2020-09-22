@@ -1,20 +1,21 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { IskPrinterComponent } from './isk-printer.component';
+import { DashboardComponent } from './dashboard.component';
 
-describe('IskPrinterComponent', () => {
-  let component: IskPrinterComponent;
-  let fixture: ComponentFixture<IskPrinterComponent>;
+describe('DashboardComponent', () => {
+
+  let component: DashboardComponent;
+  let fixture: ComponentFixture<DashboardComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ IskPrinterComponent ]
+      declarations: [ DashboardComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(IskPrinterComponent);
+    fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
@@ -22,4 +23,5 @@ describe('IskPrinterComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });

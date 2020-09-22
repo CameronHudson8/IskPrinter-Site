@@ -4,11 +4,11 @@ import { HttpClient } from '@angular/common/http';
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
 @Component({
-  selector: 'app-isk-printer',
-  templateUrl: './isk-printer.component.html',
-  styleUrls: ['./isk-printer.component.css']
+  selector: 'app-dashboard',
+  templateUrl: './dashboard.component.html',
+  styleUrls: ['./dashboard.component.css']
 })
-export class IskPrinterComponent implements OnInit {
+export class DashboardComponent implements OnInit {
 
   public character: any;
 

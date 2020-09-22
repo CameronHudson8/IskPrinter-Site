@@ -33,7 +33,7 @@ import { NavComponent } from 'src/app/components/nav/nav.component';
 import { LoginComponent } from 'src/app/components/login/login.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
-import { IskPrinterComponent } from './components/isk-printer/isk-printer.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
 
 @NgModule({
@@ -42,7 +42,7 @@ import { CodeReceiverComponent } from './components/code-receiver/code-receiver.
     NavComponent,
     LoginComponent,
     PageNotFoundComponent,
-    IskPrinterComponent,
+    DashboardComponent,
     CodeReceiverComponent,
   ],
   imports: [
