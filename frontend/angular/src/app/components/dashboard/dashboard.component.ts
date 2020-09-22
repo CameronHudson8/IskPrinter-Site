@@ -24,11 +24,6 @@ export class DashboardComponent implements OnInit {
     }
   }
 
-  public async printIsk() {
-    console.log('running...');
-    console.log('done.');
-  }
-
   public async getCharacter(): Promise<any> {
 
     const headers = {

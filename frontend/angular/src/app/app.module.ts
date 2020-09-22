@@ -35,6 +35,7 @@ import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-no
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
+import { IntrastationOrdersComponent } from './components/intrastation-orders/intrastation-orders.component';
 
 @NgModule({
   declarations: [
@@ -44,6 +45,7 @@ import { CodeReceiverComponent } from './components/code-receiver/code-receiver.
     PageNotFoundComponent,
     DashboardComponent,
     CodeReceiverComponent,
+    IntrastationOrdersComponent,
   ],
   imports: [
     AppRoutingModule,
