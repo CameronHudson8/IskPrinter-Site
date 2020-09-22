@@ -36,6 +36,7 @@ import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/materi
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
 import { IntrastationOrdersComponent } from './components/intrastation-orders/intrastation-orders.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -46,6 +47,7 @@ import { IntrastationOrdersComponent } from './components/intrastation-orders/in
     DashboardComponent,
     CodeReceiverComponent,
     IntrastationOrdersComponent,
+    ProfileComponent,
   ],
   imports: [
     AppRoutingModule,
