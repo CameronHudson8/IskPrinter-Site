@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 /* Begin Material setup, per https://material.angular.io/guide/getting-started */
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -56,6 +57,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     BrowserAnimationsModule,
     BrowserModule, // Must be imported before any Mat*Module module.
     LayoutModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,

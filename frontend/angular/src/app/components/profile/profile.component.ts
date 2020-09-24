@@ -45,7 +45,7 @@ export class ProfileComponent implements OnInit {
                 ...rawCharacter,
                 ExpiresOn: new Date(rawCharacter.ExpiresOn)
               }
-              return resolve(character)
+              return resolve(character);
             },
             (error) => reject(error)
           );
