@@ -1,0 +1,12 @@
+<ng-container
+    *ngIf="this.authenticatorService.isLoggedIn(); then isLoggedIn; else isLoggedOut">
+</ng-container>
+
+<ng-template #isLoggedOut>
+    <app-login></app-login>
+</ng-template>
+
+<ng-template #isLoggedIn>
+    <app-profile></app-profile>
+    <app-intrastation-orders></app-intrastation-orders>
+</ng-template>

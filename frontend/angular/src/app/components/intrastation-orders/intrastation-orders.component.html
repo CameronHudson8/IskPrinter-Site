@@ -1,0 +1,97 @@
+<mat-card class="form-card">
+
+    <form class="example-form">
+        <mat-form-field class="example-full-width">
+            <input type="text" placeholder="Region" aria-label="Number" matInput [formControl]="regionControl"
+                [matAutocomplete]="auto">
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onRegionSelected($event)">
+                <mat-option *ngFor="let region of filteredRegions | async" [id]="region.regionId"
+                    [value]="region.regionName">
+                    {{region.regionName}}
+                </mat-option>
+            </mat-autocomplete>
+        </mat-form-field>
+    </form>
+
+    <div style="text-align: center;">
+        <button mat-raised-button class="spinner-with-text" color="accent" (click)="printIsk();"
+            [disabled]="!regionId || (loaderService.isLoading | async)">
+            <div class="loading-button spinner-with-text">
+                <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
+                <span>Print ISK</span>
+            </div>
+        </button>
+    </div>
+
+    <mat-card-content>
+
+        <table mat-table [dataSource]="orders" class="mat-elevation-z8">
+
+            <ng-container matColumnDef="duration">
+                <th mat-header-cell *matHeaderCellDef>Duration</th>
+                <td mat-cell *matCellDef="let order">{{order.duration}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="is_buy_order">
+                <th mat-header-cell *matHeaderCellDef>Is Buy Order</th>
+                <td mat-cell *matCellDef="let order">{{order.is_buy_order}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="issued">
+                <th mat-header-cell *matHeaderCellDef>Issued</th>
+                <td mat-cell *matCellDef="let order">{{order.issued.toLocaleString()}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="location_id">
+                <th mat-header-cell *matHeaderCellDef>Location ID</th>
+                <td mat-cell *matCellDef="let order">{{order.location_id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="min_volume">
+                <th mat-header-cell *matHeaderCellDef>Min. Volume</th>
+                <td mat-cell *matCellDef="let order">{{order.min_volume}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="order_id">
+                <th mat-header-cell *matHeaderCellDef>Order ID</th>
+                <td mat-cell *matCellDef="let order">{{order.order_id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="price">
+                <th mat-header-cell *matHeaderCellDef>Price</th>
+                <td mat-cell *matCellDef="let order">{{order.price}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="range">
+                <th mat-header-cell *matHeaderCellDef>Range</th>
+                <td mat-cell *matCellDef="let order">{{order.range}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="system_id">
+                <th mat-header-cell *matHeaderCellDef>System ID</th>
+                <td mat-cell *matCellDef="let order">{{order.system_id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="type_id">
+                <th mat-header-cell *matHeaderCellDef>Type ID</th>
+                <td mat-cell *matCellDef="let order">{{order.type_id}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="volume_remain">
+                <th mat-header-cell *matHeaderCellDef>Volume, Remaining</th>
+                <td mat-cell *matCellDef="let order">{{order.volume_remain}}</td>
+            </ng-container>
+
+            <ng-container matColumnDef="volume_total">
+                <th mat-header-cell *matHeaderCellDef>Volume, Total</th>
+                <td mat-cell *matCellDef="let order">{{order.volume_total}}</td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+        </table>
+
+    </mat-card-content>
+
+</mat-card>

@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 /* Begin Material setup, per https://material.angular.io/guide/getting-started */
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { LayoutModule } from '@angular/cdk/layout';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -33,8 +34,10 @@ import { NavComponent } from 'src/app/components/nav/nav.component';
 import { LoginComponent } from 'src/app/components/login/login.component';
 import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-not-found.component';
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
-import { IskPrinterComponent } from './components/isk-printer/isk-printer.component';
+import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
+import { IntrastationOrdersComponent } from './components/intrastation-orders/intrastation-orders.component';
+import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
   declarations: [
@@ -42,8 +45,10 @@ import { CodeReceiverComponent } from './components/code-receiver/code-receiver.
     NavComponent,
     LoginComponent,
     PageNotFoundComponent,
-    IskPrinterComponent,
+    DashboardComponent,
     CodeReceiverComponent,
+    IntrastationOrdersComponent,
+    ProfileComponent,
   ],
   imports: [
     AppRoutingModule,
@@ -52,6 +57,7 @@ import { CodeReceiverComponent } from './components/code-receiver/code-receiver.
     BrowserAnimationsModule,
     BrowserModule, // Must be imported before any Mat*Module module.
     LayoutModule,
+    MatAutocompleteModule,
     MatButtonModule,
     MatCheckboxModule,
     MatInputModule,

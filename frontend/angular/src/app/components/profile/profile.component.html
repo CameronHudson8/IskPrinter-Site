@@ -1,0 +1,8 @@
+<mat-card class="form-card">
+    <mat-card-title>{{character?.CharacterName}}</mat-card-title>            
+    <mat-card-content>
+        ID: {{character?.CharacterID}}
+        <br>
+        Expires: {{character?.ExpiresOn.toLocaleDateString()}}
+    </mat-card-content>
+</mat-card>
