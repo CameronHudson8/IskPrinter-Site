@@ -9,25 +9,22 @@ import { environment } from 'src/environments/environment';
 })
 export class AuthenticatorService {
 
-  private jwt: string;
+  private LOGIN_SERVER_DOMAIN_NAME = 'login.eveonline.com';
+
   private accessToken: string;
-  private refreshToken: string;
 
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
-    this.jwt = window.localStorage.getItem('jwt');
     this.accessToken = window.localStorage.getItem('accessToken');
-    this.refreshToken = window.localStorage.getItem('refreshToken');
   }
 
   public isLoggedIn(): boolean {
-    return !!this.accessToken || !!this.refreshToken;
+    return !!this.accessToken;
   }
 
   public getLoginUrl(): string {
-    const loginServerBaseUrl = 'login.eveonline.com';
     const responseType = 'code';
     const scopes = [
       'esi-location.read_location.v1',
@@ -40,64 +37,46 @@ export class AuthenticatorService {
       'esi-characterstats.read.v1',
     ];
     const state = undefined;
-    return `https://${loginServerBaseUrl}/oauth/authorize`
-        + `?response_type=${responseType}`
-        + `&redirect_uri=${environment.frontendUrl}/code-receiver/`
-        + `&client_id=${environment.clientId}`
-        + `&scope=${scopes.join(' ')}`
-        + `${state ? `&state={state}` : ''}`;
+    return `https://${this.LOGIN_SERVER_DOMAIN_NAME}/oauth/authorize`
+      + `?response_type=${responseType}`
+      + `&redirect_uri=${environment.frontendUrl}/code-receiver/`
+      + `&client_id=${environment.clientId}`
+      + `&scope=${scopes.join(' ')}`
+      + `${state ? `&state={state}` : ''}`;
   }
 
   public logOut(): void {
-    window.localStorage.removeItem('jwt');
     window.localStorage.removeItem('accessToken');
-    window.localStorage.removeItem('refreshToken');
-    this.jwt = undefined;
     this.accessToken = undefined;
-    this.refreshToken = undefined;
     this.router.navigate(['']);
   }
 
-  public async getAccessTokenFromCode(code: string): Promise<void> {
-
-    try {
-      
-      return new Promise((resolve, reject) => {
-        this.http.post(
-          `${environment.backendUrl}/tokens`,
-          {
-            code,
-            clientId: environment.clientId
-          },
-          { observe: 'response' }
-        )
-          .subscribe((response) => {
-  
-            const { access_token, refresh_token } = response['body' as any];
-  
-            if (access_token && refresh_token) {
-              this.jwt = response['body' as any];
-              this.accessToken = access_token;
-              this.refreshToken = refresh_token;
-              window.localStorage.setItem('jwt', JSON.stringify(this.jwt));
-              window.localStorage.setItem('accessToken', access_token);
-              window.localStorage.setItem('refreshToken', refresh_token);
-              return resolve();
-            }
-            return reject(new Error("Expected response body to contain access_token and refresh_token, but it didn't."));
-  
-          }, (error) => reject(error));
-
-      });
-
-    } catch (error) {
-      console.error(error);
-    }
+  public async getAccessTokenFromCode(code: string): Promise<string> {
+    const body = {
+      code,
+      clientId: environment.clientId
+    };
+    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+      .toPromise();
     
+    this.setAccessToken((response.body as any).accessToken);
+    return this.accessToken;
   }
 
   public getAccessToken(): string {
-    return this.accessToken;
+    const accessToken = this.accessToken || window.localStorage.getItem('accessToken');
+    if (!accessToken) {
+      throw new Error('No access token exists.');
+    }
+    return accessToken;
+  }
+
+  private setAccessToken(accessToken: string): void {
+    if (!accessToken) {
+      throw new Error("Expected response body to contain accessToken, but it didn't.");
+    }
+    this.accessToken = accessToken;
+    window.localStorage.setItem('accessToken', accessToken);
   }
 
 }

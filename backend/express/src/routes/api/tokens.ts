@@ -46,7 +46,7 @@ router.post('/', function (req: Request, res: Response, next: NextFunction) {
       .then((eveResponse) => {
 
         res.statusCode = eveResponse.status
-        res.json(eveResponse.data);
+        res.json({  accessToken: eveResponse.data.access_token });
 
       }).catch((eveError) => {
 
