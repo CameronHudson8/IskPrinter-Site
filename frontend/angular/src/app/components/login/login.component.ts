@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
-
-import { LoaderService } from 'src/app/services/loader/loader.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { SimpleSnackBar, MatSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { LoaderService } from 'src/app/services/loader/loader.service';
 
 @Component({
   selector: 'app-login',

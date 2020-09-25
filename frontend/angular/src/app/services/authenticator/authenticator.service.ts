@@ -4,20 +4,21 @@ import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticatorService {
 
   private LOGIN_SERVER_DOMAIN_NAME = 'login.eveonline.com';
 
   private accessToken: string;
+  private loginUrl: string
 
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
     this.accessToken = window.localStorage.getItem('accessToken');
+    this.fetchLoginUrl()
+        .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
   public isLoggedIn(): boolean {
@@ -25,24 +26,14 @@ export class AuthenticatorService {
   }
 
   public getLoginUrl(): string {
-    const responseType = 'code';
-    const scopes = [
-      'esi-location.read_location.v1',
-      'esi-skills.read_skills.v1',
-      'esi-wallet.read_character_wallet.v1',
-      'esi-clones.read_clones.v1',
-      'esi-assets.read_assets.v1',
-      'esi-markets.structure_markets.v1',
-      'esi-markets.read_character_orders.v1',
-      'esi-characterstats.read.v1',
-    ];
-    const state = undefined;
-    return `https://${this.LOGIN_SERVER_DOMAIN_NAME}/oauth/authorize`
-      + `?response_type=${responseType}`
-      + `&redirect_uri=${environment.frontendUrl}/code-receiver/`
-      + `&client_id=${environment.clientId}`
-      + `&scope=${scopes.join(' ')}`
-      + `${state ? `&state={state}` : ''}`;
+    return this.loginUrl;
+  }
+
+  private async fetchLoginUrl(): Promise<string> {
+    const params = { 'callback-url': `${environment.frontendUrl}/code-receiver/` };
+    const response = await this.http.get(`${environment.backendUrl}/login-url`, { observe: 'response', params })
+      .toPromise();
+    return (response.body as any).loginUrl;
   }
 
   public logOut(): void {
@@ -58,7 +49,7 @@ export class AuthenticatorService {
     };
     const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
       .toPromise();
-    
+
     this.setAccessToken((response.body as any).accessToken);
     return this.accessToken;
   }
