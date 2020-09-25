@@ -20,14 +20,15 @@ class Region {
 })
 export class IntrastationOrdersComponent implements OnInit {
 
-  private filteredRegions: Observable<Region[]>;
-  private regionId: number;
-  private regions: Region[] = regions.sort((region1, region2) => region1.regionName.localeCompare(region2.regionName));
-  private regionControl = new FormControl(undefined, Validators.required);
+  private readonly regions: Region[] = regions.sort((region1, region2) => region1.regionName.localeCompare(region2.regionName));
 
-  public orders: Order[];
+  filteredRegions: Observable<Region[]>;
+  regionId: number;
+  regionControl = new FormControl(undefined, Validators.required);
 
-  public displayedColumns: string[] = [
+  orders: Order[];
+
+  displayedColumns: string[] = [
     'duration',
     'is_buy_order',
     'issued',
@@ -43,7 +44,7 @@ export class IntrastationOrdersComponent implements OnInit {
   ];
 
   constructor(
-    public authenticatorService: AuthenticatorService,
+    authenticatorService: AuthenticatorService,
     private http: HttpClient
   ) { }
 
@@ -56,7 +57,7 @@ export class IntrastationOrdersComponent implements OnInit {
   }
 
   // Used in the view
-  private onRegionSelected(event) {
+  onRegionSelected(event) {
     this.regionId = event.option.id;
   }
 
@@ -65,13 +66,13 @@ export class IntrastationOrdersComponent implements OnInit {
     return this.regions.filter((r) => r.regionName.toLowerCase().includes(filterValue));
   }
 
-  public async printIsk() {
+  async printIsk() {
     console.log('running...');
     this.orders = await this.getMarketOrdersInRegion(this.regionId);
     console.log('done.');
   }
 
-  public async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
+  async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
     
     try {
 
