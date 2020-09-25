@@ -13,10 +13,10 @@
         </mat-form-field>
     </form>
 
-    <div style="text-align: center;">
+    <div class="align-content-center">
         <button mat-raised-button class="spinner-with-text" color="accent" (click)="printIsk();"
             [disabled]="!regionId || (loaderService.isLoading | async)">
-            <div class="loading-button spinner-with-text">
+            <div class="align-content-center">
                 <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
                 <span>Print ISK</span>
             </div>
