@@ -5,6 +5,7 @@ import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { LoaderService } from 'src/app/services/loader/loader.service';
 import { Order } from 'src/app/entities/Order';
 import regions from 'src/assets/regions.json';
 
@@ -44,8 +45,9 @@ export class IntrastationOrdersComponent implements OnInit {
   ];
 
   constructor(
+    private http: HttpClient,
     authenticatorService: AuthenticatorService,
-    private http: HttpClient
+    public loaderService: LoaderService,
   ) { }
 
   ngOnInit(): void {
@@ -73,30 +75,21 @@ export class IntrastationOrdersComponent implements OnInit {
   }
 
   async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
-    
-    try {
 
-      return new Promise((resolve, reject) => {
-        this.http.get(
-          `https://esi.evetech.net/latest/markets/${regionId}/orders`,
-          { 
-            params: { order_type: 'all' },
-            observe: 'response'
-          }
-        )
-          .subscribe(
-            (response) => {
-              const orders: Order[] = (<Order[]>response.body).map((order) => {
-                return {
-                  ...order,
-                  issued: new Date(order.issued)
-                }
-              });
-              return resolve(orders);
-            },
-            (error) => reject(error)
-          );
-      });
+    try {
+      const response = await this.http.get(
+        `https://esi.evetech.net/latest/markets/${regionId}/orders`,
+        {
+          params: { order_type: 'all' },
+          observe: 'response'
+        }
+      ).toPromise();
+
+      const orders = (<Order[]>response.body).map((order) => ({
+        ...order,
+        issued: new Date(order.issued)
+      }));
+      return orders;
 
     } catch (error) {
       console.error(error);

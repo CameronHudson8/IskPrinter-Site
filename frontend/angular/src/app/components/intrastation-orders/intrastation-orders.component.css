@@ -20,3 +20,9 @@ table {
 .example-full-width {
     width: 100%;
 }
+
+.spinner-with-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}

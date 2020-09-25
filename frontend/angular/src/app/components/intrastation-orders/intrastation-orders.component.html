@@ -2,25 +2,27 @@
 
     <form class="example-form">
         <mat-form-field class="example-full-width">
-            <input type="text"
-                    placeholder="Region"
-                    aria-label="Number"
-                    matInput
-                    [formControl]="regionControl"
-                    [matAutocomplete]="auto">
+            <input type="text" placeholder="Region" aria-label="Number" matInput [formControl]="regionControl"
+                [matAutocomplete]="auto">
             <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onRegionSelected($event)">
-                <mat-option *ngFor="let region of filteredRegions | async" [id]="region.regionId" [value]="region.regionName">
+                <mat-option *ngFor="let region of filteredRegions | async" [id]="region.regionId"
+                    [value]="region.regionName">
                     {{region.regionName}}
                 </mat-option>
             </mat-autocomplete>
         </mat-form-field>
     </form>
-    
+
     <div style="text-align: center;">
-        <button mat-raised-button (click)="printIsk();" color="accent" [disabled]='!regionId'>
-            Print ISK
+        <button mat-raised-button class="spinner-with-text" color="accent" (click)="printIsk();"
+            [disabled]="!regionId || (loaderService.isLoading | async)">
+            <div class="loading-button spinner-with-text">
+                <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
+                <span>Print ISK</span>
+            </div>
         </button>
     </div>
+
     <mat-card-content>
 
         <table mat-table [dataSource]="orders" class="mat-elevation-z8">
@@ -29,12 +31,12 @@
                 <th mat-header-cell *matHeaderCellDef>Duration</th>
                 <td mat-cell *matCellDef="let order">{{order.duration}}</td>
             </ng-container>
-    
+
             <ng-container matColumnDef="is_buy_order">
                 <th mat-header-cell *matHeaderCellDef>Is Buy Order</th>
                 <td mat-cell *matCellDef="let order">{{order.is_buy_order}}</td>
             </ng-container>
-    
+
             <ng-container matColumnDef="issued">
                 <th mat-header-cell *matHeaderCellDef>Issued</th>
                 <td mat-cell *matCellDef="let order">{{order.issued.toLocaleString()}}</td>
@@ -49,7 +51,7 @@
                 <th mat-header-cell *matHeaderCellDef>Min. Volume</th>
                 <td mat-cell *matCellDef="let order">{{order.min_volume}}</td>
             </ng-container>
-            
+
             <ng-container matColumnDef="order_id">
                 <th mat-header-cell *matHeaderCellDef>Order ID</th>
                 <td mat-cell *matCellDef="let order">{{order.order_id}}</td>
@@ -84,11 +86,12 @@
                 <th mat-header-cell *matHeaderCellDef>Volume, Total</th>
                 <td mat-cell *matCellDef="let order">{{order.volume_total}}</td>
             </ng-container>
-    
+
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    
+
         </table>
 
     </mat-card-content>
+
 </mat-card>
