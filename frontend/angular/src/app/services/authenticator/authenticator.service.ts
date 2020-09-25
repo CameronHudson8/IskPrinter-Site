@@ -44,8 +44,7 @@ export class AuthenticatorService {
 
   public async getAccessTokenFromCode(code: string): Promise<string> {
     const body = {
-      code,
-      clientId: environment.clientId
+      code
     };
     const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
       .toPromise();

@@ -11,8 +11,8 @@ const LOGIN_SERVER_DOMAIN_NAME = 'login.eveonline.com';
 router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 
   const requiredParams: RequiredParams = {
-    query: [ 'callback-url' ],
-    body: []
+    body: [],
+    query: [ 'callback-url' ]
   };
   
   try {
