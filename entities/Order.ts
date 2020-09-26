@@ -1,4 +1,4 @@
-export class Order {
+export interface Order {
   duration: number;
   is_buy_order: boolean;
   issued: Date;
