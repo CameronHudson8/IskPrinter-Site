@@ -1,6 +1,11 @@
 import axios from 'axios';
+import { MongoClient} from 'mongodb';
+import { PersistentEntity } from './PersistentEntity';
 
-export class Token {
+export class Token implements PersistentEntity {
+
+    static DB_URL = 'mongodb://localhost:27017';
+    static DB_NAME = 'isk-printer';
 
     accessToken: string;
     refreshToken: string;
@@ -29,9 +34,24 @@ export class Token {
             refresh_token: refreshToken
         } = eveResponse.data;
 
-        // TODO: Save to database
+        const token = new Token(accessToken, refreshToken);
+        await token.save();
+        return token;
 
-        return new Token(accessToken, refreshToken)
+    }
+
+    async save(): Promise<PersistentEntity> {
+
+        const client = new MongoClient(Token.DB_URL, { useUnifiedTopology: true });
+        await client.connect();
+      
+        const db = await client.db(Token.DB_NAME);
+        const collection = await db.collection('tokens');
+        await collection.insertOne(this);
+      
+        await client.close();
+
+        return this;
 
     }
 

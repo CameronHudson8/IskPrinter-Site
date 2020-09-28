@@ -1,5 +1,4 @@
 import express, { Request, Response, NextFunction } from 'express';
-import axios from 'axios';
 
 import { RequiredParams, RequestValidator } from 'src/tools/RequestValidator';
 import { HttpError } from 'src/errors/HttpError';
