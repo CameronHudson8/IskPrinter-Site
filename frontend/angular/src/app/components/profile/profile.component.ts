@@ -26,35 +26,17 @@ export class ProfileComponent implements OnInit {
 
   public async getCharacter(): Promise<any> {
 
-    try {
-
-      return new Promise((resolve, reject) => {
-        this.http.get(
-          `https://login.eveonline.com/oauth/verify`,
-          {
-            headers: {
-              Authorization: `Bearer ${this.authenticatorService.getAccessToken()}`
-            },
-            observe: 'response'
-          }
-        )
-          .subscribe(
-            (response) => {
-              const rawCharacter: any = response.body;
-              const character = {
-                ...rawCharacter,
-                ExpiresOn: new Date(rawCharacter.ExpiresOn)
-              }
-              return resolve(character);
-            },
-            (error) => reject(error)
-          );
-      });
-
-    } catch (error) {
-      console.error(error);
-    }
-
+    const response = await this.authenticatorService.getWithAuth(
+      'https://login.eveonline.com/oauth/verify',
+      { observe: 'response' }
+    );
+    const rawCharacter: any = response.body;
+    const character = {
+      ...rawCharacter,
+      ExpiresOn: new Date(rawCharacter.ExpiresOn)
+    };
+    return character;
+    
   }
 
 }

@@ -1,13 +1,12 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticatorService {
-
-  private LOGIN_SERVER_DOMAIN_NAME = 'login.eveonline.com';
 
   private accessToken: string;
   private loginUrl: string
@@ -21,11 +20,11 @@ export class AuthenticatorService {
         .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
-  public isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     return !!this.accessToken;
   }
 
-  public getLoginUrl(): string {
+  getLoginUrl(): string {
     return this.loginUrl;
   }
 
@@ -36,13 +35,13 @@ export class AuthenticatorService {
     return (response.body as any).loginUrl;
   }
 
-  public logOut(): void {
+  logOut(): void {
     window.localStorage.removeItem('accessToken');
     this.accessToken = undefined;
     this.router.navigate(['']);
   }
 
-  public async getAccessTokenFromCode(code: string): Promise<string> {
+  async getAccessTokenFromCode(code: string): Promise<string> {
     const body = {
       code
     };
@@ -53,7 +52,28 @@ export class AuthenticatorService {
     return this.accessToken;
   }
 
-  public getAccessToken(): string {
+  private async requestWithAuth(method: string, url: string, body: any, options: any): Promise<HttpResponse<Object>> {
+    const optionsWithToken = {
+      ...options,
+      headers: {
+        ...options.headers,
+        Authorization: `Bearer ${this.getAccessToken()}`
+      }
+    };
+    console.log(optionsWithToken);
+    return this.http[method](url, optionsWithToken).toPromise();
+  }
+
+  async getWithAuth(url, options): Promise<HttpResponse<Object>>  {
+    const body = {};
+    return this.requestWithAuth('get', url, body, options);
+  }
+
+  async postWithAuth(url, body, options): Promise<HttpResponse<Object>>  {
+    return this.requestWithAuth('post', url, body, options);
+  }
+
+  getAccessToken(): string {
     const accessToken = this.accessToken || window.localStorage.getItem('accessToken');
     if (!accessToken) {
       throw new Error('No access token exists.');
