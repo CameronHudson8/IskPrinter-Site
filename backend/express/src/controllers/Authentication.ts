@@ -1,4 +1,4 @@
-import { Token } from 'src/entities/token'
+import { Token } from 'src/entities/Token'
 
 export class AuthenticationController {
 
