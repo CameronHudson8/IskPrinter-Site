@@ -12,8 +12,10 @@ export class Character {
     IntellectualProperty: string;
     location: {
         solar_system_id: number,
+        solar_system_name: string,
         station_id: number | undefined,
         structure_id: number | undefined,
+        structure_name: string | undefined,
     };
     portrait: string;
 
@@ -32,12 +34,29 @@ export class Character {
     }
 
     async getLocation(): Promise<Character> {
-        const response = await this.authenticatorService.requestWithAuth(
+        const characterLocationResponse = await this.authenticatorService.requestWithAuth(
             'get',
             `https://esi.evetech.net/latest/characters/${this.CharacterID}/location/`
-          );
-          this.location = (response.body as any);
-          return this;
+        );
+        this.location = (characterLocationResponse.body as any);
+
+        const solarSystemInfoResponse = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/universe/systems/${this.location.solar_system_id}`
+        );
+        this.location.solar_system_name = (solarSystemInfoResponse.body as any).name;
+
+        if (!this.location.structure_id) {
+            return this;
+        }
+
+        const structureInfoResponse = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/universe/structures/${this.location.structure_id}`
+        );
+        this.location.structure_name = (structureInfoResponse.body as any).name;
+
+        return this;
     }
 
     async getPortrait(): Promise<Character> {
@@ -46,7 +65,6 @@ export class Character {
             `https://esi.evetech.net/latest/characters/${this.CharacterID}/portrait/`
           );
           this.portrait = (response.body as any).px128x128;
-          console.log(this.portrait);
           return this;
     }
 

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 import { Character } from 'src/app/entities/Character';
@@ -10,7 +10,8 @@ import { Character } from 'src/app/entities/Character';
 })
 export class ProfileComponent implements OnInit {
 
-  public character: any;
+  character: any;
+  @Output() characterUpdate = new EventEmitter<Character>();
 
   constructor(
     public authenticatorService: AuthenticatorService,
@@ -19,11 +20,13 @@ export class ProfileComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     if (this.authenticatorService.isLoggedIn()) {
       const character = await Character.fromToken(this.authenticatorService);
+
       this.character = character;
       await Promise.all([
         this.character.getLocation(),
         this.character.getPortrait()
       ]);
+      this.characterUpdate.emit(this.character);
     }
   }
 

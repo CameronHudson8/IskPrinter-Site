@@ -7,11 +7,14 @@
             <br>
             Expires: {{character?.ExpiresOn.toLocaleDateString()}}
             <br>
-            Solar System ID: {{character?.location?.solar_system_id}}
+            Solar System: {{character?.location?.solar_system_name}}
             <br>
-            Station ID: {{character?.location?.station_id || 'None'}}
-            <br>
-            Structure ID: {{character?.location?.structure_id || 'None'}}
+            <div *ngIf="character?.location?.station_id">
+                Station ID: {{character?.location?.station_id || 'None'}}
+            </div>
+            <div *ngIf="character?.location?.structure_name">
+                Structure: {{character?.location?.structure_name || 'None'}}
+            </div>
         </mat-card-content>
     </div>
 </mat-card>
