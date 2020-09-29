@@ -3,13 +3,12 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class AuthenticatorService {
 
   private accessToken: string;
-  private loginUrl: string
+  private loginUrl: string;
 
   constructor(
     private http: HttpClient,
@@ -60,29 +59,30 @@ export class AuthenticatorService {
     return this.accessToken;
   }
 
-  private addTokenToHeaders(headers: any): HttpHeaders {
-    return new HttpHeaders({
-      ...headers,
-      Authorization: `Bearer ${this.getAccessToken()}`
-    });
+  private getAuthorizationHeader(): HttpHeaders {
+    return new HttpHeaders({ Authorization: `Bearer ${this.getAccessToken()}` });
   }
 
-  public async requestWithAuth(method: string, url: string, headers: any, body?: any): Promise<HttpResponse<Object>> {
-    let headersWithToken = this.addTokenToHeaders(headers);
-    const options = {
-      headers: headersWithToken,
+  public async requestWithAuth(method: string, url: string, body?: any): Promise<HttpResponse<Object>> {
+    let options = {
+      headers: this.getAuthorizationHeader(),
       body
     };
     try {
-      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" })
+        .toPromise();
     } catch (error) {
-      if (error.status != 401) {
+      if (![401, 403].includes(error.status)) {
         throw error;
       }
     }
     this.accessToken = await this.renewAccessToken(this.accessToken);
-    headersWithToken = this.addTokenToHeaders(headers);
-    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+    options = {
+      headers: this.getAuthorizationHeader(),
+      body
+    };
+    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" })
+      .toPromise();
   }
 
   getAccessToken(): string {

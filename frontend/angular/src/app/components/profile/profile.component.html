@@ -1,8 +1,17 @@
-<mat-card class="form-card">
-    <mat-card-title>{{character?.CharacterName}}</mat-card-title>            
-    <mat-card-content>
-        ID: {{character?.CharacterID}}
-        <br>
-        Expires: {{character?.ExpiresOn.toLocaleDateString()}}
-    </mat-card-content>
+<mat-card class="form-card" style="display: flex;">
+    <img src="{{character?.portrait}}" />
+    <div style="padding: 0px 16px;">
+        <mat-card-title>{{character?.CharacterName}}</mat-card-title>            
+        <mat-card-content>
+            ID: {{character?.CharacterID}}
+            <br>
+            Expires: {{character?.ExpiresOn.toLocaleDateString()}}
+            <br>
+            Solar System ID: {{character?.location?.solar_system_id}}
+            <br>
+            Station ID: {{character?.location?.station_id || 'None'}}
+            <br>
+            Structure ID: {{character?.location?.structure_id || 'None'}}
+        </mat-card-content>
+    </div>
 </mat-card>

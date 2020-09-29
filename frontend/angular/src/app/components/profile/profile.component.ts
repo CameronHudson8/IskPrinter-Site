@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { Character } from 'src/app/entities/Character';
 
 @Component({
   selector: 'app-profile',
@@ -14,30 +14,17 @@ export class ProfileComponent implements OnInit {
 
   constructor(
     public authenticatorService: AuthenticatorService,
-    private http: HttpClient
   ) { }
 
   async ngOnInit(): Promise<void> {
     if (this.authenticatorService.isLoggedIn()) {
-      const character = await this.getCharacter();
+      const character = await Character.fromToken(this.authenticatorService);
       this.character = character;
+      await Promise.all([
+        this.character.getLocation(),
+        this.character.getPortrait()
+      ]);
     }
-  }
-
-  public async getCharacter(): Promise<any> {
-
-    const response = await this.authenticatorService.requestWithAuth(
-      'get',
-      'https://login.eveonline.com/oauth/verify',
-      { observe: 'response' }
-    );
-    const rawCharacter: any = response.body;
-    const character = {
-      ...rawCharacter,
-      ExpiresOn: new Date(rawCharacter.ExpiresOn)
-    };
-    return character;
-    
   }
 
 }
