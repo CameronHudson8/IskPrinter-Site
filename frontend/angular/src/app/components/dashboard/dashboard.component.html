@@ -7,6 +7,6 @@
 </ng-template>
 
 <ng-template #isLoggedIn>
-    <app-profile></app-profile>
-    <app-intrastation-orders></app-intrastation-orders>
+    <app-profile (characterUpdate)="setCharacter($event)"></app-profile>
+    <app-intrastation-orders [character]="character"></app-intrastation-orders>
 </ng-template>

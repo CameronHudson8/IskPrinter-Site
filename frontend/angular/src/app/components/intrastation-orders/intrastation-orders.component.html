@@ -1,21 +1,8 @@
 <mat-card class="form-card">
 
-    <form class="example-form">
-        <mat-form-field class="example-full-width">
-            <input type="text" placeholder="Region" aria-label="Number" matInput [formControl]="regionControl"
-                [matAutocomplete]="auto">
-            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onRegionSelected($event)">
-                <mat-option *ngFor="let region of filteredRegions | async" [id]="region.regionId"
-                    [value]="region.regionName">
-                    {{region.regionName}}
-                </mat-option>
-            </mat-autocomplete>
-        </mat-form-field>
-    </form>
-
     <div class="align-content-center">
         <button mat-raised-button class="spinner-with-text" color="accent" (click)="printIsk();"
-            [disabled]="!regionId || (loaderService.isLoading | async)">
+            [disabled]="loaderService.isLoading | async">
             <div class="align-content-center">
                 <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
                 <span>Print ISK</span>

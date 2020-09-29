@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { map, startWith } from 'rxjs/operators';
@@ -8,6 +8,7 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 import { LoaderService } from 'src/app/services/loader/loader.service';
 import { Order } from 'src/app/entities/Order';
 import regions from 'src/assets/regions.json';
+import { Character } from 'src/app/entities/Character';
 
 class Region {
   regionName: string;
@@ -20,6 +21,8 @@ class Region {
   styleUrls: ['./intrastation-orders.component.css']
 })
 export class IntrastationOrdersComponent implements OnInit {
+
+  @Input() character: Character;
 
   private readonly regions: Region[] = regions.sort((region1, region2) => region1.regionName.localeCompare(region2.regionName));
 
@@ -46,11 +49,11 @@ export class IntrastationOrdersComponent implements OnInit {
 
   constructor(
     private http: HttpClient,
-    authenticatorService: AuthenticatorService,
+    public authenticatorService: AuthenticatorService,
     public loaderService: LoaderService,
   ) { }
 
-  ngOnInit(): void {
+  async ngOnInit(): Promise<void> {
     this.filteredRegions = this.regionControl.valueChanges
       .pipe(
         startWith(''),
@@ -70,30 +73,39 @@ export class IntrastationOrdersComponent implements OnInit {
 
   async printIsk() {
     console.log('running...');
-    this.orders = await this.getMarketOrdersInRegion(this.regionId);
+    this.orders = await this.getMarketOrdersInStructure(this.character.location.structure_id);
     console.log('done.');
   }
 
-  async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
+  private async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
 
-    try {
-      const response = await this.http.get(
-        `https://esi.evetech.net/latest/markets/${regionId}/orders`,
-        {
-          params: { order_type: 'all' },
-          observe: 'response'
-        }
-      ).toPromise();
+    const response = await this.http.get(
+      `https://esi.evetech.net/latest/markets/${regionId}/orders`,
+      {
+        params: { order_type: 'all' },
+        observe: 'response'
+      }
+    ).toPromise();
 
-      const orders = (<Order[]>response.body).map((order) => ({
-        ...order,
-        issued: new Date(order.issued)
-      }));
-      return orders;
+    const orders = (<Order[]>response.body).map((order) => ({
+      ...order,
+      issued: new Date(order.issued)
+    }));
+    return orders;
 
-    } catch (error) {
-      console.error(error);
-    }
+  }
+
+  private async getMarketOrdersInStructure(structureId: number): Promise<Order[]> {
+
+    const response = await this.authenticatorService.requestWithAuth(
+      'get',
+      `https://esi.evetech.net/latest/markets/structures/${structureId}`,
+    );
+    const orders = (<Order[]>response.body).map((order) => ({
+      ...order,
+      issued: new Date(order.issued)
+    }));
+    return orders;
 
   }
 
