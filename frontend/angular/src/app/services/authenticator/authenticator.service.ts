@@ -52,16 +52,41 @@ export class AuthenticatorService {
     return this.accessToken;
   }
 
-  private async requestWithAuth(method: string, url: string, body: any, options: any): Promise<HttpResponse<Object>> {
-    const optionsWithToken = {
+  async renewAccessToken(accessToken: string): Promise<string> {
+    const body = {
+      accessToken
+    };
+    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+      .toPromise();
+
+    this.setAccessToken((response.body as any).accessToken);
+    return this.accessToken;
+  }
+
+  private addTokenToRequestOptions(options: any) {
+    return {
       ...options,
       headers: {
         ...options.headers,
         Authorization: `Bearer ${this.getAccessToken()}`
       }
     };
-    console.log(optionsWithToken);
-    return this.http[method](url, optionsWithToken).toPromise();
+  }
+
+  private async requestWithAuth(method: string, url: string, body: any, options: any): Promise<HttpResponse<Object>> {
+    
+    let optionsWithToken = this.addTokenToRequestOptions(options);
+    try {
+      return await this.http[method](url, optionsWithToken).toPromise();
+    } catch (error) {
+      if (error.status != 401) {
+        throw error;
+      }
+    }
+    this.accessToken = await this.renewAccessToken(this.accessToken);
+    optionsWithToken = this.addTokenToRequestOptions(options);
+    return await this.http[method](url, optionsWithToken).toPromise();
+
   }
 
   async getWithAuth(url, options): Promise<HttpResponse<Object>>  {
