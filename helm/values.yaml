@@ -2,27 +2,37 @@
 # This is a YAML-formatted file.
 # Declare variables to be passed into your templates.
 
-backend:
-  replicaCount: 1
-  image:
-    repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: e9f6161
-    pullPolicy: Always
-  containerPort: 
-  service:
-    type: ClusterIP
-    port: 3000
-
 frontend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
     tag: e9f6161
     pullPolicy: Always
-  containerPort: 
   service:
-    type: ClusterIP
+    type: ClusterIP  # default
     port: 80
+
+backend:
+  replicaCount: 1
+  image:
+    repository: docker.io/cameronhudson8/isk-printer-backend
+    tag: e9f6161
+    pullPolicy: Always
+  service:
+    type: ClusterIP  # default
+    port: 3000
+
+database:
+  replicaCount: 1
+  image:
+    repository: mongo
+    tag: 4.4.1-bionic
+    pullPolicy: IfNotPresent  # default
+  service:
+    type: ClusterIP  # default
+    port: 27017
+  volume:
+    mountPath: /data/db
 
 imagePullSecrets: []
 nameOverride: ""

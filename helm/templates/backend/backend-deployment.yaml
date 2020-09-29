@@ -25,11 +25,28 @@ spec:
           image: "{{ .Values.backend.image.repository }}:{{ .Values.backend.image.tag }}"
           imagePullPolicy: {{ .Values.backend.image.pullPolicy }}
           env:
+            - name: CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: backend-secret
+                  key: CLIENT_ID
             - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: eve-secrets
+                  name: backend-secret
                   key: CLIENT_SECRET
+            - name: DB_URL
+              value: mongodb://isk-printer-database:27017
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
           ports:
             - name: http
               containerPort: {{ .Values.backend.service.port }}

@@ -1,65 +1,50 @@
 import express, { Request, Response, NextFunction } from 'express';
-import axios from 'axios';
+
+import { RequiredParams, RequestValidator } from 'src/tools/RequestValidator';
+import { HttpError } from 'src/errors/HttpError';
+import { AuthenticationController } from 'src/controllers/Authentication';
+import { BadRequest } from 'src/errors/BadRequest';
 
 const router = express.Router();
 
-interface RequiredParams {
-  query: string[],
-  body: string[]
-}
+router.post('/', async (req: Request, res: Response, next: NextFunction) => {
 
-const withCorrectParams = (requiredParams: RequiredParams, request: Request, res: Response, next: NextFunction) => {
-  for (const param of requiredParams.body) {
-    if (!request.body[param]) {
-      res.statusCode = 400;
-      res.statusMessage = `The request body must include "${param}".`;
-      return res.send();
+  try {
+
+    let accessToken;
+    if (req.body.code) {
+
+      const requiredParams: RequiredParams = {
+        body: [ 'code' ],
+        query: [],
+      };
+      (new RequestValidator(requiredParams)).validate(req);
+      accessToken = await (new AuthenticationController).getTokenFromCode(req.body.code);
+
+    } else if (req.body.accessToken) {
+
+      const requiredParams: RequiredParams = {
+        body: [ 'accessToken' ],
+        query: [],
+      };
+      (new RequestValidator(requiredParams)).validate(req);
+      accessToken = await (new AuthenticationController).getTokenFromRefresh(req.body.accessToken);
+
+    } else {
+      throw new BadRequest("Expected the request body to contain 'code' or 'accessToken'.");
     }
+
+    return res.json({ accessToken });
+
+  } catch (error) {
+
+    if (error instanceof HttpError) {
+      return res.status(error.statusCode).send(error.message);
+    }
+    console.error(error);
+    return res.sendStatus(500);
+
   }
-  return next();
-};
-
-router.post('/', function (req: Request, res: Response, next: NextFunction) {
-
-  const requiredParams = {
-    query: [],
-    body: [
-      'code',
-      'clientId'
-    ]
-  };
-  withCorrectParams(requiredParams, req, res, () => {
-
-    const basicAuth = `${req.body.clientId}:${process.env.CLIENT_SECRET}`;
-    const encodedBasicAuth = Buffer.from(basicAuth).toString('base64');
-
-    const config = {
-      headers: {
-        Authorization: `Basic ${encodedBasicAuth}`
-      }
-    };
-    const body = {
-      grant_type: 'authorization_code',
-      code: req.body.code
-    };
-    axios.post('https://login.eveonline.com/oauth/token', body, config)
-      .then((eveResponse) => {
-
-        res.statusCode = eveResponse.status
-        res.json({  accessToken: eveResponse.data.access_token });
-
-      }).catch((eveError) => {
-
-        console.error(eveError);
-
-        res.statusCode = eveError.response.status;
-        res.statusMessage = eveError.response.statusText;
-        res.send();
-
-      });
-
-  });
-
 
 });
 

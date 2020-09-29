@@ -16,6 +16,9 @@ npm --prefix frontend/angular run dev
 Activate webpack continuous compilation and serve the backend in development mode.
 ```
 npm --prefix backend/express install
+export CLIENT_ID='<client-id>'
+export CLIENT_SECRET='<client-secret>'
+export DB_URL='mongodb://localhost:27017'
 npm --prefix backend/express run webpack-watch
 ```
 

@@ -1,5 +1,5 @@
 button {
-    width: 90%;
+    width: 50%;
     margin: 8px;
 }
 
@@ -21,7 +21,7 @@ table {
     width: 100%;
 }
 
-.spinner-with-text {
+.align-content-center{
     display: flex;
     align-items: center;
     justify-content: center;

@@ -1,69 +1,91 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
 import { environment } from 'src/environments/environment';
+import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root'
-})
+@Injectable({ providedIn: 'root' })
 export class AuthenticatorService {
 
-  private LOGIN_SERVER_DOMAIN_NAME = 'login.eveonline.com';
-
   private accessToken: string;
+  private loginUrl: string
 
   constructor(
     private http: HttpClient,
     private router: Router,
   ) {
     this.accessToken = window.localStorage.getItem('accessToken');
+    this.fetchLoginUrl()
+        .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
-  public isLoggedIn(): boolean {
+  isLoggedIn(): boolean {
     return !!this.accessToken;
   }
 
-  public getLoginUrl(): string {
-    const responseType = 'code';
-    const scopes = [
-      'esi-location.read_location.v1',
-      'esi-skills.read_skills.v1',
-      'esi-wallet.read_character_wallet.v1',
-      'esi-clones.read_clones.v1',
-      'esi-assets.read_assets.v1',
-      'esi-markets.structure_markets.v1',
-      'esi-markets.read_character_orders.v1',
-      'esi-characterstats.read.v1',
-    ];
-    const state = undefined;
-    return `https://${this.LOGIN_SERVER_DOMAIN_NAME}/oauth/authorize`
-      + `?response_type=${responseType}`
-      + `&redirect_uri=${environment.frontendUrl}/code-receiver/`
-      + `&client_id=${environment.clientId}`
-      + `&scope=${scopes.join(' ')}`
-      + `${state ? `&state={state}` : ''}`;
+  getLoginUrl(): string {
+    return this.loginUrl;
   }
 
-  public logOut(): void {
+  private async fetchLoginUrl(): Promise<string> {
+    const params = { 'callback-url': `${environment.frontendUrl}/code-receiver/` };
+    const response = await this.http.get(`${environment.backendUrl}/login-url`, { observe: 'response', params })
+      .toPromise();
+    return (response.body as any).loginUrl;
+  }
+
+  logOut(): void {
     window.localStorage.removeItem('accessToken');
     this.accessToken = undefined;
     this.router.navigate(['']);
   }
 
-  public async getAccessTokenFromCode(code: string): Promise<string> {
+  async getAccessTokenFromCode(code: string): Promise<string> {
     const body = {
-      code,
-      clientId: environment.clientId
+      code
     };
     const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
       .toPromise();
-    
+
     this.setAccessToken((response.body as any).accessToken);
     return this.accessToken;
   }
 
-  public getAccessToken(): string {
+  async renewAccessToken(accessToken: string): Promise<string> {
+    const body = { accessToken };
+    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+      .toPromise();
+    this.setAccessToken((response.body as any).accessToken);
+    return this.accessToken;
+  }
+
+  private addTokenToHeaders(headers: any): HttpHeaders {
+    return new HttpHeaders({
+      ...headers,
+      Authorization: `Bearer ${this.getAccessToken()}`
+    });
+  }
+
+  public async requestWithAuth(method: string, url: string, headers: any, body?: any): Promise<HttpResponse<Object>> {
+    let headersWithToken = this.addTokenToHeaders(headers);
+    const options = {
+      headers: headersWithToken,
+      body
+    };
+    try {
+      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+    } catch (error) {
+      if (error.status != 401) {
+        throw error;
+      }
+    }
+    this.accessToken = await this.renewAccessToken(this.accessToken);
+    headersWithToken = this.addTokenToHeaders(headers);
+    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+  }
+
+  getAccessToken(): string {
     const accessToken = this.accessToken || window.localStorage.getItem('accessToken');
     if (!accessToken) {
       throw new Error('No access token exists.');
