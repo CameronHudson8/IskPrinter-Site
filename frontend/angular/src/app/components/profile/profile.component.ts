@@ -26,7 +26,8 @@ export class ProfileComponent implements OnInit {
 
   public async getCharacter(): Promise<any> {
 
-    const response = await this.authenticatorService.getWithAuth(
+    const response = await this.authenticatorService.requestWithAuth(
+      'get',
       'https://login.eveonline.com/oauth/verify',
       { observe: 'response' }
     );

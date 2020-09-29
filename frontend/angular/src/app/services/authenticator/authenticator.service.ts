@@ -1,4 +1,4 @@
-import { HttpClient, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
@@ -53,49 +53,36 @@ export class AuthenticatorService {
   }
 
   async renewAccessToken(accessToken: string): Promise<string> {
-    const body = {
-      accessToken
-    };
+    const body = { accessToken };
     const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
       .toPromise();
-
     this.setAccessToken((response.body as any).accessToken);
     return this.accessToken;
   }
 
-  private addTokenToRequestOptions(options: any) {
-    return {
-      ...options,
-      headers: {
-        ...options.headers,
-        Authorization: `Bearer ${this.getAccessToken()}`
-      }
-    };
+  private addTokenToHeaders(headers: any): HttpHeaders {
+    return new HttpHeaders({
+      ...headers,
+      Authorization: `Bearer ${this.getAccessToken()}`
+    });
   }
 
-  private async requestWithAuth(method: string, url: string, body: any, options: any): Promise<HttpResponse<Object>> {
-    
-    let optionsWithToken = this.addTokenToRequestOptions(options);
+  public async requestWithAuth(method: string, url: string, headers: any, body?: any): Promise<HttpResponse<Object>> {
+    let headersWithToken = this.addTokenToHeaders(headers);
+    const options = {
+      headers: headersWithToken,
+      body
+    };
     try {
-      return await this.http[method](url, optionsWithToken).toPromise();
+      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
     } catch (error) {
       if (error.status != 401) {
         throw error;
       }
     }
     this.accessToken = await this.renewAccessToken(this.accessToken);
-    optionsWithToken = this.addTokenToRequestOptions(options);
-    return await this.http[method](url, optionsWithToken).toPromise();
-
-  }
-
-  async getWithAuth(url, options): Promise<HttpResponse<Object>>  {
-    const body = {};
-    return this.requestWithAuth('get', url, body, options);
-  }
-
-  async postWithAuth(url, body, options): Promise<HttpResponse<Object>>  {
-    return this.requestWithAuth('post', url, body, options);
+    headersWithToken = this.addTokenToHeaders(headers);
+    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
   }
 
   getAccessToken(): string {
