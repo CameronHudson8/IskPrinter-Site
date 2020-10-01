@@ -2,6 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { map, startWith } from 'rxjs/operators';
+import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
@@ -30,7 +31,7 @@ export class IntrastationOrdersComponent implements OnInit {
   regionId: number;
   regionControl = new FormControl(undefined, Validators.required);
 
-  orders: Order[];
+  orders: MatTableDataSource<Order>;
 
   displayedColumns: string[] = [
     'duration',
@@ -73,7 +74,8 @@ export class IntrastationOrdersComponent implements OnInit {
 
   async printIsk() {
     console.log('running...');
-    this.orders = await this.getMarketOrdersInStructure(this.character.location.structure_id);
+    const ordersArray: Order[] = await this.getMarketOrdersInStructure(this.character.location.structure_id);
+    this.orders = new MatTableDataSource(ordersArray);
     console.log('done.');
   }
 
