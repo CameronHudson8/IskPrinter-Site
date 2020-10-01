@@ -7,8 +7,13 @@ table {
     width: 100%;
 }
 
+.mat-header-cell {
+    padding: 8px;
+}
+
 .mat-cell {
     font-size: 12px;
+    padding: 8px;
 }
 
 .example-form {
