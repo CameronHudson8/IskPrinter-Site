@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormControl, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { map, startWith } from 'rxjs/operators';
+import { MatPaginator } from '@angular/material/paginator';
 import { MatTableDataSource } from '@angular/material/table';
 import { Observable } from 'rxjs';
 
@@ -24,6 +25,7 @@ class Region {
 export class IntrastationOrdersComponent implements OnInit {
 
   @Input() character: Character;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
 
   private readonly regions: Region[] = regions.sort((region1, region2) => region1.regionName.localeCompare(region2.regionName));
 
@@ -76,6 +78,7 @@ export class IntrastationOrdersComponent implements OnInit {
     console.log('running...');
     const ordersArray: Order[] = await this.getMarketOrdersInStructure(this.character.location.structure_id);
     this.orders = new MatTableDataSource(ordersArray);
+    this.orders.paginator = this.paginator;
     console.log('done.');
   }
 
