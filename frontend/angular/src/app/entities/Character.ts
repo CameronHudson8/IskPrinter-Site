@@ -8,11 +8,11 @@ export class Character {
     name: string;
     expiresOn: Date;
     location: {
-        solar_system_id: number,
-        solar_system_name: string,
-        station_id: number | undefined,
-        structure_id: number | undefined,
-        structure_name: string | undefined,
+        solarSystemId: number,
+        solarSystemName: string,
+        stationId: number | undefined,
+        structureId: number | undefined,
+        structureName?: string | undefined,
     };
     portrait: string;
 
@@ -37,23 +37,31 @@ export class Character {
             'get',
             `https://esi.evetech.net/latest/characters/${this.id}/location/`
         );
-        this.location = (characterLocationResponse.body as any);
+        const locationData = characterLocationResponse.body as any;
 
         const solarSystemInfoResponse = await this.authenticatorService.requestWithAuth(
             'get',
-            `https://esi.evetech.net/latest/universe/systems/${this.location.solar_system_id}`
+            `https://esi.evetech.net/latest/universe/systems/${locationData.solar_system_id}`
         );
-        this.location.solar_system_name = (solarSystemInfoResponse.body as any).name;
+        const solarSystemData = solarSystemInfoResponse.body as any;
 
-        if (!this.location.structure_id) {
+        this.location = {
+            solarSystemId: locationData.solar_system_id,
+            solarSystemName: solarSystemData.name,
+            stationId: locationData.station_id,
+            structureId: locationData.structure_id,
+            structureName: locationData.structure_name,
+        };
+
+        if (!this.location.structureId) {
             return this;
         }
 
         const structureInfoResponse = await this.authenticatorService.requestWithAuth(
             'get',
-            `https://esi.evetech.net/latest/universe/structures/${this.location.structure_id}`
+            `https://esi.evetech.net/latest/universe/structures/${this.location.structureId}`
         );
-        this.location.structure_name = (structureInfoResponse.body as any).name;
+        this.location.structureName = (structureInfoResponse.body as any).name;
 
         return this;
     }
