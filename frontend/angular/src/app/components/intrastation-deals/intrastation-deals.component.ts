@@ -68,8 +68,9 @@ export class IntrastationDealsComponent implements OnInit {
 
   async printIsk() {
     console.log('running...');
-    const dealFinder = new DealFinder(this.authenticatorService);
-    this.deals = new MatTableDataSource(await dealFinder.findDeals(this.character.id, { verbose: true }));
+    const dealFinder = new DealFinder(this.authenticatorService, window.localStorage);
+    const deals = await dealFinder.findDeals(this.character.id, this.character.location.regionId, { verbose: true });
+    this.deals = new MatTableDataSource(deals);
     this.deals.paginator = this.paginator
     console.log('done.');
   }

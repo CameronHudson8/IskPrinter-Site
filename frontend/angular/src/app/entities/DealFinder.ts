@@ -5,7 +5,13 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 // Establish a global state.
 const ip: any = { charData: {} };
 
-class FakeLocalStorage {
+
+interface LocalStorageInterface {
+    setItem(key: string, value: string): void;
+    getItem(key: string): string;
+}
+
+class FakeLocalStorage implements LocalStorageInterface {
 
     data: object = {};
 
@@ -37,15 +43,23 @@ let itemVolHistory = {};
 export class DealFinder {
 
     authenticatorService: AuthenticatorService;
+    localStorage: LocalStorageInterface;
+    typeIds: number[];
     structureOrders: Order[];
     suggestedDeals: Deal[];
     verbose: boolean;
 
-    constructor(authenticatorService: AuthenticatorService) {
+    constructor(authenticatorService: AuthenticatorService, localStorage?: LocalStorageInterface) {
         this.authenticatorService = authenticatorService;
+        this.localStorage = localStorage || new FakeLocalStorage();
     }
 
-    async findDeals(characterId: number, { verbose }: { verbose: boolean }): Promise<Deal[]> {
+    async findDeals(characterId: number, regionId: number, { verbose }: { verbose: boolean }): Promise<Deal[]> {
+
+        this.typeIds = await this.getTypeIds();
+        this.localStorage.setItem('typeIds', JSON.stringify(this.typeIds));
+
+        console.log(`Marketable type ids: ${this.typeIds}`);
 
         return [
             // new Deal(typeId, volume, buyPrice, sellPrice, fees),
@@ -71,22 +85,51 @@ export class DealFinder {
 
     }
 
-    private async getMarketOrdersInRegion(regionId: number): Promise<Order[]> {
+    private async getTypeIds(): Promise<number[]> {
 
+        // Try to load cached data first
+        if (this.typeIds) {
+            return this.typeIds;
+        }
+        const storedTypeIds = JSON.parse(this.localStorage.getItem('typeIds'));
+        if (storedTypeIds) {
+            return storedTypeIds;
+        }
+
+        // Fetch fresh data
+        const marketGroupsResponse = await this.authenticatorService.requestWithAuth(
+            'get',
+            'https://esi.evetech.net/latest/markets/groups'
+        );
+        const marketGroupIds = marketGroupsResponse.body as number[];
+
+        const typeIds: number[] = await marketGroupIds
+            .map(async (marketGroupId) => {
+                const marketGroupResponse = await this.authenticatorService.requestWithAuth(
+                    'get',
+                    `https://esi.evetech.net/latest/markets/groups/${marketGroupId}`,
+                );
+                const groupTypeIds: number[] = (marketGroupResponse.body as any).types;
+                return groupTypeIds;
+            })
+            .reduce(async(previousValue, currentValue) => [
+                ...(await previousValue),
+                ...(await currentValue)
+            ]);
+        
+        return typeIds;
+    }
+
+    private async getVolumeHistory(regionId: number, typeId: number) {
         const response = await this.authenticatorService.requestWithAuth(
             'get',
-            `https://esi.evetech.net/latest/markets/${regionId}/orders`,
+            `https://esi.evetech.net/latest/markets/${regionId}/history`,
             {
-                params: { order_type: 'all' },
-                observe: 'response'
+                params: { type_id: typeId }
             }
         );
-        const orders = (<Order[]>response.body).map((order) => ({
-            ...order,
-            issued: new Date(order.issued)
-        }));
-        return orders;
-
+        const typeIds = response.body as number[];
+        return typeIds;
     }
 
     private async getMarketOrdersInStructure(structureId: number): Promise<Order[]> {

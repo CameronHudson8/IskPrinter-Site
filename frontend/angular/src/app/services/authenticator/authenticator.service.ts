@@ -70,6 +70,7 @@ export class AuthenticatorService {
           Authorization: `Bearer ${this.getAccessToken()}`,
         }),
         observe: 'response',
+        params: options?.params,
         responseType: 'json'
       }
     ).toPromise();
