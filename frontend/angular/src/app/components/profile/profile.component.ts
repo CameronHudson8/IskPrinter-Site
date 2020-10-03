@@ -19,9 +19,9 @@ export class ProfileComponent implements OnInit {
 
   async ngOnInit(): Promise<void> {
     if (this.authenticatorService.isLoggedIn()) {
-      const character = await Character.fromToken(this.authenticatorService);
-
-      this.character = character;
+      
+      this.character = new Character(this.authenticatorService);
+      await this.character.getId();
       await Promise.all([
         this.character.getLocation(),
         this.character.getPortrait()

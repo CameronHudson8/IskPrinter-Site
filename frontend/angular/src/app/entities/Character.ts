@@ -1,15 +1,12 @@
-import { AuthenticatorService } from '../services/authenticator/authenticator.service';
+import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
 export class Character {
 
     authenticatorService: AuthenticatorService;
 
-    CharacterID: number;
-    CharacterName: string;
-    ExpiresOn: Date;
-    TokenType: string;
-    CharacterOwnerHash: string;
-    IntellectualProperty: string;
+    id: number;
+    name: string;
+    expiresOn: Date;
     location: {
         solar_system_id: number,
         solar_system_name: string,
@@ -19,24 +16,26 @@ export class Character {
     };
     portrait: string;
 
-    static async fromToken(authenticatorService: AuthenticatorService): Promise<Character> {
-        const response = await authenticatorService.requestWithAuth(
+    constructor(authenticatorService: AuthenticatorService) {
+        this.authenticatorService = authenticatorService;
+    };
+
+    async getId(): Promise<Character> {
+        const response = await this.authenticatorService.requestWithAuth(
             'get',
             'https://login.eveonline.com/oauth/verify'
         );
-        const characterData = {
-            ...response.body,
-            ExpiresOn: new Date((response.body as any).ExpiresOn)
-        };
-        const character = Object.assign(new Character, characterData);
-        character.authenticatorService = authenticatorService;
-        return character;
+        const characterData: any = response.body;
+        this.id = characterData.CharacterID;
+        this.name = characterData.CharacterName;
+        this.expiresOn = new Date(characterData.ExpiresOn)
+        return this;
     }
 
     async getLocation(): Promise<Character> {
         const characterLocationResponse = await this.authenticatorService.requestWithAuth(
             'get',
-            `https://esi.evetech.net/latest/characters/${this.CharacterID}/location/`
+            `https://esi.evetech.net/latest/characters/${this.id}/location/`
         );
         this.location = (characterLocationResponse.body as any);
 
@@ -62,7 +61,7 @@ export class Character {
     async getPortrait(): Promise<Character> {
         const response = await this.authenticatorService.requestWithAuth(
             'get',
-            `https://esi.evetech.net/latest/characters/${this.CharacterID}/portrait/`
+            `https://esi.evetech.net/latest/characters/${this.id}/portrait/`
           );
           this.portrait = (response.body as any).px128x128;
           return this;

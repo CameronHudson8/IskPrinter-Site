@@ -1,11 +1,11 @@
 <mat-card class="form-card" style="display: flex;">
     <img src="{{character?.portrait}}" />
     <div style="padding: 0px 16px;">
-        <mat-card-title>{{character?.CharacterName}}</mat-card-title>            
+        <mat-card-title>{{character?.name}}</mat-card-title>            
         <mat-card-content>
-            ID: {{character?.CharacterID}}
+            ID: {{character?.id}}
             <br>
-            Expires: {{character?.ExpiresOn.toLocaleDateString()}}
+            Expires: {{character?.expiresOn?.toLocaleDateString()}}
             <br>
             Solar System: {{character?.location?.solar_system_name}}
             <br>
