@@ -26,8 +26,16 @@ table {
     width: 100%;
 }
 
-.align-content-center{
+.align-content-center {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.mat-column-volume,
+.mat-column-buyPrice,
+.mat-column-sellPrice,
+.mat-column-fees,
+.mat-column-profit {
+    text-align: right;
 }

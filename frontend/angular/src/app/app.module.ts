@@ -36,7 +36,7 @@ import { PageNotFoundComponent } from 'src/app/components/page-not-found/page-no
 import { ErrorStateMatcher, ShowOnDirtyErrorStateMatcher } from '@angular/material/core';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { CodeReceiverComponent } from './components/code-receiver/code-receiver.component';
-import { IntrastationOrdersComponent } from './components/intrastation-orders/intrastation-orders.component';
+import { IntrastationDealsComponent } from './components/intrastation-deals/intrastation-deals.component';
 import { ProfileComponent } from './components/profile/profile.component';
 
 @NgModule({
@@ -47,7 +47,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     PageNotFoundComponent,
     DashboardComponent,
     CodeReceiverComponent,
-    IntrastationOrdersComponent,
+    IntrastationDealsComponent,
     ProfileComponent,
   ],
   imports: [
