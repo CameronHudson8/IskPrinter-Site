@@ -16,7 +16,7 @@ export class AuthenticatorService {
   ) {
     this.accessToken = window.localStorage.getItem('accessToken');
     this.fetchLoginUrl()
-        .then((loginUrl) => this.loginUrl = loginUrl);
+      .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
   isLoggedIn(): boolean {
@@ -59,30 +59,30 @@ export class AuthenticatorService {
     return this.accessToken;
   }
 
-  private getAuthorizationHeader(): HttpHeaders {
-    return new HttpHeaders({ Authorization: `Bearer ${this.getAccessToken()}` });
-  }
+  public async requestWithAuth(method: string, url: string, options?: any): Promise<HttpResponse<Object>> {
+    const doRequest = async () => this.http.request(
+      method,
+      url,
+      {
+        body: options?.body,
+        headers: new HttpHeaders({
+          ...options?.headers,
+          Authorization: `Bearer ${this.getAccessToken()}`,
+        }),
+        observe: 'response',
+        responseType: 'json'
+      }
+    ).toPromise();
 
-  public async requestWithAuth(method: string, url: string, body?: any): Promise<HttpResponse<Object>> {
-    let options = {
-      headers: this.getAuthorizationHeader(),
-      body
-    };
     try {
-      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" })
-        .toPromise();
+      return await doRequest();
     } catch (error) {
       if (![401, 403].includes(error.status)) {
         throw error;
       }
     }
     this.accessToken = await this.renewAccessToken(this.accessToken);
-    options = {
-      headers: this.getAuthorizationHeader(),
-      body
-    };
-    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" })
-      .toPromise();
+    return await doRequest();
   }
 
   getAccessToken(): string {
