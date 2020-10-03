@@ -10,6 +10,10 @@ export class Character {
     location: {
         solarSystemId: number,
         solarSystemName: string,
+        constellationId: number,
+        constellationName: string,
+        regionId: number,
+        regionName: string,
         stationId: number | undefined,
         structureId: number | undefined,
         structureName?: string | undefined,
@@ -33,21 +37,42 @@ export class Character {
     }
 
     async getLocation(): Promise<Character> {
+
+        // Get basic location data, including solar system ID
         const characterLocationResponse = await this.authenticatorService.requestWithAuth(
             'get',
             `https://esi.evetech.net/latest/characters/${this.id}/location/`
         );
         const locationData = characterLocationResponse.body as any;
 
-        const solarSystemInfoResponse = await this.authenticatorService.requestWithAuth(
+        // Get solar system name and parent constellation ID
+        const solarSystemResponse = await this.authenticatorService.requestWithAuth(
             'get',
             `https://esi.evetech.net/latest/universe/systems/${locationData.solar_system_id}`
         );
-        const solarSystemData = solarSystemInfoResponse.body as any;
+        const solarSystemData = solarSystemResponse.body as any;
+
+        // Get constellation name and parent region ID
+        const constellationResponse = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/universe/constellations/${solarSystemData.constellation_id}`
+        );
+        const constellationData = constellationResponse.body as any;
+
+        // Get region name
+        const regionResponse = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/universe/regions/${constellationData.region_id}`
+        );
+        const regionData = regionResponse.body as any;
 
         this.location = {
             solarSystemId: locationData.solar_system_id,
             solarSystemName: solarSystemData.name,
+            constellationId: solarSystemData.constellation_id,
+            constellationName: constellationData.name,
+            regionId: constellationData.region_id,
+            regionName: regionData.name,
             stationId: locationData.station_id,
             structureId: locationData.structure_id,
             structureName: locationData.structure_name,

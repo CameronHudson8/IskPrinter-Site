@@ -1,14 +1,23 @@
 <mat-card class="form-card" style="display: flex;">
-    <img src="{{character?.portrait}}" />
+    <img style="align-self: flex-start;" src="{{character?.portrait}}" />
     <div style="padding: 0px 16px;">
         <mat-card-title>{{character?.name}}</mat-card-title>            
         <mat-card-content>
-            ID: {{character?.id}}
-            <br>
-            Expires: {{character?.expiresOn?.toLocaleDateString()}}
-            <br>
-            Solar System: {{character?.location?.solarSystemName}}
-            <br>
+            <div>
+                ID: {{character?.id}}
+            </div>
+            <div>
+                Expires: {{character?.expiresOn?.toLocaleDateString()}}
+            </div>
+            <div>
+                Region: {{character?.location?.regionName}}
+            </div>
+            <div>
+                Constellation: {{character?.location?.constellationName}}
+            </div>
+            <div>
+                Solar System: {{character?.location?.solarSystemName}}
+            </div>
             <div *ngIf="character?.location?.stationId">
                 Station ID: {{character?.location?.stationId || 'None'}}
             </div>
