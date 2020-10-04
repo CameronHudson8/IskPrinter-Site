@@ -1,28 +1,11 @@
-import { Order } from 'src/app/entities/Order';
-import { Deal } from 'src/app/entities/Deal';
 import { AuthenticatorInterface } from 'src/app/services/authenticator/authenticator.interface';
+import { Deal } from 'src/app/entities/DealFinder/Deal';
+import { FakeLocalStorage } from './FakeLocalStorage';
+import { LocalStorageInterface } from './LocalStorageInterface';
+import { Order } from 'src/app/entities/Order';
 
 // Establish a global state.
 const ip: any = { charData: {} };
-
-interface LocalStorageInterface {
-    setItem(key: string, value: string): void;
-    getItem(key: string): string;
-}
-
-class FakeLocalStorage implements LocalStorageInterface {
-
-    data: object = {};
-
-    setItem(key: string, value: string) {
-        this.data[key] = value;
-    }
-
-    getItem(key: string) {
-        return this.data[key];
-    }
-
-}
 
 const fakeLocalStorage = new FakeLocalStorage();
 
@@ -57,11 +40,9 @@ export class DealFinder {
 
         this.typeIds = await this.getTypeIds();
         this.localStorage.setItem('typeIds', JSON.stringify(this.typeIds));
-
-        console.log(`Marketable type ids: ${this.typeIds}`);
-        // console.log(`getting market history for typeId ${typeIds[0]}`);
-        // const volumeHistory = await this.getVolumeHistory(regionId, typeIds[0]);
-        // console.log(volumeHistory); 
+        console.log(`getting market history for typeId ${this.typeIds[0]}`);
+        const volumeHistory = await this.getVolumeHistory(regionId, this.typeIds[1]);
+        console.log(volumeHistory); 
 
         return [
             // new Deal(typeId, volume, buyPrice, sellPrice, fees),
@@ -107,7 +88,8 @@ export class DealFinder {
 
         const typeIds: number[] = await marketGroupIds
             .map(async (marketGroupId) => {
-                const marketGroupResponse = await this.authenticatorService.requestWithAuth(
+                let marketGroupResponse;
+                marketGroupResponse = await this.authenticatorService.requestWithAuth(
                     'get',
                     `https://esi.evetech.net/latest/markets/groups/${marketGroupId}`,
                 );
@@ -123,13 +105,21 @@ export class DealFinder {
     }
 
     private async getVolumeHistory(regionId: number, typeId: number) {
-        const response = await this.authenticatorService.requestWithAuth(
-            'get',
-            `https://esi.evetech.net/latest/markets/${regionId}/history`,
-            {
-                params: { type_id: typeId }
+        let response;
+        try {
+            response = await this.authenticatorService.requestWithAuth(
+                'get',
+                `https://esi.evetech.net/latest/markets/${regionId}/history`,
+                {
+                    params: { type_id: typeId }
+                }
+            );
+        } catch (err) {
+            if (err.status === 404) {
+                return [];
             }
-        );
+            throw err;
+        }
         const typeIds = response.body as number[];
         return typeIds;
     }
@@ -649,7 +639,7 @@ export class DealFinder {
                 let statusUpdate = 'Retrieved market history of ' + typeNames[typeId] + '\n(item ' + typeId + ' of ' + maxId + ').';
                 this.consoleAndStatus(statusUpdate);
 
-                let history = this.analyzeHistory(typeId, response.data);
+                let history = this.analyzeHistory(response.data);
                 if (typeof itemVolHistory[ip.regionId][typeId] === 'undefined') itemVolHistory[ip.regionId][typeId] = {};
                 itemVolHistory[ip.regionId][typeId].maxPrice = history.maxPrice;
                 itemVolHistory[ip.regionId][typeId].avgBuyVol = history.avgDailyBuyVol;
@@ -672,7 +662,7 @@ export class DealFinder {
             });
     }
 
-    analyzeHistory(typeId, data) {
+    analyzeHistory(data) {
 
         //console.log("Determining buy and sell orders...");
         let firstDate = data[0] ? data[0].date : Date.now() - 1000 * 60 * 60 * 24;
@@ -689,12 +679,6 @@ export class DealFinder {
             minSellMovingAvg: 0, // = itemData[typeId].minSell;
         };
 
-        itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys = 0;
-        itemVolHistory[ip.regionId][typeId].totalVolumeOfSells = 0;
-        itemVolHistory[ip.regionId][typeId].movingMaxBuyTotal = 0;
-        itemVolHistory[ip.regionId][typeId].movingMinSellTotal = 0;
-        itemVolHistory[ip.regionId][typeId].maxBuyMovingAvg = itemData[typeId].maxBuy;
-        itemVolHistory[ip.regionId][typeId].minSellMovingAvg = itemData[typeId].minSell;
         let buyFraction;
 
         for (let i = 0; i < data.length; i += 1) {
@@ -703,15 +687,30 @@ export class DealFinder {
 
             //console.log("Determining buy and sell orders for day " + data[i].date);
             let a = [
-                [data[i].highest,              // [0][0]
-                data[i].lowest],  // [0][1]
-                [itemVolHistory[ip.regionId][typeId].minSellMovingAvg,     // [1][0]
-                itemVolHistory[ip.regionId][typeId].maxBuyMovingAvg]   // [1][1]
+                [
+                    data[i].highest,              // [0][0]
+                    data[i].lowest                // [0][1]
+                ], 
+                [
+                    workingData.minSellMovingAvg, // [1][0]
+                    workingData.maxBuyMovingAvg   // [1][1]
+                ]  
             ];
 
+            console.log(`data[i].highest: ${data[i].highest}.`);
+            console.log(`data[i].lowest: ${data[i].lowest}.`);
+            console.log(`workingData.minSellMovingAvg: ${workingData.minSellMovingAvg}.`);
+            console.log(`workingData.maxBuyMovingAvg: ${workingData.maxBuyMovingAvg}.`);
+
             //TODO Use linear algebra to identify the option with minimum error.
-            let x = [data[i].highest, data[i].lowest];
-            let y = [itemVolHistory[ip.regionId][typeId].minSellMovingAvg, itemVolHistory[ip.regionId][typeId].maxBuyMovingAvg];
+            let x = [
+                data[i].highest,
+                data[i].lowest
+            ];
+            let y = [
+                workingData.minSellMovingAvg,
+                workingData.maxBuyMovingAvg
+            ];
             //let beta = Math.transpose(x);
 
             // Calculate the simple error for each option.
@@ -721,6 +720,8 @@ export class DealFinder {
                 [a[0][1] - a[1][0],    // [1][0] = lowest - minSell
                 a[0][1] - a[1][1]]   // [1][1] = lowest - maxBuy
             ];
+
+            console.log(`b: ${b}.`);
 
             // Square the errors.
             for (let j = 0; j < b.length; j += 1) {
@@ -752,12 +753,13 @@ export class DealFinder {
                     }
                 }
             }
-            buyFraction = this.getBuyFraction(typeId, data, i, minIndex);
-            this.updateCumulativeTotals(typeId, data, i, buyFraction);
+            console.log(`residuals: ${error}.`);
+            buyFraction = this.getBuyFraction(workingData, data, i, minIndex);
+            this.updateCumulativeTotals(workingData, data, i, buyFraction);
         }
         //Logger.log("Computed average average buy volume of " + this.avgBuyVolumePerDay);
-        let avgBuyVolumePerDay = itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys / dateSpan;
-        let avgSellVolumePerDay = itemVolHistory[ip.regionId][typeId].totalVolumeOfSells / dateSpan;
+        let avgBuyVolumePerDay = workingData.totalVolumeOfBuys / dateSpan;
+        let avgSellVolumePerDay = workingData.totalVolumeOfSells / dateSpan;
         return {
             maxPrice: maxPrice,
             avgDailyBuyVol: avgBuyVolumePerDay,
@@ -766,7 +768,9 @@ export class DealFinder {
 
     }
 
-    getBuyFraction(typeId, data, i, minIndex) {
+    // WARNING: This is a temporary refactor.
+    // This function will MUTATE the workingData parameter.
+    getBuyFraction(workingData, data, i, minIndex) {
         switch (10 * minIndex.j + minIndex.k) {
             case 0:
                 // Highest and lowest are both sell.
@@ -778,14 +782,14 @@ export class DealFinder {
             case 10:
                 // Highest is buy and lowest is sell.
                 // This is not possible. Make an assumption.
-                let totalCumulativeVolume = itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys + itemVolHistory[ip.regionId][typeId].totalVolumeOfSells;
+                let totalCumulativeVolume = workingData.totalVolumeOfBuys + workingData.totalVolumeOfSells;
                 if (totalCumulativeVolume == 0) {
                     // If there's nothing to go on, assume they're 50-50 split.
                     return 0.5;
                 } else {
                     // If we do have prior volume data, then assume it has the same
                     // distribution as what has already been seen.
-                    return itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys / totalCumulativeVolume;
+                    return workingData.totalVolumeOfBuys / totalCumulativeVolume;
                 }
             case 11:
                 // Highest and lowest are both buy.
@@ -796,18 +800,20 @@ export class DealFinder {
 
     }
 
-    updateCumulativeTotals(typeId, data, i, buyFraction) {
+    // WARNING: This is a temporary refactor.
+    // This function will MUTATE the workingData parameter.
+    updateCumulativeTotals(workingData, data, i, buyFraction) {
         let buyVolume = data[i].volume * buyFraction;
         let sellVolume = data[i].volume - buyVolume;
-        itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys += buyVolume;
-        itemVolHistory[ip.regionId][typeId].totalVolumeOfSells += sellVolume;
-        itemVolHistory[ip.regionId][typeId].movingMaxBuyTotal += buyVolume * data[i].lowest;
-        itemVolHistory[ip.regionId][typeId].movingMinSellTotal += sellVolume * data[i].highest;
-        if (itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys > 0) {
-            itemVolHistory[ip.regionId][typeId].maxBuyMovingAvg = itemVolHistory[ip.regionId][typeId].movingMaxBuyTotal / itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys;
+        workingData.totalVolumeOfBuys += buyVolume;
+        workingData.totalVolumeOfSells += sellVolume;
+        workingData.movingMaxBuyTotal += buyVolume * data[i].lowest;
+        workingData.movingMinSellTotal += sellVolume * data[i].highest;
+        if (workingData.totalVolumeOfBuys > 0) {
+            workingData.maxBuyMovingAvg = workingData.movingMaxBuyTotal / workingData.totalVolumeOfBuys;
         }
-        if (itemVolHistory[ip.regionId][typeId].totalVolumeOfSells > 0) {
-            itemVolHistory[ip.regionId][typeId].minSellMovingAvg = itemVolHistory[ip.regionId][typeId].movingMinSellTotal / itemVolHistory[ip.regionId][typeId].totalVolumeOfSells;
+        if (workingData.totalVolumeOfSells > 0) {
+            workingData.minSellMovingAvg = workingData.movingMinSellTotal / workingData.totalVolumeOfSells;
         }
     }
 

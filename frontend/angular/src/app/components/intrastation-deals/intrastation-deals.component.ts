@@ -7,8 +7,8 @@ import { Observable } from 'rxjs';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 import { Character } from 'src/app/entities/Character';
-import { Deal } from 'src/app/entities/Deal';
-import { DealFinder } from 'src/app/entities/DealFinder';
+import { Deal } from 'src/app/entities/DealFinder/Deal';
+import { DealFinder } from 'src/app/entities/DealFinder/DealFinder';
 import { LoaderService } from 'src/app/services/loader/loader.service';
 import regions from 'src/assets/regions.json';
 
