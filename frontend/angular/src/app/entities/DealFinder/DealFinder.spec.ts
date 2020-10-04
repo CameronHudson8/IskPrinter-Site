@@ -4,7 +4,7 @@ import { HttpResponse } from '@angular/common/http';
 
 import { FakeLocalStorage } from './FakeLocalStorage';
 import { AuthenticatorInterface } from '../../services/authenticator/authenticator.interface';
-import happyVolumeHistory from './happyVolumeHistory.json';
+import happyVolumeHistory from './happyVolumeHistoryTypeId2267.json';
 
 describe('DealFinder', () => {
 
@@ -25,7 +25,8 @@ describe('DealFinder', () => {
   it('should properly categorize historical volume', () => {
     const analyzedHistory = dealFinder.analyzeHistory(happyVolumeHistory);
     console.log(analyzedHistory);
-
+    happyVolumeHistory.forEach((day) => console.log(`${day.date}\t${day.volume.toLocaleString()}`));
+    console.log(happyVolumeHistory.map((day) => day.volume).reduce((total, daily) => total + daily, 0));
     expect(dealFinder).toBeTruthy();
   });
 

@@ -1,4 +1,5 @@
 import { AuthenticatorInterface } from 'src/app/services/authenticator/authenticator.interface';
+import { Character } from 'src/app/entities/Character';
 import { Deal } from 'src/app/entities/DealFinder/Deal';
 import { FakeLocalStorage } from './FakeLocalStorage';
 import { LocalStorageInterface } from './LocalStorageInterface';
@@ -24,9 +25,18 @@ let itemVolHistory = {};
 
 export class DealFinder {
 
+    static readonly MAX_ORDER_DAYS = 90;
+
+    // If there are no sell orders present on the market,
+    // The maximum transaction price in the historical data
+    // is multiplied by the following factor to compute a sell price.
+    static readonly HISTORICAL_SELL_FACTOR = 1.05;
+    static readonly MIN_BUY_PRICE = 0.01;
+
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
     typeIds: number[];
+    historicalData: { [key: number]: any };
     structureOrders: Order[];
     suggestedDeals: Deal[];
     verbose: boolean;
@@ -36,56 +46,33 @@ export class DealFinder {
         this.localStorage = localStorage || new FakeLocalStorage();
     }
 
-    async findDeals(characterId: number, regionId: number, { verbose }: { verbose: boolean }): Promise<Deal[]> {
+    async findDeals(character: Character, { verbose }: { verbose: boolean }): Promise<Deal[]> {
 
         this.typeIds = await this.getTypeIds();
-        this.localStorage.setItem('typeIds', JSON.stringify(this.typeIds));
 
-        const deals: Deal[] = [];
-
-        console.log(`getting market history for typeId ${this.typeIds[1]}`);
-        const volumeHistory = await this.getVolumeHistory(regionId, this.typeIds[1]);
-        const analyzedHistory = this.analyzeHistory(volumeHistory);
-
-        // TODO: get current buy and sell prices to complete new Deal(), below.
-
-        const typeId = this.typeIds[1];
-        const volume = Math.min(analyzedHistory.avgDailyBuyVol, analyzedHistory.avgDailySellVol)
-        // const d = new Deal(typeId, volume, )
-        
-        return [
-            // new Deal(typeId, volume, buyPrice, sellPrice, fees),
-            new Deal(28392, 1, 200, 800, 2),
-            new Deal(2819, 28, 2849, 98943, 38),
-            new Deal(294903, 3028, 1084928, 5029052, 10892),
-        ].sort((deal1, deal2) => deal2.profit - deal1.profit);
-
-        ip.charData.id = characterId;
-        this.verbose = verbose || false;
-
-        // await this.retrieveData();
-        // await this.buildItemList();
-        // await this.getTypeNames();
-        // await this.removeExpiredItems();
-        // await this.getHistoriesOfItems(7);
-        // await this.readSkills();
-        // await this.fillDataGaps();
-        // await this.calcIskToInvest();
-        // await this.calcScores();
-        // await this.removeAlreadyTrading();
-        return this.suggestOrders();
+        const [
+            historicalData,
+            currentPrices
+        ] = await Promise.all([
+            this.getHistoricalData(character.location.regionId, this.typeIds),
+            this.getCurrentPrices(character.location.structureId)
+        ]);
+        this.historicalData = historicalData;
+        const deals: Deal[] = this.computeDeals(currentPrices, historicalData);
+        return deals;
 
     }
 
     private async getTypeIds(): Promise<number[]> {
+        console.log('Getting type ids...');
 
         // Try to load cached data first
         if (this.typeIds) {
             return this.typeIds;
         }
         const storedTypeIds = JSON.parse(this.localStorage.getItem('typeIds'));
-        if (storedTypeIds) {
-            return storedTypeIds;
+        if (storedTypeIds?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24)) {
+            return storedTypeIds.data;
         }
 
         // Fetch fresh data
@@ -105,32 +92,319 @@ export class DealFinder {
                 const groupTypeIds: number[] = (marketGroupResponse.body as any).types;
                 return groupTypeIds;
             })
-            .reduce(async(previousValue, currentValue) => [
+            .reduce(async (previousValue, currentValue) => [
                 ...(await previousValue),
                 ...(await currentValue)
             ]);
-        
+
+        this.localStorage.setItem('typeIds', JSON.stringify({
+            timestamp: Date.now(),
+            data: typeIds,
+        }));
         return typeIds;
     }
 
-    private async getVolumeHistory(regionId: number, typeId: number) {
-        let response;
-        try {
-            response = await this.authenticatorService.requestWithAuth(
-                'get',
-                `https://esi.evetech.net/latest/markets/${regionId}/history`,
-                {
-                    params: { type_id: typeId }
-                }
-            );
-        } catch (err) {
-            if (err.status === 404) {
-                return [];
-            }
-            throw err;
+    private async getHistoricalData(regionId: number, typeIds: number[]): Promise<{ [key: number]: any }> {
+        console.log('Getting historical data...');
+
+        // Try to load cached data first
+        if (this.historicalData) {
+            return this.historicalData;
         }
-        const typeIds = response.body as number[];
-        return typeIds;
+        const storedHistoricalData = JSON.parse(this.localStorage.getItem('historicalData'));
+        if (storedHistoricalData?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24)) {
+            return storedHistoricalData.data;
+        }
+
+        const historicalData = await typeIds.map(async (typeId) => {
+            let response;
+            try {
+                response = await this.authenticatorService.requestWithAuth(
+                    'get',
+                    `https://esi.evetech.net/latest/markets/${regionId}/history`,
+                    {
+                        params: { type_id: typeId }
+                    }
+                );
+            } catch (err) {
+                if (err.status === 404) {
+                    return [];
+                }
+                throw err;
+            }
+            const history = response.body as number[];
+            return { [typeId]: this.analyzeHistory(history) };
+        }).reduce(async (previousValue, currentValue): Promise<{ [key: number]: any }> => ({
+            ...(await previousValue),
+            ...(await currentValue),
+        }));
+
+        this.localStorage.setItem('historicalData', JSON.stringify({
+            timestamp: Date.now(),
+            data: historicalData,
+        }));
+        return historicalData;
+    }
+
+    analyzeHistory(data) {
+
+        let maxPrice = 0;
+
+        const workingData = {
+            totalVolumeOfBuys: 0,
+            totalVolumeOfSells: 0,
+            movingMaxBuyTotal: 0,
+            movingMinSellTotal: 0,
+            maxBuyMovingAvg: 0, // = itemData[typeId].maxBuy;
+            minSellMovingAvg: 0, // = itemData[typeId].minSell;
+        };
+
+        if (data.length === 0) {
+            return {
+                maxPrice: 0,
+                avgDailyBuyVol: 0,
+                avgDailySellVol: 0,
+            };
+        }
+
+        let buyFraction;
+        const firstDate: number = Number(new Date(data[0].date));
+        let dateSpan;
+
+        for (let i = 0; i < data.length; i += 1) {
+
+            maxPrice = Math.max(maxPrice, data[i].highest);
+
+            let a = [
+                [
+                    data[i].highest,              // [0][0]
+                    data[i].lowest                // [0][1]
+                ],
+                [
+                    workingData.minSellMovingAvg, // [1][0]
+                    workingData.maxBuyMovingAvg   // [1][1]
+                ]
+            ];
+
+            //TODO Use linear algebra to identify the option with minimum error.
+            let x = [
+                data[i].highest,
+                data[i].lowest
+            ];
+            let y = [
+                workingData.minSellMovingAvg,
+                workingData.maxBuyMovingAvg
+            ];
+            //let beta = Math.transpose(x);
+
+            // Calculate the simple error for each option.
+            let b = [
+                [a[0][0] - a[1][0],    // [0][0] = highest - minSell
+                a[0][0] - a[1][1]],  // [0][1] = highest - maxBuy
+                [a[0][1] - a[1][0],    // [1][0] = lowest - minSell
+                a[0][1] - a[1][1]]   // [1][1] = lowest - maxBuy
+            ];
+
+            // Square the errors.
+            for (let j = 0; j < b.length; j += 1) {
+                for (let k = 0; k < b[j].length; k += 1) {
+                    b[j][k] *= b[j][k];
+                }
+            }
+
+            // Calculate the total error for each possibility.
+            let error = [
+                [b[0][0] + b[1][0],  // [0][0] = highestIsSell and LowestIsSell
+                b[0][0] + b[1][1]], // [0][1] = highestIsSell and LowestIsBuy
+                [b[0][1] + b[1][0],  // [1][0] = highestIsBuy and LowestIsSell
+                b[0][1] + b[1][1]]  // [1][1] = highestIsBuy and LowestIsBuy
+            ];
+
+            // Initialize a pair of indices that will correspond to the min error.
+            let minIndex = {
+                j: 0,
+                k: 0
+            };
+
+            // Find the option with the minimum error.
+            for (let j = 0; j < error.length; j += 1) {
+                for (let k = 0; k < error[j].length; k += 1) {
+                    if (error[j][k] < error[minIndex.j][minIndex.k]) {
+                        minIndex.j = j;
+                        minIndex.k = k;
+                    }
+                }
+            }
+
+            buyFraction = this.getBuyFraction(workingData, data, i, minIndex);
+            this.updateCumulativeTotals(workingData, data, i, buyFraction);
+
+            let finalDate = Number(new Date(data[i].date));
+            dateSpan = 1 + (finalDate - firstDate) / 1000 / 60 / 60 / 24;
+
+        }
+        let avgBuyVolumePerDay = workingData.totalVolumeOfBuys / dateSpan;
+        let avgSellVolumePerDay = workingData.totalVolumeOfSells / dateSpan;
+        return {
+            maxPrice,
+            avgDailyBuyVol: avgBuyVolumePerDay,
+            avgDailySellVol: avgSellVolumePerDay,
+        };
+
+    }
+
+    // WARNING: This is a temporary refactor.
+    // This function will MUTATE the workingData parameter.
+    getBuyFraction(workingData, data, i, minIndex) {
+        switch (10 * minIndex.j + minIndex.k) {
+            case 0:
+                // Highest and lowest are both sell.
+                return 0;
+            case 1:
+                // Highest price is sell and lowest price is buy.
+                return (data[i].highest - data[i].average)
+                    / (data[i].highest - data[i].lowest);
+            case 10:
+                // Highest is buy and lowest is sell.
+                // This is not possible. Make an assumption.
+                let totalCumulativeVolume = workingData.totalVolumeOfBuys + workingData.totalVolumeOfSells;
+                if (totalCumulativeVolume == 0) {
+                    // If there's nothing to go on, assume they're 50-50 split.
+                    return 0.5;
+                } else {
+                    // If we do have prior volume data, then assume it has the same
+                    // distribution as what has already been seen.
+                    return workingData.totalVolumeOfBuys / totalCumulativeVolume;
+                }
+            case 11:
+                // Highest and lowest are both buy.
+                return 1;
+            default:
+                throw new Error('Impossible combination if j and k. Please debug me.');
+        }
+
+    }
+
+    // WARNING: This is a temporary refactor.
+    // This function will MUTATE the workingData parameter.
+    updateCumulativeTotals(workingData, data, i, buyFraction) {
+
+        let buyVolume = data[i].volume * buyFraction;
+        let sellVolume = data[i].volume - buyVolume;
+
+        workingData.totalVolumeOfBuys += buyVolume;
+        workingData.totalVolumeOfSells += sellVolume;
+
+        workingData.movingMaxBuyTotal += buyVolume * data[i].lowest;
+        workingData.movingMinSellTotal += sellVolume * data[i].highest;
+        if (workingData.totalVolumeOfBuys > 0) {
+            workingData.maxBuyMovingAvg = workingData.movingMaxBuyTotal / workingData.totalVolumeOfBuys;
+        }
+        if (workingData.totalVolumeOfSells > 0) {
+            workingData.minSellMovingAvg = workingData.movingMinSellTotal / workingData.totalVolumeOfSells;
+        }
+    }
+
+    // Use structure id to get structure orders.
+    private async getCurrentPrices(structureId: number): Promise<{ [key: number]: any }> {
+        console.log('Getting current prices...');
+
+        const response = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/markets/structures/${structureId}`,
+        );
+        const totalPages = Number(response.headers.get('x-pages'));
+
+        const pages = [];
+        for (let i = 1; i <= totalPages; i += 1) {
+            pages.push(i);
+        }
+
+        const currentPrices = await pages
+            .map(async (pageNumber: number) => {
+                let response;
+                response = await this.authenticatorService.requestWithAuth(
+                    'get',
+                    `https://esi.evetech.net/latest/markets/structures/${structureId}`,
+                    { params: { page: pageNumber } }
+                );
+                const orders = response.body as Order[];
+                return orders;
+            })
+            .map(async (page: Promise<Order[]>) => {
+
+                const pageSummary: { [key: number]: any } = {};
+
+                (await page).forEach((order) => {
+                    if (pageSummary[order.type_id] === undefined) {
+                        pageSummary[order.type_id] = {}
+                    }
+                    if (order.is_buy_order) {
+                        if (
+                            pageSummary[order.type_id].maxBuy === undefined
+                            || order.price > pageSummary[order.type_id].maxBuy
+                        ) { pageSummary[order.type_id].maxBuy = order.price; }
+                    } else {
+                        if (
+                            pageSummary[order.type_id].minSell === undefined
+                            || order.price < pageSummary[order.type_id].minSell
+                        ) { pageSummary[order.type_id].minSell = order.price; }
+                    }
+
+                });
+
+                return pageSummary;
+
+            })
+            .reduce(async (completeSummary, pageSummary) => {
+
+                const completeSummaryClone = { ...(await completeSummary) };
+
+                Object.entries(await pageSummary).forEach(([typeId, typeSummary]) => {
+
+                    if (completeSummaryClone[typeId] === undefined) {
+                        completeSummaryClone[typeId] = typeSummary;
+                        return;
+                    }
+                    if (
+                        completeSummaryClone[typeId].maxBuy === undefined
+                        || typeSummary.maxBuy > completeSummaryClone[typeId].maxBuy
+                    ) { completeSummaryClone[typeId].maxBuy = typeSummary.maxBuy; }
+                    if (
+                        completeSummaryClone[typeId].minSell === undefined
+                        || typeSummary.minSell < completeSummaryClone[typeId].minSell
+                    ) { completeSummaryClone[typeId].minSell = typeSummary.minSell; }
+
+                });
+
+                return completeSummaryClone;
+            });
+        return currentPrices;
+    }
+
+    private computeDeals(
+        currentPrices: { [key: number]: any },
+        historicalData: { [key: number]: any }
+    ): Deal[] {
+
+        const deals: Deal[] = [];
+
+        for (const [typeId, historicalDatum] of Object.entries(historicalData)) {
+
+            const volume = Math.round(DealFinder.MAX_ORDER_DAYS * Math.min(historicalDatum.avgDailyBuyVol, historicalDatum.avgDailySellVol));
+            let buyPrice = DealFinder.MIN_BUY_PRICE;
+            if (currentPrices[typeId]?.maxBuy) {
+                buyPrice = Math.max(buyPrice, 1.001 * currentPrices[typeId].maxBuy);
+            }
+            let sellPrice = DealFinder.HISTORICAL_SELL_FACTOR * historicalDatum.maxPrice;
+            if (currentPrices[typeId]?.minSell) {
+                sellPrice = Math.min(sellPrice, 0.999 * currentPrices[typeId].minSell);
+            }
+            const fees = 0; // TODO calculate fees based on skills
+            deals.push(new Deal(Number(typeId), volume, buyPrice, sellPrice, fees));
+        }
+
+        return deals.sort((deal1, deal2) => deal2.profit - deal1.profit);
     }
 
     private async getMarketOrdersInStructure(structureId: number): Promise<Order[]> {
@@ -216,7 +490,7 @@ export class DealFinder {
             this.getCharWalletBal(ip.charData.id),
             this.getCurrentLocation(ip.charData.id),
             this.getReprocessedValues(),
-            this.getStructureOrders()
+            this.getCurrentPrices(undefined)
         ]);
     }
 
@@ -539,251 +813,6 @@ export class DealFinder {
         ).then((response: any) => {
             ip.charData.walletBal = response.data;
         });
-    }
-
-    // Use structure id to get structure orders.
-    getStructureOrders() {
-        if (dataIsFresh) return Promise.resolve();
-
-        // First, get the number of pages.
-        this.consoleAndStatus('Downloading structure orders...');
-        let options: any = OPTS;
-        options.token = ip.accessToken.tokenString;
-        if (!marketData[ip.structureId]) marketData[ip.structureId] = {};
-        marketData[ip.structureId].orders = [];
-
-        let p = Promise.resolve();
-        let totalOrders = 0;
-
-        // Call the API once just to get the total number of pages.
-        return this.wrapperForFetch(ip.esiApis.market, 'getMarketsStructuresStructureId', ip.structureId, options)
-            .then((response: any) => {
-                const totalPages = response.response.header['x-pages'];
-                for (let i = 1; i <= totalPages; i += 1) {
-                    p = p.then(() => {
-                        options.page = i;
-                        return this.wrapperForFetch(ip.esiApis.market, 'getMarketsStructuresStructureId', ip.structureId, options)
-                    }).then((response: any) => {
-                        return new Promise((resolveInner, rejectInner) => {
-                            totalOrders += response.data.length;
-                            this.consoleAndStatus('Retrieved structure orders page ' + i + ' of ' + totalPages + '.');
-                            marketData[ip.structureId].orders = marketData[ip.structureId].orders.concat(response.data);
-                            resolveInner();
-                        });
-                    })
-                }
-            }).then(() => p);
-    }
-
-    // Retrieve item market histories if the current data is older than the threshold (in days).
-    getHistoriesOfItems(threshold) {
-        let statusUpdate = 'Getting histories of items...';
-        this.consoleAndStatus(statusUpdate);
-
-        return new Promise((resolve, reject) => {
-            let p = Promise.resolve();
-            for (let typeId in itemData) {
-                p = p.then(() => {
-                    // Don't bother retrieving data unless it's more than 7 days old.
-                    if (typeof itemVolHistory === 'undefined') itemVolHistory = {};
-                    // delete itemVolHistory.undefined;
-                    if (typeof itemVolHistory[ip.regionId] === 'undefined') itemVolHistory[ip.regionId] = {};
-                    if (typeof itemVolHistory[ip.regionId][typeId] === 'undefined') itemVolHistory[ip.regionId][typeId] = {};
-                    let needToRetrieve = Date.now() - itemVolHistory[ip.regionId][typeId].dataAge > threshold * 24 * 60 * 60 * 1000;
-                    needToRetrieve = !itemVolHistory[ip.regionId][typeId].dataAge || needToRetrieve;
-                    needToRetrieve = itemVolHistory[ip.regionId][typeId].avgBuyVol == null || needToRetrieve;
-                    if (needToRetrieve) {
-                        return this.getHistoryOfItem(typeId);
-                    } else {
-                        return Promise.resolve();
-                    }
-                });
-            }
-            resolve(p);
-        }).then((p) => p);
-    }
-
-    getHistoryOfItem(typeId) {
-        let options = OPTS;
-        return this.wrapperForFetch(ip.esiApis.market, 'getMarketsRegionIdHistory', ip.regionId, typeId, options)
-            .then((response: any) => {
-                let statusUpdate = 'Retrieved market history of ' + typeNames[typeId] + '\n(item ' + typeId + ' of ' + maxId + ').';
-                this.consoleAndStatus(statusUpdate);
-
-                let history = this.analyzeHistory(response.data);
-                if (typeof itemVolHistory[ip.regionId][typeId] === 'undefined') itemVolHistory[ip.regionId][typeId] = {};
-                itemVolHistory[ip.regionId][typeId].maxPrice = history.maxPrice;
-                itemVolHistory[ip.regionId][typeId].avgBuyVol = history.avgDailyBuyVol;
-                itemVolHistory[ip.regionId][typeId].avgSellVol = history.avgDailySellVol;
-                itemVolHistory[ip.regionId][typeId].dataAge = Date.now();
-                fakeLocalStorage.setItem('itemVolHistory', JSON.stringify(itemVolHistory));
-            })
-            .catch(reason => {
-                if (reason == 404) {
-
-                    // Remove the item from the data.
-                    let statusUpdate = 'Removing obsolete item ' + typeNames[typeId] + ' from data set.';
-                    this.consoleAndStatus(statusUpdate);
-
-                    delete itemData[typeId];
-                    fakeLocalStorage.setItem('itemData', JSON.stringify(itemData));
-                } else {
-                    console.error("Encountered " + reason + " error during item history retrieval!");
-                }
-            });
-    }
-
-    analyzeHistory(data) {
-
-        let maxPrice = 0;
-
-        const workingData = {
-            totalVolumeOfBuys: 0,
-            totalVolumeOfSells: 0,
-            movingMaxBuyTotal: 0,
-            movingMinSellTotal: 0,
-            maxBuyMovingAvg: 0, // = itemData[typeId].maxBuy;
-            minSellMovingAvg: 0, // = itemData[typeId].minSell;
-        };
-
-        let buyFraction;
-        const firstDate: number = Number(new Date(data[0].date));
-        let dateSpan;
-
-        for (let i = 0; i < data.length; i += 1) {
-
-            maxPrice = Math.max(maxPrice, data[i].highest);
-
-            let a = [
-                [
-                    data[i].highest,              // [0][0]
-                    data[i].lowest                // [0][1]
-                ], 
-                [
-                    workingData.minSellMovingAvg, // [1][0]
-                    workingData.maxBuyMovingAvg   // [1][1]
-                ]  
-            ];
-
-            //TODO Use linear algebra to identify the option with minimum error.
-            let x = [
-                data[i].highest,
-                data[i].lowest
-            ];
-            let y = [
-                workingData.minSellMovingAvg,
-                workingData.maxBuyMovingAvg
-            ];
-            //let beta = Math.transpose(x);
-
-            // Calculate the simple error for each option.
-            let b = [
-                [a[0][0] - a[1][0],    // [0][0] = highest - minSell
-                a[0][0] - a[1][1]],  // [0][1] = highest - maxBuy
-                [a[0][1] - a[1][0],    // [1][0] = lowest - minSell
-                a[0][1] - a[1][1]]   // [1][1] = lowest - maxBuy
-            ];
-
-            // Square the errors.
-            for (let j = 0; j < b.length; j += 1) {
-                for (let k = 0; k < b[j].length; k += 1) {
-                    b[j][k] *= b[j][k];
-                }
-            }
-
-            // Calculate the total error for each possibility.
-            let error = [
-                [b[0][0] + b[1][0],  // [0][0] = highestIsSell and LowestIsSell
-                b[0][0] + b[1][1]], // [0][1] = highestIsSell and LowestIsBuy
-                [b[0][1] + b[1][0],  // [1][0] = highestIsBuy and LowestIsSell
-                b[0][1] + b[1][1]]  // [1][1] = highestIsBuy and LowestIsBuy
-            ];
-
-            // Initialize a pair of indices that will correspond to the min error.
-            let minIndex = {
-                j: 0,
-                k: 0
-            };
-
-            // Find the option with the minimum error.
-            for (let j = 0; j < error.length; j += 1) {
-                for (let k = 0; k < error[j].length; k += 1) {
-                    if (error[j][k] < error[minIndex.j][minIndex.k]) {
-                        minIndex.j = j;
-                        minIndex.k = k;
-                    }
-                }
-            }
-
-            buyFraction = this.getBuyFraction(workingData, data, i, minIndex);
-            this.updateCumulativeTotals(workingData, data, i, buyFraction);
-
-            let finalDate = Number(new Date(data[i].date));
-            dateSpan = (finalDate - firstDate) / 1000 / 60 / 60 / 24;
-            console.log(`days: ${dateSpan}`);
-            
-        }
-        //Logger.log("Computed average average buy volume of " + this.avgBuyVolumePerDay);
-        let avgBuyVolumePerDay = workingData.totalVolumeOfBuys / dateSpan;
-        let avgSellVolumePerDay = workingData.totalVolumeOfSells / dateSpan;
-        return {
-            maxPrice: maxPrice,
-            avgDailyBuyVol: avgBuyVolumePerDay,
-            avgDailySellVol: avgSellVolumePerDay,
-        };
-
-    }
-
-    // WARNING: This is a temporary refactor.
-    // This function will MUTATE the workingData parameter.
-    getBuyFraction(workingData, data, i, minIndex) {
-        switch (10 * minIndex.j + minIndex.k) {
-            case 0:
-                // Highest and lowest are both sell.
-                return 0;
-            case 1:
-                // Highest price is sell and lowest price is buy.
-                return (data[i].highest - data[i].average)
-                    / (data[i].highest - data[i].lowest);
-            case 10:
-                // Highest is buy and lowest is sell.
-                // This is not possible. Make an assumption.
-                let totalCumulativeVolume = workingData.totalVolumeOfBuys + workingData.totalVolumeOfSells;
-                if (totalCumulativeVolume == 0) {
-                    // If there's nothing to go on, assume they're 50-50 split.
-                    return 0.5;
-                } else {
-                    // If we do have prior volume data, then assume it has the same
-                    // distribution as what has already been seen.
-                    return workingData.totalVolumeOfBuys / totalCumulativeVolume;
-                }
-            case 11:
-                // Highest and lowest are both buy.
-                return 1;
-            default:
-                throw new Error('Impossible combination if j and k. Please debug me.');
-        }
-
-    }
-
-    // WARNING: This is a temporary refactor.
-    // This function will MUTATE the workingData parameter.
-    updateCumulativeTotals(workingData, data, i, buyFraction) {
-
-        let buyVolume = data[i].volume * buyFraction;
-        let sellVolume = data[i].volume - buyVolume;
-
-        workingData.totalVolumeOfBuys += buyVolume;
-        workingData.totalVolumeOfSells += sellVolume;
-
-        workingData.movingMaxBuyTotal += buyVolume * data[i].lowest;
-        workingData.movingMinSellTotal += sellVolume * data[i].highest;
-        if (workingData.totalVolumeOfBuys > 0) {
-            workingData.maxBuyMovingAvg = workingData.movingMaxBuyTotal / workingData.totalVolumeOfBuys;
-        }
-        if (workingData.totalVolumeOfSells > 0) {
-            workingData.minSellMovingAvg = workingData.movingMinSellTotal / workingData.totalVolumeOfSells;
-        }
     }
 
     readSkills() {
