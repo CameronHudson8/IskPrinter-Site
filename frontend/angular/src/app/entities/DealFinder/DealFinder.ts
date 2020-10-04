@@ -40,10 +40,19 @@ export class DealFinder {
 
         this.typeIds = await this.getTypeIds();
         this.localStorage.setItem('typeIds', JSON.stringify(this.typeIds));
-        console.log(`getting market history for typeId ${this.typeIds[0]}`);
-        const volumeHistory = await this.getVolumeHistory(regionId, this.typeIds[1]);
-        console.log(volumeHistory); 
 
+        const deals: Deal[] = [];
+
+        console.log(`getting market history for typeId ${this.typeIds[1]}`);
+        const volumeHistory = await this.getVolumeHistory(regionId, this.typeIds[1]);
+        const analyzedHistory = this.analyzeHistory(volumeHistory);
+
+        // TODO: get current buy and sell prices to complete new Deal(), below.
+
+        const typeId = this.typeIds[1];
+        const volume = Math.min(analyzedHistory.avgDailyBuyVol, analyzedHistory.avgDailySellVol)
+        // const d = new Deal(typeId, volume, )
+        
         return [
             // new Deal(typeId, volume, buyPrice, sellPrice, fees),
             new Deal(28392, 1, 200, 800, 2),
@@ -197,37 +206,6 @@ export class DealFinder {
         });
     }
 
-    // // Load saved data.
-    // loadSavedData() {
-    //   return new Promise((resolve, reject) => {
-
-    //     // If there is saved data for this character that is less than 5 minutes old, load it.
-    //     let tempCharData = fakeLocalStorage.getItem(ip.charData.id);
-    //     if (tempCharData) {
-    //       tempCharData = JSON.parse(tempCharData);
-    //       let dataAge = Date.now() - tempCharData.timestamp;
-
-    //       // dataIsFresh = (dataAge < 5 * 60 * 1000);
-
-    //       // ---- FOR DEBUGGING ---- //
-    //       dataIsFresh = false;
-    //       console.log('Data is ' + (dataIsFresh ? '' : 'not ') + 'fresh.');
-
-    //       if (dataIsFresh) {
-    //         console.log('Loading saved data from ' + (dataAge / 1000 / 60).toFixed(1) + ' minutes ago...');
-    //         ip.charData = tempCharData;
-    //       }
-    //       //itemData = JSON.parse(fakeLocalStorage.getItem('itemData'));
-    //       let itemVolHistory = JSON.parse(fakeLocalStorage.getItem('itemVolHistory'));
-    //       itemData = {};
-    //       if (!itemVolHistory) itemVolHistory = {};
-    //       // if (typeof itemVolHistory[ip.regionId] === 'undefined') itemVolHistory[ip.regionId] = {};
-    //       if (!ip.charData) ip.charData = {};
-    //     }
-    //     resolve();
-    //   });
-    // }
-
     // Retrieve data from CCP.
     async retrieveData(): Promise<void> {
         await Promise.all([
@@ -324,7 +302,6 @@ export class DealFinder {
                 .then(response => response.text())
                 .then(dataString => JSON.parse(dataString))
                 .then(data => {
-                    // console.log(data);
                     ip.reprocessingData = data;
                     return resolve();
                 });
@@ -340,8 +317,6 @@ export class DealFinder {
 
             let allOrders = marketData[ip.structureId].orders;
             itemData = {};
-
-            console.log(`Keys in allOrders = ${Object.keys(allOrders).length}.`);
 
             for (let i = 0; i < allOrders.length; i += 1) {
 
@@ -382,9 +357,7 @@ export class DealFinder {
             let id;
             for (let i = 0; i < ip.charData.alreadyTrading.length; i += 1) {
                 id = ip.charData.alreadyTrading[i];
-                //console.log('checking ' + typeNames[id]);
                 if (itemData[id]) {
-                    //console.log('removing ' + typeNames[id]);
                     delete itemData[id];
                 }
             }
@@ -450,7 +423,6 @@ export class DealFinder {
             let result;
             api[fetchFunctionName](...fetchArgs, (error, data, response) => {
                 result = { error: error, data: data, response: response };
-                //console.log(result);
                 resolve(result);
             });
         }).then((result: any) => {
@@ -510,7 +482,6 @@ export class DealFinder {
         options.token = ip.accessToken.tokenString;
         return this.wrapperForFetch(ip.esiApis.market, 'getCharactersCharacterIdOrders', characterId, options)
             .then((response: any) => {
-                //console.log(response.data);
                 ip.charData.usedOrders = response.data.length;
                 ip.charData.additionalIskToCover = 0;
                 ip.charData.alreadyTrading = [];
@@ -657,17 +628,13 @@ export class DealFinder {
                     delete itemData[typeId];
                     fakeLocalStorage.setItem('itemData', JSON.stringify(itemData));
                 } else {
-                    console.log("Encountered " + reason + " error during item history retrieval!");
+                    console.error("Encountered " + reason + " error during item history retrieval!");
                 }
             });
     }
 
     analyzeHistory(data) {
 
-        //console.log("Determining buy and sell orders...");
-        let firstDate = data[0] ? data[0].date : Date.now() - 1000 * 60 * 60 * 24;
-        let finalDate = Date.now();
-        let dateSpan = (finalDate - firstDate) / 1000 / 60 / 60 / 24;
         let maxPrice = 0;
 
         const workingData = {
@@ -680,12 +647,13 @@ export class DealFinder {
         };
 
         let buyFraction;
+        const firstDate: number = Number(new Date(data[0].date));
+        let dateSpan;
 
         for (let i = 0; i < data.length; i += 1) {
 
             maxPrice = Math.max(maxPrice, data[i].highest);
 
-            //console.log("Determining buy and sell orders for day " + data[i].date);
             let a = [
                 [
                     data[i].highest,              // [0][0]
@@ -696,11 +664,6 @@ export class DealFinder {
                     workingData.maxBuyMovingAvg   // [1][1]
                 ]  
             ];
-
-            console.log(`data[i].highest: ${data[i].highest}.`);
-            console.log(`data[i].lowest: ${data[i].lowest}.`);
-            console.log(`workingData.minSellMovingAvg: ${workingData.minSellMovingAvg}.`);
-            console.log(`workingData.maxBuyMovingAvg: ${workingData.maxBuyMovingAvg}.`);
 
             //TODO Use linear algebra to identify the option with minimum error.
             let x = [
@@ -720,8 +683,6 @@ export class DealFinder {
                 [a[0][1] - a[1][0],    // [1][0] = lowest - minSell
                 a[0][1] - a[1][1]]   // [1][1] = lowest - maxBuy
             ];
-
-            console.log(`b: ${b}.`);
 
             // Square the errors.
             for (let j = 0; j < b.length; j += 1) {
@@ -753,9 +714,14 @@ export class DealFinder {
                     }
                 }
             }
-            console.log(`residuals: ${error}.`);
+
             buyFraction = this.getBuyFraction(workingData, data, i, minIndex);
             this.updateCumulativeTotals(workingData, data, i, buyFraction);
+
+            let finalDate = Number(new Date(data[i].date));
+            dateSpan = (finalDate - firstDate) / 1000 / 60 / 60 / 24;
+            console.log(`days: ${dateSpan}`);
+            
         }
         //Logger.log("Computed average average buy volume of " + this.avgBuyVolumePerDay);
         let avgBuyVolumePerDay = workingData.totalVolumeOfBuys / dateSpan;
@@ -803,10 +769,13 @@ export class DealFinder {
     // WARNING: This is a temporary refactor.
     // This function will MUTATE the workingData parameter.
     updateCumulativeTotals(workingData, data, i, buyFraction) {
+
         let buyVolume = data[i].volume * buyFraction;
         let sellVolume = data[i].volume - buyVolume;
+
         workingData.totalVolumeOfBuys += buyVolume;
         workingData.totalVolumeOfSells += sellVolume;
+
         workingData.movingMaxBuyTotal += buyVolume * data[i].lowest;
         workingData.movingMinSellTotal += sellVolume * data[i].highest;
         if (workingData.totalVolumeOfBuys > 0) {
@@ -891,9 +860,7 @@ export class DealFinder {
 
     calcScores() {
         console.log('Calculating item scores...');
-        // return new Promise((resolve, reject) => {
         const p = [];
-        console.log(`Keys in itemData = ${Object.keys(itemData).length}.`);
         for (let typeId in itemData) {
             p.push(this.reprocessedValue(typeId).then((reprocessedValue: number) => {
                 itemData[typeId].this.reprocessedValue = this.reprocessedValue;
@@ -909,8 +876,6 @@ export class DealFinder {
             }));
         }
         return Promise.all(p);
-        // });
-        // .then((p) => p.then(() => resolve()));
     }
 
     reprocessedValue(feedTypeId) {
@@ -960,7 +925,6 @@ export class DealFinder {
 
         let remainingBudget = ip.charData.iskToInvest;
 
-        console.log(allResults)
         while ((i < allResults.length) && (ordersUsed < ip.charData.availOrders)) {
             if (this.totalCost(allResults[i]) <= remainingBudget) {
                 currentRoster.push(allResults[i]);

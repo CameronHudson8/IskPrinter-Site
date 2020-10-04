@@ -16,6 +16,7 @@ describe('DealFinder', () => {
 
   let fakeLocalStorage;
   let dealFinder
+
   beforeEach(() => {
     fakeLocalStorage = new FakeLocalStorage();
     dealFinder = new DealFinder(stubAuthenticatorService, fakeLocalStorage);
@@ -24,13 +25,6 @@ describe('DealFinder', () => {
   it('should properly categorize historical volume', () => {
     const analyzedHistory = dealFinder.analyzeHistory(happyVolumeHistory);
     console.log(analyzedHistory);
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
-    console.log('ANALYZING HISTORY');
 
     expect(dealFinder).toBeTruthy();
   });
