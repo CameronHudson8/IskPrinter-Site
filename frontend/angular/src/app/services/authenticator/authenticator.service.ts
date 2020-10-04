@@ -2,10 +2,11 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthenticatorInterface } from './authenticator.interface';
 import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticatorService {
+export class AuthenticatorService implements AuthenticatorInterface {
 
   private accessToken: string;
   private loginUrl: string;

@@ -1,10 +1,9 @@
 import { Order } from 'src/app/entities/Order';
 import { Deal } from 'src/app/entities/Deal';
-import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { AuthenticatorInterface } from 'src/app/services/authenticator/authenticator.interface';
 
 // Establish a global state.
 const ip: any = { charData: {} };
-
 
 interface LocalStorageInterface {
     setItem(key: string, value: string): void;
@@ -42,14 +41,14 @@ let itemVolHistory = {};
 
 export class DealFinder {
 
-    authenticatorService: AuthenticatorService;
+    authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
     typeIds: number[];
     structureOrders: Order[];
     suggestedDeals: Deal[];
     verbose: boolean;
 
-    constructor(authenticatorService: AuthenticatorService, localStorage?: LocalStorageInterface) {
+    constructor(authenticatorService: AuthenticatorInterface, localStorage?: LocalStorageInterface) {
         this.authenticatorService = authenticatorService;
         this.localStorage = localStorage || new FakeLocalStorage();
     }
@@ -60,6 +59,9 @@ export class DealFinder {
         this.localStorage.setItem('typeIds', JSON.stringify(this.typeIds));
 
         console.log(`Marketable type ids: ${this.typeIds}`);
+        // console.log(`getting market history for typeId ${typeIds[0]}`);
+        // const volumeHistory = await this.getVolumeHistory(regionId, typeIds[0]);
+        // console.log(volumeHistory); 
 
         return [
             // new Deal(typeId, volume, buyPrice, sellPrice, fees),
@@ -677,6 +679,15 @@ export class DealFinder {
         let finalDate = Date.now();
         let dateSpan = (finalDate - firstDate) / 1000 / 60 / 60 / 24;
         let maxPrice = 0;
+
+        const workingData = {
+            totalVolumeOfBuys: 0,
+            totalVolumeOfSells: 0,
+            movingMaxBuyTotal: 0,
+            movingMinSellTotal: 0,
+            maxBuyMovingAvg: 0, // = itemData[typeId].maxBuy;
+            minSellMovingAvg: 0, // = itemData[typeId].minSell;
+        };
 
         itemVolHistory[ip.regionId][typeId].totalVolumeOfBuys = 0;
         itemVolHistory[ip.regionId][typeId].totalVolumeOfSells = 0;
