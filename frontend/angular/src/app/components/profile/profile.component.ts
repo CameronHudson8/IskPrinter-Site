@@ -24,7 +24,8 @@ export class ProfileComponent implements OnInit {
       await this.character.getId();
       await Promise.all([
         this.character.getLocation(),
-        this.character.getPortrait()
+        this.character.getPortrait(),
+        this.character.getWalletBalance()
       ]);
       this.characterUpdate.emit(this.character);
     }

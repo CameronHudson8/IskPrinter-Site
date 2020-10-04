@@ -23,6 +23,7 @@ export class Character {
         skillId: number,
         activeSkillLevel: number, 
     }[];
+    walletBalance: number;
 
     constructor(authenticatorService: AuthenticatorService) {
         this.authenticatorService = authenticatorService;
@@ -115,6 +116,16 @@ export class Character {
             skillId: skill.skill_id,
             activeSkillLevel: skill.active_skill_level,
         }));
+        return this;
+    }
+
+    async getWalletBalance(): Promise<Character> {
+        const response = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/characters/${this.id}/wallet/`
+        );
+        const walletBalance: number = (response.body as number);
+        this.walletBalance = walletBalance;
         return this;
     }
 

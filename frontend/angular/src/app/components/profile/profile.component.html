@@ -26,4 +26,9 @@
             </div>
         </mat-card-content>
     </div>
+    <div style="align-self: center;">
+        <mat-card-title>
+            Balance: {{character?.walletBalance?.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}} ISK
+        </mat-card-title>
+    </div>
 </mat-card>

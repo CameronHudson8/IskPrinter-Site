@@ -56,15 +56,18 @@ export class DealFinder {
         const [
             historicalData,
             currentPrices,
-            _
+            _1,
+            _2
         ] = await Promise.all([
             this.getHistoricalData(character.location.regionId, Object.keys(this.types).map(Number)),
             this.getCurrentPrices(character.location.structureId),
-            character.skills ? Promise.resolve() : character.getSkills()
+            character.skills ? Promise.resolve() : character.getSkills(),
+            character.walletBalance ? Promise.resolve() : character.getWalletBalance()
         ]);
         this.historicalData = historicalData;
-        const deals: Deal[] = this.computeDeals(currentPrices, historicalData, character.skills);
-        return deals;
+        let deals: Deal[] = this.computeDeals(currentPrices, historicalData, character);
+        deals = this.scaleOrFilterByAffordability(deals, character.walletBalance);
+        return deals.sort((deal1, deal2) => deal2.profit - deal1.profit);
 
     }
 
@@ -402,13 +405,13 @@ export class DealFinder {
     private computeDeals(
         currentPrices: { [key: number]: any },
         historicalData: { [key: number]: any },
-        characterSkills: any,
+        character: Character,
     ): Deal[] {
 
-        const brokerRelationsSkillLevel = characterSkills
+        const brokerRelationsSkillLevel = character.skills
             .filter((skill) => skill.skillId === 3446)[0]
             .activeSkillLevel;
-        const accountingSkillLevel = characterSkills
+        const accountingSkillLevel = character.skills
             .filter((skill) => skill.skillId === 16622)[0]
             .activeSkillLevel;
 
@@ -427,7 +430,7 @@ export class DealFinder {
         const buyFeeAndTaxRate = brokerFee;
         const sellFeeAndTaxRate = brokerFee + salesTax;
 
-        const deals: Deal[] = [];
+        let deals: Deal[] = [];
 
         for (const [typeId, historicalDatum] of Object.entries(historicalData)) {
 
@@ -445,8 +448,37 @@ export class DealFinder {
             const fees = buyFeeAndTax + sellFeeAndTax;
             deals.push(new Deal(Number(typeId), this.types[typeId], volume, buyPrice, sellPrice, fees));
         }
+        return deals;
+    }
 
-        return deals.sort((deal1, deal2) => deal2.profit - deal1.profit);
+    private scaleOrFilterByAffordability(deals: Deal[], walletBalance: number) {
+        const affordableDeals: Deal[] = [];
+        for (const deal of deals) {
+            if (deal.volume * deal.buyPrice + deal.fees > walletBalance) {
+                const feePerUnit = deal.fees / deal.volume;
+                const maxVolume = Math.floor(walletBalance / (deal.buyPrice + feePerUnit));
+                if (maxVolume > 0) {
+                    affordableDeals.push(new Deal(
+                        deal.typeId,
+                        deal.typeName,
+                        maxVolume,
+                        deal.buyPrice,
+                        deal.sellPrice,
+                        deal.fees * maxVolume / deal.volume
+                    ));
+                }
+            } else {
+                affordableDeals.push(new Deal(
+                    deal.typeId,
+                    deal.typeName,
+                    deal.volume,
+                    deal.buyPrice,
+                    deal.sellPrice,
+                    deal.fees
+                ));
+            }
+        }
+        return affordableDeals;
     }
 
     private async getMarketOrdersInStructure(structureId: number): Promise<Order[]> {
