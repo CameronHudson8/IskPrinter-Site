@@ -36,6 +36,7 @@ export class IntrastationDealsComponent implements OnInit {
 
   displayedDealColumns: string[] = [
     'typeId',
+    'typeName',
     'volume',
     'buyPrice',
     'sellPrice',
@@ -69,7 +70,7 @@ export class IntrastationDealsComponent implements OnInit {
   async printIsk() {
     console.log('running...');
     const dealFinder = new DealFinder(this.authenticatorService, window.localStorage);
-    const deals = await dealFinder.findDeals(this.character, { verbose: true });
+    const deals = await dealFinder.findDeals(this.character);
     this.deals = new MatTableDataSource(deals);
     this.deals.paginator = this.paginator
     console.log('done.');

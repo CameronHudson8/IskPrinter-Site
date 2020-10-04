@@ -2,6 +2,7 @@ export class Deal {
 
     constructor(
         public typeId: number,
+        public typeName: string,
         public volume: number,
         public buyPrice: number,
         public sellPrice: number,

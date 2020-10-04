@@ -19,6 +19,10 @@ export class Character {
         structureName?: string | undefined,
     };
     portrait: string;
+    skills: {
+        skillId: number,
+        activeSkillLevel: number, 
+    }[];
 
     constructor(authenticatorService: AuthenticatorService) {
         this.authenticatorService = authenticatorService;
@@ -98,6 +102,20 @@ export class Character {
           );
           this.portrait = (response.body as any).px128x128;
           return this;
+    }
+
+    async getSkills(): Promise<Character> {
+        const response = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/characters/${this.id}/skills/`
+        );
+        console.log()
+        const skillData: any[] = (response.body as any).skills;
+        this.skills = skillData.map((skill) => ({
+            skillId: skill.skill_id,
+            activeSkillLevel: skill.active_skill_level,
+        }));
+        return this;
     }
 
 }

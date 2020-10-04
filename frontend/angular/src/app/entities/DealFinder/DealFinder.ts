@@ -25,17 +25,20 @@ let itemVolHistory = {};
 
 export class DealFinder {
 
-    static readonly MAX_ORDER_DAYS = 90;
-
+    static readonly BASE_SALES_TAX = 0.05;
     // If there are no sell orders present on the market,
-    // The maximum transaction price in the historical data
     // is multiplied by the following factor to compute a sell price.
+    // The maximum transaction price in the historical data
     static readonly HISTORICAL_SELL_FACTOR = 1.05;
+    static readonly MAX_ORDER_DAYS = 90;
     static readonly MIN_BUY_PRICE = 0.01;
+
+    static readonly TYPE_CACHE_DURATION = 14; // days
+    static readonly HISTORICAL_DATA_CACHE_DURATION = 3; // days
 
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
-    typeIds: number[];
+    types: { [typeId: number]: string };
     historicalData: { [key: number]: any };
     structureOrders: Order[];
     suggestedDeals: Deal[];
@@ -46,33 +49,35 @@ export class DealFinder {
         this.localStorage = localStorage || new FakeLocalStorage();
     }
 
-    async findDeals(character: Character, { verbose }: { verbose: boolean }): Promise<Deal[]> {
+    async findDeals(character: Character): Promise<Deal[]> {
 
-        this.typeIds = await this.getTypeIds();
+        this.types = await this.getMarketableTypes();
 
         const [
             historicalData,
-            currentPrices
+            currentPrices,
+            _
         ] = await Promise.all([
-            this.getHistoricalData(character.location.regionId, this.typeIds),
-            this.getCurrentPrices(character.location.structureId)
+            this.getHistoricalData(character.location.regionId, Object.keys(this.types).map(Number)),
+            this.getCurrentPrices(character.location.structureId),
+            character.skills ? Promise.resolve() : character.getSkills()
         ]);
         this.historicalData = historicalData;
-        const deals: Deal[] = this.computeDeals(currentPrices, historicalData);
+        const deals: Deal[] = this.computeDeals(currentPrices, historicalData, character.skills);
         return deals;
 
     }
 
-    private async getTypeIds(): Promise<number[]> {
-        console.log('Getting type ids...');
+    private async getMarketableTypes(): Promise<{ [typeId: number]: string }> {
+        console.log('Getting marketable types...');
 
         // Try to load cached data first
-        if (this.typeIds) {
-            return this.typeIds;
+        if (this.types) {
+            return this.types;
         }
-        const storedTypeIds = JSON.parse(this.localStorage.getItem('typeIds'));
-        if (storedTypeIds?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24)) {
-            return storedTypeIds.data;
+        const storedTypes = JSON.parse(this.localStorage.getItem('types'));
+        if (storedTypes?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.TYPE_CACHE_DURATION)) {
+            return storedTypes.data;
         }
 
         // Fetch fresh data
@@ -82,26 +87,38 @@ export class DealFinder {
         );
         const marketGroupIds = marketGroupsResponse.body as number[];
 
-        const typeIds: number[] = await marketGroupIds
+        const types: { [typeId: number]: string } = await marketGroupIds
             .map(async (marketGroupId) => {
-                let marketGroupResponse;
-                marketGroupResponse = await this.authenticatorService.requestWithAuth(
+                const marketGroupResponse = await this.authenticatorService.requestWithAuth(
                     'get',
                     `https://esi.evetech.net/latest/markets/groups/${marketGroupId}`,
                 );
                 const groupTypeIds: number[] = (marketGroupResponse.body as any).types;
-                return groupTypeIds;
-            })
-            .reduce(async (previousValue, currentValue) => [
-                ...(await previousValue),
-                ...(await currentValue)
-            ]);
+                
+                return groupTypeIds.map(async (groupTypeId) => {
 
-        this.localStorage.setItem('typeIds', JSON.stringify({
+                    const typeResponse = await this.authenticatorService.requestWithAuth(
+                        'get',
+                        `https://esi.evetech.net/latest/universe/types/${groupTypeId}`,
+                    );
+                    const groupTypeName: string = (typeResponse.body as any).name;
+                    return { [groupTypeId]: groupTypeName };
+                })
+                .reduce(async (allGroupTypes, groupType) => ({
+                    ...(await allGroupTypes),
+                    ...(await groupType)
+                }), {});
+            })
+            .reduce(async (allTypes, groupTypes) => ({
+                ...(await allTypes),
+                ...(await groupTypes)
+            }), {});
+
+        this.localStorage.setItem('types', JSON.stringify({
             timestamp: Date.now(),
-            data: typeIds,
+            data: types,
         }));
-        return typeIds;
+        return types;
     }
 
     private async getHistoricalData(regionId: number, typeIds: number[]): Promise<{ [key: number]: any }> {
@@ -112,7 +129,7 @@ export class DealFinder {
             return this.historicalData;
         }
         const storedHistoricalData = JSON.parse(this.localStorage.getItem('historicalData'));
-        if (storedHistoricalData?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24)) {
+        if (storedHistoricalData?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.HISTORICAL_DATA_CACHE_DURATION)) {
             return storedHistoricalData.data;
         }
 
@@ -384,8 +401,31 @@ export class DealFinder {
 
     private computeDeals(
         currentPrices: { [key: number]: any },
-        historicalData: { [key: number]: any }
+        historicalData: { [key: number]: any },
+        characterSkills: any,
     ): Deal[] {
+
+        const brokerRelationsSkillLevel = characterSkills
+            .filter((skill) => skill.skillId === 3446)[0]
+            .activeSkillLevel;
+        const accountingSkillLevel = characterSkills
+            .filter((skill) => skill.skillId === 16622)[0]
+            .activeSkillLevel;
+
+        const stationIsNpc = false; // TODO: retrieve this from the current structure info
+        let brokerFee;
+        if (stationIsNpc) {
+            const npcStructureBrokerFee = 0.05; // TODO: retrieve this from the current structure info
+            brokerFee = npcStructureBrokerFee - 0.003 * brokerRelationsSkillLevel;
+        } else {
+            const firstImperialPalaceBrokerFee = 0.02;  // TODO: retrieve from current structure
+            brokerFee = firstImperialPalaceBrokerFee;
+        }
+
+        const salesTax = DealFinder.BASE_SALES_TAX * (1 - 0.011 * accountingSkillLevel);
+
+        const buyFeeAndTaxRate = brokerFee;
+        const sellFeeAndTaxRate = brokerFee + salesTax;
 
         const deals: Deal[] = [];
 
@@ -400,8 +440,10 @@ export class DealFinder {
             if (currentPrices[typeId]?.minSell) {
                 sellPrice = Math.min(sellPrice, 0.999 * currentPrices[typeId].minSell);
             }
-            const fees = 0; // TODO calculate fees based on skills
-            deals.push(new Deal(Number(typeId), volume, buyPrice, sellPrice, fees));
+            const buyFeeAndTax = Math.max(100, volume * buyPrice * buyFeeAndTaxRate);
+            const sellFeeAndTax = Math.max(100, volume * sellPrice * sellFeeAndTaxRate);
+            const fees = buyFeeAndTax + sellFeeAndTax;
+            deals.push(new Deal(Number(typeId), this.types[typeId], volume, buyPrice, sellPrice, fees));
         }
 
         return deals.sort((deal1, deal2) => deal2.profit - deal1.profit);
