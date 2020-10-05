@@ -58,7 +58,7 @@ export class DealFinder {
             currentPrices,
             _1,
             _2
-        ] = await Promise.all([
+        ] = await Promise.all<any>([
             this.getHistoricalData(character.location.regionId, Object.keys(this.types).map(Number)),
             this.getCurrentPrices(character.location.structureId),
             character.skills ? Promise.resolve() : character.getSkills(),
@@ -67,7 +67,9 @@ export class DealFinder {
         this.historicalData = historicalData;
         let deals: Deal[] = this.computeDeals(currentPrices, historicalData, character);
         deals = this.scaleOrFilterByAffordability(deals, character.walletBalance);
-        return deals.sort((deal1, deal2) => deal2.profit - deal1.profit);
+        return deals
+           .filter((deal) => deal.profit > 0)
+           .sort((deal1, deal2) => deal2.profit - deal1.profit);
 
     }
 
