@@ -1,4 +1,5 @@
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { Order } from './Order';
 
 export class Character {
 
@@ -18,6 +19,7 @@ export class Character {
         structureId: number | undefined,
         structureName?: string | undefined,
     };
+    orders: Order[];
     portrait: string;
     skills: {
         skillId: number,
@@ -96,6 +98,20 @@ export class Character {
         return this;
     }
 
+    async getOrders(): Promise<Character> {
+        const response = await this.authenticatorService.requestWithAuth(
+            'get',
+            `https://esi.evetech.net/latest/characters/${this.id}/orders/`
+        );
+        const orders: any[] = (response.body as any);
+        this.orders = orders.map((order) => ({
+            isBuyOrder: order.is_buy_order,
+            locationId: order.location_id,
+            typeId: order.type_id
+        }));
+        return this;
+    }
+
     async getPortrait(): Promise<Character> {
         const response = await this.authenticatorService.requestWithAuth(
             'get',
@@ -110,7 +126,6 @@ export class Character {
             'get',
             `https://esi.evetech.net/latest/characters/${this.id}/skills/`
         );
-        console.log()
         const skillData: any[] = (response.body as any).skills;
         this.skills = skillData.map((skill) => ({
             skillId: skill.skill_id,

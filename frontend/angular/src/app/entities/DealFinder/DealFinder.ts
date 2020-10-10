@@ -23,6 +23,13 @@ let maxId;
 let verbose;
 let itemVolHistory = {};
 
+interface EveOrder {
+    type_id: number;
+    is_buy_order: boolean;
+    price: number;
+    issued: Date;
+}
+
 export class DealFinder {
 
     static readonly BASE_SALES_TAX = 0.05;
@@ -57,19 +64,26 @@ export class DealFinder {
             historicalData,
             currentPrices,
             _1,
-            _2
+            _2,
+            _3,
         ] = await Promise.all<any>([
             this.getHistoricalData(character.location.regionId, Object.keys(this.types).map(Number)),
             this.getCurrentPrices(character.location.structureId),
             character.skills ? Promise.resolve() : character.getSkills(),
-            character.walletBalance ? Promise.resolve() : character.getWalletBalance()
+            character.walletBalance ? Promise.resolve() : character.getWalletBalance(),
+            character.orders ? Promise.resolve() : character.getOrders()
         ]);
         this.historicalData = historicalData;
         let deals: Deal[] = this.computeDeals(currentPrices, historicalData, character);
         deals = this.scaleOrFilterByAffordability(deals, character.walletBalance);
         return deals
-           .filter((deal) => deal.profit > 0)
-           .sort((deal1, deal2) => deal2.profit - deal1.profit);
+            .filter((deal) => deal.profit > 0)
+            // Only include deals for which there is NOT an existing order for the same typeId and location.
+            .filter((deal) => !character.orders.some((order) =>
+                order.typeId === deal.typeId
+                && order.locationId === character.location.structureId
+            ))
+            .sort((deal1, deal2) => deal2.profit - deal1.profit);
 
     }
 
@@ -341,7 +355,6 @@ export class DealFinder {
         for (let i = 1; i <= totalPages; i += 1) {
             pages.push(i);
         }
-
         const currentPrices = await pages
             .map(async (pageNumber: number) => {
                 let response;
@@ -350,10 +363,10 @@ export class DealFinder {
                     `https://esi.evetech.net/latest/markets/structures/${structureId}`,
                     { params: { page: pageNumber } }
                 );
-                const orders = response.body as Order[];
+                const orders = response.body as EveOrder[];
                 return orders;
             })
-            .map(async (page: Promise<Order[]>) => {
+            .map(async (page: Promise<EveOrder[]>) => {
 
                 const pageSummary: { [key: number]: any } = {};
 
@@ -483,13 +496,13 @@ export class DealFinder {
         return affordableDeals;
     }
 
-    private async getMarketOrdersInStructure(structureId: number): Promise<Order[]> {
+    private async getMarketOrdersInStructure(structureId: number): Promise<EveOrder[]> {
 
         const response = await this.authenticatorService.requestWithAuth(
             'get',
             `https://esi.evetech.net/latest/markets/structures/${structureId}`,
         );
-        const orders = (<Order[]>response.body).map((order) => ({
+        const orders = (<EveOrder[]>response.body).map((order) => ({
             ...order,
             issued: new Date(order.issued)
         }));
