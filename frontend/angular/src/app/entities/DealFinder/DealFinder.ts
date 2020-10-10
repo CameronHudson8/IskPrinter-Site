@@ -449,7 +449,7 @@ export class DealFinder {
 
         for (const [typeId, historicalDatum] of Object.entries(historicalData)) {
 
-            const volume = Math.round(DealFinder.MAX_ORDER_DAYS * Math.min(historicalDatum.avgDailyBuyVol, historicalDatum.avgDailySellVol));
+            const volume = DealFinder.MAX_ORDER_DAYS * Math.min(historicalDatum.avgDailyBuyVol, historicalDatum.avgDailySellVol);
             let buyPrice = DealFinder.MIN_BUY_PRICE;
             if (currentPrices[typeId]?.maxBuy) {
                 buyPrice = Math.max(buyPrice, 1.001 * currentPrices[typeId].maxBuy);
