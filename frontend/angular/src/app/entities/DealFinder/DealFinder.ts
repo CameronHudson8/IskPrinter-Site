@@ -37,7 +37,7 @@ export class DealFinder {
     // is multiplied by the following factor to compute a sell price.
     // The maximum transaction price in the historical data
     static readonly HISTORICAL_SELL_FACTOR = 1.05;
-    static readonly MAX_ORDER_DAYS = 90;
+    static readonly MAX_ORDER_DAYS = 1;
     static readonly MIN_BUY_PRICE = 0.01;
 
     static readonly TYPE_CACHE_DURATION = 14; // days
@@ -113,7 +113,7 @@ export class DealFinder {
                     `https://esi.evetech.net/latest/markets/groups/${marketGroupId}`,
                 );
                 const groupTypeIds: number[] = (marketGroupResponse.body as any).types;
-                
+
                 return groupTypeIds.map(async (groupTypeId) => {
 
                     const typeResponse = await this.authenticatorService.requestWithAuth(
@@ -123,10 +123,10 @@ export class DealFinder {
                     const groupTypeName: string = (typeResponse.body as any).name;
                     return { [groupTypeId]: groupTypeName };
                 })
-                .reduce(async (allGroupTypes, groupType) => ({
-                    ...(await allGroupTypes),
-                    ...(await groupType)
-                }), {});
+                    .reduce(async (allGroupTypes, groupType) => ({
+                        ...(await allGroupTypes),
+                        ...(await groupType)
+                    }), {});
             })
             .reduce(async (allTypes, groupTypes) => ({
                 ...(await allTypes),
