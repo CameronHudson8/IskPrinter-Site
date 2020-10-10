@@ -3,7 +3,7 @@ import express, { Request, Response, NextFunction } from 'express';
 import { RequiredParams, RequestValidator } from 'src/tools/RequestValidator';
 import { HttpError } from 'src/errors/HttpError';
 import { AuthenticationController } from 'src/controllers/Authentication';
-import { BadRequest } from 'src/errors/BadRequest';
+import { BadRequestError } from 'src/errors/BadRequestError';
 
 const router = express.Router();
 
@@ -31,7 +31,7 @@ router.post('/', async (req: Request, res: Response, next: NextFunction) => {
       accessToken = await (new AuthenticationController).getTokenFromRefresh(req.body.accessToken);
 
     } else {
-      throw new BadRequest("Expected the request body to contain 'code' or 'accessToken'.");
+      throw new BadRequestError("Expected the request body to contain 'code' or 'accessToken'.");
     }
 
     return res.json({ accessToken });

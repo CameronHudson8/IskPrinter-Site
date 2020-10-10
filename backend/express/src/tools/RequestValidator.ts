@@ -1,6 +1,6 @@
 import { Request } from 'express';
 
-import { BadRequest } from 'src/errors/BadRequest';
+import { BadRequestError } from 'src/errors/BadRequestError';
 
 export interface RequiredParams {
     body: string[];
@@ -21,12 +21,12 @@ export class RequestValidator {
         }
         for (const param of this.requiredParams.body) {
             if (!(param in request.body)) {
-                throw new BadRequest(`Body parameter '${param}' is required.`);
+                throw new BadRequestError(`Body parameter '${param}' is required.`);
             }
         }
         for (const param of this.requiredParams.query) {
             if (!(param in request.query)) {
-                throw new BadRequest(`Query parameter '${param}' is required.`);
+                throw new BadRequestError(`Query parameter '${param}' is required.`);
             }
         }
         return true;

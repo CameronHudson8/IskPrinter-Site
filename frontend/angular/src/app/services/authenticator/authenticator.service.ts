@@ -54,8 +54,16 @@ export class AuthenticatorService implements AuthenticatorInterface {
 
   async renewAccessToken(accessToken: string): Promise<string> {
     const body = { accessToken };
-    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
-      .toPromise();
+    let response;
+    try {
+      response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+        .toPromise();
+    } catch (error) {
+      if (error.status === 404) {
+        this.logOut();
+        throw error;
+      }
+    }
     this.setAccessToken((response.body as any).accessToken);
     return this.accessToken;
   }
@@ -80,6 +88,7 @@ export class AuthenticatorService implements AuthenticatorInterface {
       return await doRequest();
     } catch (error) {
       if (![401, 403].includes(error.status)) {
+        console.error(JSON.stringify(error));
         throw error;
       }
     }
