@@ -24,27 +24,27 @@
             </ng-container>
 
             <ng-container matColumnDef="volume">
-                <th mat-header-cell *matHeaderCellDef>Volume</th>
+                <th mat-header-cell *matHeaderCellDef>Volume, Daily</th>
                 <td mat-cell *matCellDef="let deal">{{deal.volume.toLocaleString()}}</td>
             </ng-container>
 
             <ng-container matColumnDef="buyPrice">
-                <th mat-header-cell *matHeaderCellDef>Buy Price</th>
+                <th mat-header-cell *matHeaderCellDef>Buy Price, Unit</th>
                 <td mat-cell *matCellDef="let deal">{{deal.buyPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</td>
             </ng-container>
 
             <ng-container matColumnDef="sellPrice">
-                <th mat-header-cell *matHeaderCellDef>Sell Price</th>
+                <th mat-header-cell *matHeaderCellDef>Sell Price, Unit</th>
                 <td mat-cell *matCellDef="let deal">{{deal.sellPrice.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</td>
             </ng-container>
 
             <ng-container matColumnDef="fees">
-                <th mat-header-cell *matHeaderCellDef>Fees</th>
+                <th mat-header-cell *matHeaderCellDef>Fees, Total</th>
                 <td mat-cell *matCellDef="let deal">{{deal.fees.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</td>
             </ng-container>
 
             <ng-container matColumnDef="profit">
-                <th mat-header-cell *matHeaderCellDef>Profit</th>
+                <th mat-header-cell *matHeaderCellDef>Profit, Total</th>
                 <td mat-cell *matCellDef="let deal">{{deal.profit.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2})}}</td>
             </ng-container>
 
