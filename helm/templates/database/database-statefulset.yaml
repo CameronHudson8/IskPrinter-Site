@@ -27,7 +27,7 @@ spec:
           image: "{{ .Values.database.image.repository }}:{{ .Values.database.image.tag }}"
           imagePullPolicy: {{ .Values.database.image.pullPolicy }}
           command: ["mongod"]
-          args: ["--journal"]
+          args: ["--journal", "--bind_ip_all"]
           env:
             - name: MONGO_INITDB_ROOT_USERNAME
               valueFrom:
