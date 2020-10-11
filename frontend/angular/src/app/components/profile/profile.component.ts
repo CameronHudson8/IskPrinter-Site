@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { Character } from 'src/app/entities/Character';
 
 @Component({
   selector: 'app-profile',
@@ -10,34 +10,25 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 })
 export class ProfileComponent implements OnInit {
 
-  public character: any;
+  character: any;
+  @Output() characterUpdate = new EventEmitter<Character>();
 
   constructor(
     public authenticatorService: AuthenticatorService,
-    private http: HttpClient
   ) { }
 
   async ngOnInit(): Promise<void> {
     if (this.authenticatorService.isLoggedIn()) {
-      const character = await this.getCharacter();
-      this.character = character;
+      
+      this.character = new Character(this.authenticatorService);
+      await this.character.getId();
+      await Promise.all([
+        this.character.getLocation(),
+        this.character.getPortrait(),
+        this.character.getWalletBalance()
+      ]);
+      this.characterUpdate.emit(this.character);
     }
-  }
-
-  public async getCharacter(): Promise<any> {
-
-    const response = await this.authenticatorService.requestWithAuth(
-      'get',
-      'https://login.eveonline.com/oauth/verify',
-      { observe: 'response' }
-    );
-    const rawCharacter: any = response.body;
-    const character = {
-      ...rawCharacter,
-      ExpiresOn: new Date(rawCharacter.ExpiresOn)
-    };
-    return character;
-    
   }
 
 }

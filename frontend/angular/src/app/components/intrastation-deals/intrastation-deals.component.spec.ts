@@ -1,13 +1,12 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
-import { CodeReceiverComponent } from './code-receiver.component';
+import { IntrastationDealsComponent } from './intrastation-deals.component';
 
-describe('CodeReceiverComponent', () => {
-  let component: CodeReceiverComponent;
-  let fixture: ComponentFixture<CodeReceiverComponent>;
+describe('IntrastationDealsComponent', () => {
+  let component: IntrastationDealsComponent;
+  let fixture: ComponentFixture<IntrastationDealsComponent>;
 
   let authenticatorServiceStub: Partial<AuthenticatorService> = {
     isLoggedIn: () => true,
@@ -15,15 +14,14 @@ describe('CodeReceiverComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodeReceiverComponent ],
-      imports: [ RouterTestingModule ],
+      declarations: [ IntrastationDealsComponent ],
       providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(CodeReceiverComponent);
+    fixture = TestBed.createComponent(IntrastationDealsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

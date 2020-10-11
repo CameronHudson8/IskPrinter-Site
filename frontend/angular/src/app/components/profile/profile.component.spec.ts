@@ -1,4 +1,7 @@
+import { HttpResponse } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+
+import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
 import { ProfileComponent } from './profile.component';
 
@@ -6,9 +9,17 @@ describe('ProfileComponent', () => {
   let component: ProfileComponent;
   let fixture: ComponentFixture<ProfileComponent>;
 
+  let authenticatorServiceStub: Partial<AuthenticatorService> = {
+    isLoggedIn: () => true,
+    requestWithAuth: (method: string, url: string, options?: any) =>  {
+      return new Promise<HttpResponse<Object>>((resolve: (value?: HttpResponse<Object>) => void, reject: (reason?: any) => void) => {});
+    }
+  };
+
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ ProfileComponent ]
+      declarations: [ ProfileComponent ],
+      providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
     })
     .compileComponents();
   }));

@@ -8,9 +8,9 @@ spec:
   type: {{ .Values.database.service.type }}
   ports:
     - port: {{ .Values.database.service.port }}
-      targetPort: http
+      targetPort: {{ .Values.database.service.port }}
       protocol: TCP
-      name: http
+      name: mongodb
   clusterIP: None
   selector:
     app.kubernetes.io/name: {{ include "isk-printer.name" . }}-database

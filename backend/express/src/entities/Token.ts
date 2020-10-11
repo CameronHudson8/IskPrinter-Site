@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { MongoClient, Collection} from 'mongodb';
-import { PersistentEntity } from './PersistentEntity';
+
+import { PersistentEntity } from 'src/entities/PersistentEntity';
+import { ResourceNotFoundError } from 'src/errors/ResourceNotFoundError';
 
 export class Token implements PersistentEntity {
 
@@ -48,6 +50,10 @@ export class Token implements PersistentEntity {
         const priorToken = await Token.withCollection((collection: Collection<any>) => {
             return collection.findOne({ accessToken: priorAccessToken });
         });
+
+        if (!priorToken) {
+            throw new ResourceNotFoundError(`Did not find a matching entry for access token ${priorAccessToken}.`);
+        }
 
         // Send it to Eve for refreshing.
         const config = {

@@ -6,7 +6,7 @@ frontend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
-    tag: cfbfa73
+    tag: 159c462
     pullPolicy: Always
   service:
     type: ClusterIP  # default
@@ -16,7 +16,7 @@ backend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: cfbfa73
+    tag: 159c462
     pullPolicy: Always
   service:
     type: ClusterIP  # default
@@ -32,6 +32,7 @@ database:
     type: ClusterIP  # default
     port: 27017
   volume:
+    capacity: 8Gi
     mountPath: /data/db
 
 imagePullSecrets: []
@@ -68,17 +69,24 @@ resources:
   backend:
     limits:
       cpu: *defaultCpuLimit
-      memory: 64Mi
+      memory: *defaultMemoryLimit
     requests:
       cpu: *defaultCpuRequest
-      memory: 64Mi
+      memory: *defaultMemoryRequest
   frontend:
     limits:
       cpu: *defaultCpuLimit
-      memory: 16Mi
+      memory: *defaultMemoryLimit
     requests:
       cpu: *defaultCpuRequest
-      memory: 16Mi
+      memory: *defaultMemoryRequest
+  database:
+    limits:
+      cpu: *defaultCpuLimit
+      memory: *defaultMemoryLimit
+    requests:
+      cpu: *defaultCpuRequest
+      memory: *defaultMemoryRequest
 
 nodeSelector: {}
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+import { Character } from 'src/app/entities/Character';
 
 @Component({
   selector: 'app-dashboard',
@@ -9,12 +10,17 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 })
 export class DashboardComponent implements OnInit {
 
+  character: Character;
 
   constructor(
     public authenticatorService: AuthenticatorService,
   ) { }
 
   ngOnInit(): void {
+  }
+
+  setCharacter(character: Character) {
+    this.character = character;
   }
 
 }

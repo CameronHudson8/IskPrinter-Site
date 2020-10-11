@@ -2,14 +2,14 @@ import { HttpClient, HttpResponse, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 
+import { AuthenticatorInterface } from './authenticator.interface';
 import { environment } from 'src/environments/environment';
-import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
-export class AuthenticatorService {
+export class AuthenticatorService implements AuthenticatorInterface {
 
   private accessToken: string;
-  private loginUrl: string
+  private loginUrl: string;
 
   constructor(
     private http: HttpClient,
@@ -17,7 +17,7 @@ export class AuthenticatorService {
   ) {
     this.accessToken = window.localStorage.getItem('accessToken');
     this.fetchLoginUrl()
-        .then((loginUrl) => this.loginUrl = loginUrl);
+      .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
   isLoggedIn(): boolean {
@@ -54,35 +54,46 @@ export class AuthenticatorService {
 
   async renewAccessToken(accessToken: string): Promise<string> {
     const body = { accessToken };
-    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
-      .toPromise();
+    let response;
+    try {
+      response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+        .toPromise();
+    } catch (error) {
+      if (error.status === 404) {
+        this.logOut();
+        throw error;
+      }
+    }
     this.setAccessToken((response.body as any).accessToken);
     return this.accessToken;
   }
 
-  private addTokenToHeaders(headers: any): HttpHeaders {
-    return new HttpHeaders({
-      ...headers,
-      Authorization: `Bearer ${this.getAccessToken()}`
-    });
-  }
+  public async requestWithAuth(method: string, url: string, options?: any): Promise<HttpResponse<Object>> {
+    const doRequest = async () => this.http.request(
+      method,
+      url,
+      {
+        body: options?.body,
+        headers: new HttpHeaders({
+          ...options?.headers,
+          Authorization: `Bearer ${this.getAccessToken()}`,
+        }),
+        observe: 'response',
+        params: options?.params,
+        responseType: 'json'
+      }
+    ).toPromise();
 
-  public async requestWithAuth(method: string, url: string, headers: any, body?: any): Promise<HttpResponse<Object>> {
-    let headersWithToken = this.addTokenToHeaders(headers);
-    const options = {
-      headers: headersWithToken,
-      body
-    };
     try {
-      return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+      return await doRequest();
     } catch (error) {
-      if (error.status != 401) {
+      if (![401, 403].includes(error.status)) {
+        console.error(JSON.stringify(error));
         throw error;
       }
     }
     this.accessToken = await this.renewAccessToken(this.accessToken);
-    headersWithToken = this.addTokenToHeaders(headers);
-    return await this.http.request(method, url, { ...options, observe: "response", responseType: "json" }).toPromise();
+    return await doRequest();
   }
 
   getAccessToken(): string {

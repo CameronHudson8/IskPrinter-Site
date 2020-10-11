@@ -7,11 +7,17 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
+import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
+
 import { NavComponent } from './nav.component';
 
 describe('NavComponent', () => {
   let component: NavComponent;
   let fixture: ComponentFixture<NavComponent>;
+
+  let authenticatorServiceStub: Partial<AuthenticatorService> = {
+    isLoggedIn: () => true,
+  };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -24,7 +30,8 @@ describe('NavComponent', () => {
         MatListModule,
         MatSidenavModule,
         MatToolbarModule,
-      ]
+      ],
+      providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
     }).compileComponents();
   }));
 
