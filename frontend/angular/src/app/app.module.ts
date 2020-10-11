@@ -29,6 +29,7 @@ import { MatTreeModule } from '@angular/material/tree';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RequestInformerModule } from 'src/app/modules/request-informer/request-informer.module';
+import { RequestThrottlerModule } from 'src/app/modules/request-throttler/request-throttler.module';
 
 import { NavComponent } from 'src/app/components/nav/nav.component';
 import { LoginComponent } from 'src/app/components/login/login.component';
@@ -79,6 +80,7 @@ import { ProfileComponent } from './components/profile/profile.component';
     FormsModule,
     HttpClientModule,
     RequestInformerModule,
+    RequestThrottlerModule,
     ReactiveFormsModule,
   ],
   providers: [
