@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { LoaderService } from 'src/app/services/loader/loader.service';
+import { RequestInformerService } from 'src/app/services/request-informer/request-informer.service';
 
 /**
  * This class is based on the example by jornare on Stackoverflow.
@@ -10,24 +10,24 @@ import { LoaderService } from 'src/app/services/loader/loader.service';
 @Injectable({
   providedIn: 'root'
 })
-export class Interceptor implements HttpInterceptor {
+export class RequestInformer implements HttpInterceptor {
 
   private requests: HttpRequest<any>[] = [];
 
   constructor(
-    private loaderService: LoaderService,
+    private requestInformer: RequestInformerService,
   ) { }
 
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);
     this.requests.splice(i, 1);
-    this.loaderService.isLoading.next(this.requests.length > 0);
+    this.requestInformer.isLoading.next(this.requests.length > 0);
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     // throw new Error('Method not implemented.');
     this.requests.push(req);
-    this.loaderService.isLoading.next(true);
+    this.requestInformer.isLoading.next(true);
     return Observable.create(observer => {
       const subscription = next.handle(req)
         .subscribe(

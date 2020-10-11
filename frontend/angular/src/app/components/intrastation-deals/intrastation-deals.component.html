@@ -2,9 +2,9 @@
 
     <div class="align-content-center">
         <button mat-raised-button class="spinner-with-text" color="accent" (click)="printIsk();"
-            [disabled]="loaderService.isLoading | async">
+            [disabled]="requestInformer.isLoading | async">
             <div class="align-content-center">
-                <mat-spinner *ngIf="loaderService.isLoading | async" diameter="16" color="accent"></mat-spinner>
+                <mat-spinner *ngIf="requestInformer.isLoading | async" diameter="16" color="accent"></mat-spinner>
                 <span>Print ISK</span>
             </div>
         </button>
