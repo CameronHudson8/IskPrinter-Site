@@ -28,16 +28,15 @@ export class RequestInformer implements HttpInterceptor {
     // throw new Error('Method not implemented.');
     this.requests.push(req);
     this.requestInformer.isLoading.next(true);
-    return Observable.create(observer => {
+    return new Observable((observer) => {
       const subscription = next.handle(req)
-        .subscribe(
-          event => {
-            if (event instanceof HttpResponse) {
-              this.removeRequest(req);
-              observer.next(event);
-            }
-          },
-          err => { this.removeRequest(req); observer.error(err); },
+        .subscribe((event) => {
+          if (event instanceof HttpResponse) {
+            this.removeRequest(req);
+            observer.next(event);
+          }
+        },
+          (err) => { this.removeRequest(req); observer.error(err); },
           () => { this.removeRequest(req); observer.complete(); });
       // teardown logic in case of cancelled requests
       return () => {
