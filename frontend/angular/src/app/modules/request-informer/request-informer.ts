@@ -25,7 +25,7 @@ export class RequestInformer implements HttpInterceptor {
   }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    // throw new Error('Method not implemented.');
+
     this.requests.push(req);
     this.requestInformer.isLoading.next(true);
     return new Observable((observer) => {
@@ -45,4 +45,5 @@ export class RequestInformer implements HttpInterceptor {
       };
     });
   }
+  
 }
