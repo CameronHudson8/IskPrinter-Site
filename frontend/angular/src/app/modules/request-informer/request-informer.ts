@@ -30,20 +30,29 @@ export class RequestInformer implements HttpInterceptor {
     this.requestInformer.isLoading.next(true);
     return new Observable((observer) => {
       const subscription = next.handle(req)
-        .subscribe((event) => {
-          if (event instanceof HttpResponse) {
+        .subscribe(
+          (event) => {
+            if (event instanceof HttpResponse) {
+              this.removeRequest(req);
+              observer.next(event);
+            }
+          },
+          (err) => {
             this.removeRequest(req);
-            observer.next(event);
+            observer.error(err);
+          },
+          () => {
+            this.removeRequest(req);
+            observer.complete();
           }
-        },
-          (err) => { this.removeRequest(req); observer.error(err); },
-          () => { this.removeRequest(req); observer.complete(); });
+        );
       // teardown logic in case of cancelled requests
       return () => {
         this.removeRequest(req);
         subscription.unsubscribe();
       };
     });
+
   }
-  
+
 }
