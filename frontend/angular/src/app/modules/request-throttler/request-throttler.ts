@@ -53,28 +53,25 @@ export class RequestThrottler implements HttpInterceptor {
         observer.complete();
         this.requestsInProgress -= 1;
 
-        if (this.requestQueue.length > 0) {
-          this.processNextRequest();
+        if (this.requestQueue.length <= 0) {
+          return;
         }
+        const [observer2, observable2, futureSubscription2] = this.requestQueue.shift();
+        if (futureSubscription2.closed) {
+          return;
+        }
+        const subscription2 = this.executeRequest(observer2, observable2);
+        futureSubscription2.unsubscribe = subscription2.unsubscribe;
 
       }
     );
     return subscription;
   }
 
-  storeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription  {
+  storeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription {
     const futureSubscription = new Subscription();
     this.requestQueue.push([observer, observable, futureSubscription]);
     return futureSubscription;
-  }
-
-  processNextRequest(): void {
-    const [observer, observable, futureSubscription] = this.requestQueue.shift();
-    if (futureSubscription.closed) {
-      return;
-    }
-    const subscription = this.executeRequest(observer, observable);
-    futureSubscription.unsubscribe = subscription.unsubscribe;
   }
 
 }
