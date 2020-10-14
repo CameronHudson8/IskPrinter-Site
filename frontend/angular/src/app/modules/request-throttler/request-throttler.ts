@@ -12,7 +12,7 @@ import { Subscriber } from 'rxjs/internal/Subscriber';
 })
 export class RequestThrottler implements HttpInterceptor {
 
-  private static readonly THROTTLE_LIMIT = 5;
+  private static readonly THROTTLE_LIMIT = 16;
 
   private runningRequestLoops: number = 0;
   private requestQueue: [
