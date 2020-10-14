@@ -19,8 +19,7 @@ export class RequestThrottler implements HttpInterceptor {
   private requestsInProgress: number = 0;
   private requestQueue: [
     Subscriber<HttpEvent<any>>,
-    HttpRequest<any>,
-    HttpHandler,
+    Observable<HttpEvent<any>>,
     Subscription
   ][] = [];
 
@@ -34,38 +33,20 @@ export class RequestThrottler implements HttpInterceptor {
     console.log(`queuedRequests = ${this.requestQueue.length}`);
 
     return new Observable<HttpEvent<any>>((observer) => {
-
+      const observable = next.handle(req);
+      let subscription;
       if (this.requestsInProgress < RequestThrottler.THROTTLE_LIMIT) {
-        const subscription = this.doTheThing(observer, req, next);
-        return () => subscription.unsubscribe();
+        subscription = this.executeRequest(observer, observable);
+      } else {
+        subscription = this.storeRequest(observer, observable);
       }
-
-      const futureSubscription = new Subscription();
-      this.requestQueue.push([observer, req, next, futureSubscription]);
-
-      return () => {
-        console.log('unsubscribing...');
-        futureSubscription.unsubscribe();
-      }
+      return () => subscription.unsubscribe();
     });
   }
 
-  processNextRequest(): void {
-
-    const [observer, req, next, futureSubscription] = this.requestQueue.shift();
-
-    if (futureSubscription.closed) {
-      return;
-    }
-
-    const subscription = this.doTheThing(observer, req, next);
-    futureSubscription.unsubscribe = subscription.unsubscribe;
-
-  }
-
-  doTheThing(observer: Subscriber<HttpEvent<any>>, req: HttpRequest<any>, next: HttpHandler): Subscription {
+  executeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription {
     this.requestsInProgress += 1;
-    const subscription = next.handle(req).subscribe(
+    const subscription = observable.subscribe(
       (response) => observer.next(response),
       (err) => observer.error(err),
       () => {
@@ -79,6 +60,21 @@ export class RequestThrottler implements HttpInterceptor {
       }
     );
     return subscription;
+  }
+
+  storeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription  {
+    const futureSubscription = new Subscription();
+    this.requestQueue.push([observer, observable, futureSubscription]);
+    return futureSubscription;
+  }
+
+  processNextRequest(): void {
+    const [observer, observable, futureSubscription] = this.requestQueue.shift();
+    if (futureSubscription.closed) {
+      return;
+    }
+    const subscription = this.executeRequest(observer, observable);
+    futureSubscription.unsubscribe = subscription.unsubscribe;
   }
 
 }
