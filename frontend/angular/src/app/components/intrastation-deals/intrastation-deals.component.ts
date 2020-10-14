@@ -9,7 +9,7 @@ import { AuthenticatorService } from 'src/app/services/authenticator/authenticat
 import { Character } from 'src/app/entities/Character';
 import { Deal } from 'src/app/entities/DealFinder/Deal';
 import { DealFinder } from 'src/app/entities/DealFinder/DealFinder';
-import { LoaderService } from 'src/app/services/loader/loader.service';
+import { RequestInformerService } from 'src/app/services/request-informer/request-informer.service';
 import regions from 'src/assets/regions.json';
 
 class Region {
@@ -46,7 +46,7 @@ export class IntrastationDealsComponent implements OnInit {
 
   constructor(
     public authenticatorService: AuthenticatorService,
-    public loaderService: LoaderService,
+    public requestInformer: RequestInformerService,
   ) { }
 
   async ngOnInit(): Promise<void> {

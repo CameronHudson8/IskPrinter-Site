@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { SimpleSnackBar, MatSnackBarRef } from '@angular/material/snack-bar';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
-import { LoaderService } from 'src/app/services/loader/loader.service';
+import { RequestInformerService } from 'src/app/services/request-informer/request-informer.service';
 
 @Component({
   selector: 'app-login',
@@ -13,7 +13,7 @@ export class LoginComponent {
 
   constructor(
     public authenticatorService: AuthenticatorService, 
-    public loaderService: LoaderService,
+    public requestInformer: RequestInformerService,
   ) { }
 
   // onSubmit(): void {
