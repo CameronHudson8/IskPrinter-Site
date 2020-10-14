@@ -34,44 +34,40 @@ export class RequestThrottler implements HttpInterceptor {
 
     return new Observable<HttpEvent<any>>((observer) => {
       const observable = next.handle(req);
-      let subscription;
+      const subscription = new Subscription;
+
+      this.requestQueue.push([observer, observable, subscription]);
+
       if (this.requestsInProgress < RequestThrottler.THROTTLE_LIMIT) {
-        subscription = this.executeRequest(observer, observable);
-      } else {
-        subscription = this.storeRequest(observer, observable);
+        this.startNewRequestLoop();
       }
       return () => subscription.unsubscribe();
     });
   }
 
-  executeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription {
+  async startNewRequestLoop() {
     this.requestsInProgress += 1;
-    const subscription = observable.subscribe(
-      (response) => observer.next(response),
-      (err) => observer.error(err),
-      () => {
-        observer.complete();
-        this.requestsInProgress -= 1;
 
-        if (this.requestQueue.length <= 0) {
-          return;
-        }
-        const [observer2, observable2, futureSubscription2] = this.requestQueue.shift();
-        if (futureSubscription2.closed) {
-          return;
-        }
-        const subscription2 = this.executeRequest(observer2, observable2);
-        futureSubscription2.unsubscribe = subscription2.unsubscribe;
+    while (this.requestQueue.length > 0) {
 
+      const [observer, observable, subscription] = this.requestQueue.shift();
+
+      if (subscription.closed) {
+        continue;
       }
-    );
-    return subscription;
-  }
 
-  storeRequest(observer: Subscriber<HttpEvent<any>>, observable: Observable<HttpEvent<any>>): Subscription {
-    const futureSubscription = new Subscription();
-    this.requestQueue.push([observer, observable, futureSubscription]);
-    return futureSubscription;
+      try {
+        const response = await observable.toPromise();
+        observer.next(response);
+      } catch (err) {
+        observer.error(err);
+      } finally {
+        observer.complete();
+      }
+
+    }
+
+    this.requestsInProgress -= 1;
   }
 
 }
