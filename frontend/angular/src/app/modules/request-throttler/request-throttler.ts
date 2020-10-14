@@ -3,6 +3,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } fr
 import { NgModule } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Subscriber } from 'rxjs/internal/Subscriber';
+import { RequestInformerService } from 'src/app/services/request-informer/request-informer.service';
 
 @NgModule({
   declarations: [],
@@ -22,6 +23,7 @@ export class RequestThrottler implements HttpInterceptor {
   ][] = [];
 
   constructor(
+    private requestInformer: RequestInformerService,
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
@@ -40,6 +42,7 @@ export class RequestThrottler implements HttpInterceptor {
   }
 
   async startNewRequestLoop() {
+    this.requestInformer.isLoading.next(true);
     this.runningRequestLoops += 1;
 
     while (this.requestQueue.length > 0) {
@@ -62,6 +65,11 @@ export class RequestThrottler implements HttpInterceptor {
     }
 
     this.runningRequestLoops -= 1;
+    this.requestInformer.isLoading.next(this.totalRequests() > 0);
+  }
+
+  totalRequests(): number {
+    return this.requestQueue.length + this.runningRequestLoops;
   }
 
 }
