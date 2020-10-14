@@ -4,8 +4,6 @@ import { NgModule } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Subscriber } from 'rxjs/internal/Subscriber';
 
-import { RequestThrottlerService } from 'src/app/services/request-throttler/request-throttler.service';
-
 @NgModule({
   declarations: [],
   imports: [
@@ -16,7 +14,7 @@ export class RequestThrottler implements HttpInterceptor {
 
   private static readonly THROTTLE_LIMIT = 5;
 
-  private requestsInProgress: number = 0;
+  private runningRequestLoops: number = 0;
   private requestQueue: [
     Subscriber<HttpEvent<any>>,
     Observable<HttpEvent<any>>,
@@ -24,29 +22,25 @@ export class RequestThrottler implements HttpInterceptor {
   ][] = [];
 
   constructor(
-    private requestThrottler: RequestThrottlerService,
   ) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-
-    console.log(`requestsInProgress = ${this.requestsInProgress}`);
-    console.log(`queuedRequests = ${this.requestQueue.length}`);
-
     return new Observable<HttpEvent<any>>((observer) => {
+
       const observable = next.handle(req);
       const subscription = new Subscription;
-
       this.requestQueue.push([observer, observable, subscription]);
 
-      if (this.requestsInProgress < RequestThrottler.THROTTLE_LIMIT) {
+      if (this.runningRequestLoops < RequestThrottler.THROTTLE_LIMIT) {
         this.startNewRequestLoop();
       }
       return () => subscription.unsubscribe();
+
     });
   }
 
   async startNewRequestLoop() {
-    this.requestsInProgress += 1;
+    this.runningRequestLoops += 1;
 
     while (this.requestQueue.length > 0) {
 
@@ -67,7 +61,7 @@ export class RequestThrottler implements HttpInterceptor {
 
     }
 
-    this.requestsInProgress -= 1;
+    this.runningRequestLoops -= 1;
   }
 
 }
