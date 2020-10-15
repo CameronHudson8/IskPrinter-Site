@@ -7,7 +7,6 @@ export class Character {
 
     id: number;
     name: string;
-    expiresOn: Date;
     location: {
         solarSystemId: number,
         solarSystemName: string,
@@ -39,7 +38,6 @@ export class Character {
         const characterData: any = response.body;
         this.id = characterData.CharacterID;
         this.name = characterData.CharacterName;
-        this.expiresOn = new Date(characterData.ExpiresOn)
         return this;
     }
 
