@@ -164,7 +164,7 @@ export class DealFinder {
                 );
             } catch (err) {
                 if (err.status === 404) {
-                    return [];
+                    return {};
                 }
                 throw err;
             }
