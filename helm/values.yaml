@@ -6,7 +6,7 @@ frontend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
-    tag: 9d26b9f
+    tag: d0183c5
     pullPolicy: Always
   service:
     type: ClusterIP  # default
@@ -21,7 +21,7 @@ backend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: 9d26b9f
+    tag: d0183c5
     pullPolicy: Always
   service:
     type: ClusterIP  # default
@@ -53,7 +53,7 @@ database:
 weeklyDownload:
   image:
     repository: docker.io/cameronhudson8/isk-printer-weekly-download
-    tag: 9d26b9f
+    tag: d0183c5
     pullPolicy: IfNotPresent  # default
   resources:
     limits:
