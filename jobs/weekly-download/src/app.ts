@@ -1,7 +1,7 @@
 import { AssertionError } from 'assert';
 import axios from 'axios';
 import { MongoClient, Collection } from 'mongodb';
-import { Observable, Subscriber, Subscription } from 'rxjs';
+import { Observable, Subscriber } from 'rxjs';
 
 
 const DB_URL = process.env.DB_URL;
@@ -26,47 +26,41 @@ const THROTTLE_LIMIT = 16;
 let runningRequestLoops: number = 0;
 const requestQueue: [Subscriber<any>, () => Promise<any>][] = [];
 
-async function getMarketableTypes(): Promise<Type[]> {
+async function getMarketableTypes(): Promise<void> {
 
   const marketGroupsResponse = await sendRequest(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
   const marketGroupIds: number[] = marketGroupsResponse.data;
 
-  const marketGroups: any[] = await Promise.all(marketGroupIds.map(async (marketGroupId) => {
-    let marketGroupResponse;
-    try {
-      marketGroupResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`));
-    } catch (error) {
-      console.error(error);
-    }
-    const marketGroup = marketGroupResponse.data;
-    console.log(`[GROUP] ${marketGroup.market_group_id}: ${marketGroup.name}`);
-    return marketGroup;
-  }));
-
-  const typeIds: number[] = marketGroups
-    .map((marketGroup) => marketGroup.types)
-    .reduce((allTypeIds, typeIdsOfSingleGroup) => {
-      return [
-        ...allTypeIds,
-        ...typeIdsOfSingleGroup
-      ];
+  marketGroupIds
+    .map(async (marketGroupId) => {
+      let marketGroupResponse;
+      try {
+        marketGroupResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`));
+      } catch (error) {
+        console.error(error);
+      }
+      const marketGroup: any = marketGroupResponse.data;
+      console.log(`[GROUP] ${marketGroup.market_group_id}: ${marketGroup.name}`);
+      marketGroup.types.map(async (typeId: number) => {
+        let typeResponse;
+        try {
+          typeResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`));
+        } catch (error) {
+          console.error(error);
+        }
+        const typeData = typeResponse.data;
+        const type = { typeId: typeData.type_id, typeName: typeData.name };
+        console.log(`[TYPE] ${type.typeId}: ${type.typeName}`);
+        await sendRequest(() => withCollection(async (collection) => {
+          try {
+            return await collection.replaceOne({ typeId: type.typeId }, type, { upsert: true });
+          } catch (error) {
+            console.error(error);
+          }
+        }));
+      });
     });
-
-  const types: Type[] = await Promise.all(typeIds.map(async (typeId) => {
-    let typeResponse;
-    try {
-      typeResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`));
-    } catch (error) {
-      console.error(error);
-    }
-    const typeData = typeResponse.data;
-    const type = { typeId: typeData.type_id, typeName: typeData.name };
-    console.log(`[TYPE] ${type.typeId}: ${type.typeName}`);
-    return type;
-  }));
-
-  return types;
-
+   
 }
 
 async function sendRequest(next: () => Promise<any>): Promise<any> {
@@ -85,7 +79,7 @@ async function startNewRequestLoop(): Promise<void> {
 
   while (requestQueue.length > 0) {
 
-    const request = requestQueue.shift();
+    const request = requestQueue.pop();
     if (request === undefined) {
       throw new AssertionError();
     }
@@ -112,8 +106,6 @@ async function startNewRequestLoop(): Promise<void> {
   runningRequestLoops -= 1;
 }
 
-
-
 async function withCollection(next: (collection: Collection<any>) => Promise<any>): Promise<void> {
 
   if (DB_URL === undefined) {
@@ -131,17 +123,7 @@ async function withCollection(next: (collection: Collection<any>) => Promise<any
 }
 
 getMarketableTypes()
-  .then((types) => {
-    withCollection(async (collection) => {
-      for (const type of types) {
-        try {
-          await collection.replaceOne({ typeId: type.typeId }, type, { upsert: true });
-        } catch (error) {
-          console.error(error);
-        }
-      }
-    });
-  })
   .catch((error) => {
     console.error(error);
+    process.exit(1);
   });
