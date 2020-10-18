@@ -82,7 +82,7 @@ export class Token implements PersistentEntity {
 
     }
 
-    static async withCollection(next: (collection: Collection<any>) => Promise<any>): Promise<Token> {
+    static async withCollection(next: (collection: Collection<any>) => Promise<any>): Promise<any> {
 
         const dbUrl = process.env.DB_URL;
         if (!dbUrl) {

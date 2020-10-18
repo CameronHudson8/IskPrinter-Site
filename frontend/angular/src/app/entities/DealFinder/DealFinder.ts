@@ -1,6 +1,8 @@
+
 import { AuthenticatorInterface } from 'src/app/services/authenticator/authenticator.interface';
 import { Character } from 'src/app/entities/Character';
 import { Deal } from 'src/app/entities/DealFinder/Deal';
+import { Type } from 'src/app/entities/Type';
 import { FakeLocalStorage } from './FakeLocalStorage';
 import { LocalStorageInterface } from './LocalStorageInterface';
 import { Order } from 'src/app/entities/Order';
@@ -45,7 +47,7 @@ export class DealFinder {
 
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
-    types: { [typeId: number]: string };
+    types: Type[];
     historicalData: { [key: number]: any };
     structureOrders: Order[];
     suggestedDeals: Deal[];
@@ -67,7 +69,7 @@ export class DealFinder {
             _2,
             _3,
         ] = await Promise.all<any>([
-            this.getHistoricalData(character.location.regionId, Object.keys(this.types).map(Number)),
+            this.getHistoricalData(character.location.regionId, this.types.map((type) => type.typeId)),
             this.getCurrentPrices(character.location.structureId),
             character.skills ? Promise.resolve() : character.getSkills(),
             character.walletBalance ? Promise.resolve() : character.getWalletBalance(),
@@ -80,63 +82,16 @@ export class DealFinder {
             .filter((deal) => deal.profit > 0)
             // Only include deals for which there is NOT an existing order for the same typeId and location.
             .filter((deal) => !character.orders.some((order) =>
-                order.typeId === deal.typeId
+                order.typeId === deal.type.typeId
                 && order.locationId === character.location.structureId
             ))
             .sort((deal1, deal2) => deal2.profit - deal1.profit);
 
     }
 
-    private async getMarketableTypes(): Promise<{ [typeId: number]: string }> {
-        console.log('Getting marketable types...');
-
-        // Try to load cached data first
-        if (this.types) {
-            return this.types;
-        }
-        const storedTypes = JSON.parse(this.localStorage.getItem('types'));
-        if (storedTypes?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.TYPE_CACHE_DURATION)) {
-            return storedTypes.data;
-        }
-
-        // Fetch fresh data
-        const marketGroupsResponse = await this.authenticatorService.requestWithAuth(
-            'get',
-            'https://esi.evetech.net/latest/markets/groups'
-        );
-        const marketGroupIds = marketGroupsResponse.body as number[];
-
-        const types: { [typeId: number]: string } = await marketGroupIds
-            .map(async (marketGroupId) => {
-                const marketGroupResponse = await this.authenticatorService.requestWithAuth(
-                    'get',
-                    `https://esi.evetech.net/latest/markets/groups/${marketGroupId}`,
-                );
-                const groupTypeIds: number[] = (marketGroupResponse.body as any).types;
-
-                return groupTypeIds.map(async (groupTypeId) => {
-
-                    const typeResponse = await this.authenticatorService.requestWithAuth(
-                        'get',
-                        `https://esi.evetech.net/latest/universe/types/${groupTypeId}`,
-                    );
-                    const groupTypeName: string = (typeResponse.body as any).name;
-                    return { [groupTypeId]: groupTypeName };
-                })
-                    .reduce(async (allGroupTypes, groupType) => ({
-                        ...(await allGroupTypes),
-                        ...(await groupType)
-                    }), {});
-            })
-            .reduce(async (allTypes, groupTypes) => ({
-                ...(await allTypes),
-                ...(await groupTypes)
-            }), {});
-
-        this.localStorage.setItem('types', JSON.stringify({
-            timestamp: Date.now(),
-            data: types,
-        }));
+    private async getMarketableTypes(): Promise<Type[]> {
+        const typeResponse = await this.authenticatorService.backendRequest('get', '/types');
+        const types = typeResponse.body as Type[];
         return types;
     }
 
@@ -461,7 +416,8 @@ export class DealFinder {
             const buyFeeAndTax = Math.max(100, volume * buyPrice * buyFeeAndTaxRate);
             const sellFeeAndTax = Math.max(100, volume * sellPrice * sellFeeAndTaxRate);
             const fees = buyFeeAndTax + sellFeeAndTax;
-            deals.push(new Deal(Number(typeId), this.types[typeId], volume, buyPrice, sellPrice, fees));
+            const type = this.types.find((type) => type.typeId === Number(typeId));
+            deals.push(new Deal(type, volume, buyPrice, sellPrice, fees));
         }
         return deals;
     }
@@ -474,8 +430,7 @@ export class DealFinder {
                 const maxVolume = Math.floor(walletBalance / (deal.buyPrice + feePerUnit));
                 if (maxVolume > 0) {
                     affordableDeals.push(new Deal(
-                        deal.typeId,
-                        deal.typeName,
+                        deal.type,
                         maxVolume,
                         deal.buyPrice,
                         deal.sellPrice,
@@ -484,8 +439,7 @@ export class DealFinder {
                 }
             } else {
                 affordableDeals.push(new Deal(
-                    deal.typeId,
-                    deal.typeName,
+                    deal.type,
                     deal.volume,
                     deal.buyPrice,
                     deal.sellPrice,
