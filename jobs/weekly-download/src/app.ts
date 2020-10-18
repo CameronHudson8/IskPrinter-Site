@@ -21,12 +21,13 @@ const getMarketableTypes = async (): Promise<Type[]> => {
   const marketGroupsResponse = await axios.get('https://esi.evetech.net/latest/markets/groups');
   const marketGroupIds: number[] = marketGroupsResponse.data;
 
-  const marketGroups: any[] = await Promise.all(marketGroupIds
-    .map(async (marketGroupId) => {
-      const marketGroupResponse = await axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`);
-      const marketGroup = marketGroupResponse.data;
-      return marketGroup;
-    }));
+  const marketGroups: any[] = [];
+  for (const marketGroupId of marketGroupIds) {
+    const marketGroupResponse = await axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`);
+    const marketGroup = marketGroupResponse.data;
+    marketGroups.push(marketGroup);
+    console.log(`[GROUP] ${marketGroup.market_group_id}: ${marketGroup.name}`);
+  }
 
   const typeIds: number[] = marketGroups
     .map((marketGroup) => marketGroup.types)
@@ -37,12 +38,14 @@ const getMarketableTypes = async (): Promise<Type[]> => {
       ];
     });
 
-  const types: Type[] = await Promise.all(typeIds.map(async (typeId) => {
+  const types: Type[] = [];
+  for (const typeId of typeIds) {
     const typeResponse = await axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`);
-    const typeName: string = typeResponse.data.name;
-    console.log(`${typeId}: ${typeName}`)
-    return { typeId, typeName };
-  }));
+    const typeData = typeResponse.data;
+    const type = { typeId: typeData.type_id, typeName: typeData.name };
+    types.push(type);
+    console.log(`[TYPE] ${type.typeId}: ${type.typeName}`)
+  }
 
   return types;
 
@@ -67,7 +70,8 @@ const withCollection = async (next: (collection: Collection<any>) => Promise<any
 getMarketableTypes()
   .then((types) => {
     withCollection(async (collection) => {
-      await collection.deleteMany({});
-      await collection.insertMany(types)
+      for (const type of types) {
+        await collection.updateOne({ typeId: type.typeId }, type);
+      }
     });
   });
