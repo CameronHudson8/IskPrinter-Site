@@ -15,7 +15,8 @@
   "license": "SEE LICENSE IN ../LICENSE",
   "dependencies": {
     "axios": "^0.20.0",
-    "mongodb": "^3.6.2"
+    "mongodb": "^3.6.2",
+    "rxjs": "^6.6.3"
   },
   "devDependencies": {
     "@types/mongodb": "^3.5.27",

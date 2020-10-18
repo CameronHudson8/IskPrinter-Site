@@ -1,5 +1,8 @@
+import { AssertionError } from 'assert';
 import axios from 'axios';
 import { MongoClient, Collection } from 'mongodb';
+import { Observable, Subscriber, Subscription } from 'rxjs';
+
 
 const DB_URL = process.env.DB_URL;
 if (!DB_URL || DB_URL === '') {
@@ -18,42 +21,27 @@ interface Type {
   typeName: string
 }
 
-const withRetry = async (next: () => any) => {
-  let error;
-  for (const _ of new Array(MAX_RETRIES)) {
-    try {
-      return await next();
-    } catch (e) {
-      error = e;
-      if (e.response?.status === 404) {
-        // Don't bother retrying.
-        throw error;
-      }
-      // If not 404, then try again.
-    }
-  }
-  console.error(`Unable to complete request after ${MAX_RETRIES} tries.`);
-  throw error;
-};
+const THROTTLE_LIMIT = 16;
 
-const getMarketableTypes = async (): Promise<Type[]> => {
+let runningRequestLoops: number = 0;
+const requestQueue: [Subscriber<any>, () => Promise<any>][] = [];
 
-  const marketGroupsResponse = await withRetry(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
+async function getMarketableTypes(): Promise<Type[]> {
+
+  const marketGroupsResponse = await sendRequest(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
   const marketGroupIds: number[] = marketGroupsResponse.data;
 
-  const marketGroups: any[] = [];
-  for (const marketGroupId of marketGroupIds) {
+  const marketGroups: any[] = await Promise.all(marketGroupIds.map(async (marketGroupId) => {
     let marketGroupResponse;
     try {
-      marketGroupResponse = await withRetry(() => axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`));
+      marketGroupResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`));
     } catch (error) {
       console.error(error);
-      continue;
     }
     const marketGroup = marketGroupResponse.data;
-    marketGroups.push(marketGroup);
     console.log(`[GROUP] ${marketGroup.market_group_id}: ${marketGroup.name}`);
-  }
+    return marketGroup;
+  }));
 
   const typeIds: number[] = marketGroups
     .map((marketGroup) => marketGroup.types)
@@ -64,27 +52,73 @@ const getMarketableTypes = async (): Promise<Type[]> => {
       ];
     });
 
-  const types: Type[] = [];
-  for (const typeId of typeIds) {
+  const types: Type[] = await Promise.all(typeIds.map(async (typeId) => {
     let typeResponse;
     try {
-      typeResponse = await withRetry(() => axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`));
+      typeResponse = await sendRequest(() => axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`));
     } catch (error) {
       console.error(error);
-      continue;
     }
     const typeData = typeResponse.data;
     const type = { typeId: typeData.type_id, typeName: typeData.name };
-    types.push(type);
-    console.log(`[TYPE] ${type.typeId}: ${type.typeName}`)
-  }
+    console.log(`[TYPE] ${type.typeId}: ${type.typeName}`);
+    return type;
+  }));
 
   return types;
 
 }
 
-const withCollection = async (next: (collection: Collection<any>) => Promise<any>): Promise<void> => {
+async function sendRequest(next: () => Promise<any>): Promise<any> {
+  return new Observable((observer) => {
 
+    requestQueue.push([observer, next]);
+    if (runningRequestLoops < THROTTLE_LIMIT) {
+      startNewRequestLoop();
+    }
+
+  }).toPromise();
+}
+
+async function startNewRequestLoop(): Promise<void> {
+  runningRequestLoops += 1;
+
+  while (requestQueue.length > 0) {
+
+    const request = requestQueue.shift();
+    if (request === undefined) {
+      throw new AssertionError();
+    }
+    const [observer, next] = request;
+
+    let error;
+    for (const _ of new Array(MAX_RETRIES)) {
+      error = undefined;
+      try {
+        const response = await next();
+        observer.next(response);
+        break;
+      } catch (err) {
+        error = err;
+      }
+    }
+    if (error) {
+      observer.error(error);
+    }
+    observer.complete();
+
+  }
+
+  runningRequestLoops -= 1;
+}
+
+
+
+async function withCollection(next: (collection: Collection<any>) => Promise<any>): Promise<void> {
+
+  if (DB_URL === undefined) {
+    throw new AssertionError();
+  }
   const client = new MongoClient(DB_URL, { useUnifiedTopology: true });
   await client.connect();
   const db = client.db(DB_NAME);

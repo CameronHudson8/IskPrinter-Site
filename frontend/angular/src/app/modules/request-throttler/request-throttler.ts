@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest, HttpResponse } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { Observable, Subscription } from 'rxjs';
-import { Subscriber } from 'rxjs/internal/Subscriber';
+import { Observable, Subscriber, Subscription } from 'rxjs';
 import { RequestInformerService } from 'src/app/services/request-informer/request-informer.service';
 
 @NgModule({
