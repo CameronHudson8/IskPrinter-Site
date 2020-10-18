@@ -20,7 +20,7 @@ interface Type {
 
 const withRetry = async (next: () => any) => {
   let error;
-  for (const _ in new Array(MAX_RETRIES)) {
+  for (const _ of new Array(MAX_RETRIES)) {
     try {
       return await next();
     } catch (e) {
@@ -32,15 +32,13 @@ const withRetry = async (next: () => any) => {
       // If not 404, then try again.
     }
   }
+  console.error(`Unable to complete request after ${MAX_RETRIES} tries.`);
   throw error;
 };
 
 const getMarketableTypes = async (): Promise<Type[]> => {
 
-  console.log('Getting marketable types...');
-
-  let marketGroupsResponse;
-  marketGroupsResponse = await withRetry(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
+  const marketGroupsResponse = await withRetry(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
   const marketGroupIds: number[] = marketGroupsResponse.data;
 
   const marketGroups: any[] = [];
