@@ -15,12 +15,12 @@
         <table mat-table [dataSource]="deals">
             <ng-container matColumnDef="typeId">
                 <th mat-header-cell *matHeaderCellDef>Type ID</th>
-                <td mat-cell *matCellDef="let deal">{{deal.typeId}}</td>
+                <td mat-cell *matCellDef="let deal">{{deal.type.typeId}}</td>
             </ng-container>
 
             <ng-container matColumnDef="typeName">
                 <th mat-header-cell *matHeaderCellDef>Type Name</th>
-                <td mat-cell *matCellDef="let deal">{{deal.typeName}}</td>
+                <td mat-cell *matCellDef="let deal">{{deal.type.typeName}}</td>
             </ng-container>
 
             <ng-container matColumnDef="volume">

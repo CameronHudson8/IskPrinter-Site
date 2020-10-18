@@ -112,4 +112,20 @@ export class AuthenticatorService implements AuthenticatorInterface {
     window.localStorage.setItem('accessToken', accessToken);
   }
 
+  async backendRequest(method: string, uri: string, options?: any): Promise<HttpResponse<Object>> {
+    return this.http.request(
+      method,
+      `${environment.backendUrl}${uri}`,
+      {
+        body: options?.body,
+        headers: new HttpHeaders({
+          ...options?.headers,
+        }),
+        observe: 'response',
+        params: options?.params,
+        responseType: 'json'
+      }
+    ).toPromise();
+  }
+
 }

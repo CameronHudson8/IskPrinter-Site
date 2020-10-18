@@ -1,8 +1,9 @@
+import { Type } from 'src/app/entities/Type';
+
 export class Deal {
 
     constructor(
-        public typeId: number,
-        public typeName: string,
+        public type: Type,
         public volume: number,
         public buyPrice: number,
         public sellPrice: number,

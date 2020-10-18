@@ -56,7 +56,7 @@ spec:
                 - --eval
                 - "db.adminCommand('ping')"
           resources:
-            {{- toYaml .Values.resources.database | nindent 12 }}
+            {{- toYaml .Values.database.resources | nindent 12 }}
           volumeMounts:
             - name: {{ .Chart.Name }}-database-volume
               mountPath: {{ .Values.database.volume.mountPath }}

@@ -6,21 +6,31 @@ frontend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
-    tag: 2587d3a
+    tag: 30bb1e2
     pullPolicy: Always
   service:
     type: ClusterIP  # default
     port: 80
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
 
 backend:
   replicaCount: 1
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: 2587d3a
+    tag: 30bb1e2
     pullPolicy: Always
   service:
     type: ClusterIP  # default
     port: 3000
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
 
 database:
   replicaCount: 1
@@ -34,6 +44,22 @@ database:
   volume:
     capacity: 8Gi
     mountPath: /data/db
+  resources:
+    limits:
+      memory: 128Mi
+    requests:
+      memory: 128Mi
+
+weeklyDownload:
+  image:
+    repository: docker.io/cameronhudson8/isk-printer-weekly-download
+    tag: 30bb1e2
+    pullPolicy: IfNotPresent  # default
+  resources:
+    limits:
+      memory: 256Mi
+    requests:
+      memory: 256Mi
 
 imagePullSecrets: []
 nameOverride: ""
@@ -57,36 +83,6 @@ ingress:
           servicePort: 80
   tls:
    - secretName: tls-iskprinter.com
-
-resources:
-  default:
-    limits:
-      cpu: &defaultCpuLimit 0
-      memory: &defaultMemoryLimit 128Mi
-    requests:
-      cpu: &defaultCpuRequest 0
-      memory: &defaultMemoryRequest 128Mi
-  backend:
-    limits:
-      cpu: *defaultCpuLimit
-      memory: *defaultMemoryLimit
-    requests:
-      cpu: *defaultCpuRequest
-      memory: *defaultMemoryRequest
-  frontend:
-    limits:
-      cpu: *defaultCpuLimit
-      memory: *defaultMemoryLimit
-    requests:
-      cpu: *defaultCpuRequest
-      memory: *defaultMemoryRequest
-  database:
-    limits:
-      cpu: *defaultCpuLimit
-      memory: *defaultMemoryLimit
-    requests:
-      cpu: *defaultCpuRequest
-      memory: *defaultMemoryRequest
 
 nodeSelector: {}
 

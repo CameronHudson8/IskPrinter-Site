@@ -1,0 +1,53 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: {{ include "isk-printer.fullname" . }}-weekly-download
+  labels:
+{{ include "isk-printer.labels" . | indent 4 }}
+spec:
+  schedule: 3 19 * * 4  # Randomly selected: Run weekly on day 4 (Wednesday) at 03:19
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "isk-printer.name" . }}-weekly-download
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      template:
+        spec:
+        {{- with .Values.imagePullSecrets }}
+          imagePullSecrets:
+            {{- toYaml . | nindent 8 }}
+        {{- end }}
+          restartPolicy: OnFailure
+          containers:
+          - name: {{ .Chart.Name }}-weekly-download
+            image: "{{ .Values.weeklyDownload.image.repository }}:{{ .Values.weeklyDownload.image.tag }}"
+            imagePullPolicy: {{ .Values.weeklyDownload.image.pullPolicy }}
+            env:
+            - name: DB_URL
+              value: mongodb://isk-printer-database:27017
+            - name: MONGO_INITDB_ROOT_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: MONGO_INITDB_ROOT_USERNAME
+            - name: MONGO_INITDB_ROOT_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: database-secret
+                  key: MONGO_INITDB_ROOT_PASSWORD
+            resources:
+              {{- toYaml .Values.weeklyDownload.resources | nindent 14 }}
+          {{- with .Values.nodeSelector }}
+          nodeSelector:
+            {{- toYaml . | nindent 8 }}
+          {{- end }}
+            
+    {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+    {{- end }}
