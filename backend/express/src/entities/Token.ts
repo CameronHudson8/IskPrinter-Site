@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { MongoClient, Collection} from 'mongodb';
+import { MongoClient, Collection } from 'mongodb';
 
 import { PersistentEntity } from 'src/entities/PersistentEntity';
 import { ResourceNotFoundError } from 'src/errors/ResourceNotFoundError';

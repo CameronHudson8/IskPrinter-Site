@@ -43,6 +43,13 @@ docker build ./frontend/ -t "cameronhudson8/isk-printer-frontend:${tag}"
 docker push "cameronhudson8/isk-printer-frontend:${tag}"
 ```
 
+To build the weekly download job and push it:
+```
+tag=$(git rev-parse --verify --short HEAD)
+docker build ./jobs/weekly-download/ -t "cameronhudson8/isk-printer-weekly-download:${tag}"
+docker push "cameronhudson8/isk-printer-weekly-download:${tag}"
+```
+
 ## How to deploy
 
 **Assumptions:**
