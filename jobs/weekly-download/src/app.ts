@@ -109,4 +109,7 @@ getMarketableTypes()
         }
       }
     });
+  })
+  .catch((error) => {
+    console.error(error);
   });
