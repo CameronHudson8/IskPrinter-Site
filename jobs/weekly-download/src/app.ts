@@ -2,28 +2,56 @@ import axios from 'axios';
 import { MongoClient, Collection } from 'mongodb';
 
 const DB_URL = process.env.DB_URL;
+if (!DB_URL || DB_URL === '') {
+  throw new Error("Environment variable 'DB_URL' is undefined.");
+}
 // Implicitly required:
 // process.env.MONGO_INITDB_ROOT_USERNAME
 // process.env.MONGO_INITDB_ROOT_PASSWORD
 
 const DB_NAME = 'isk-printer';
 const TYPE_COLLECTION_NAME = 'types';
+const MAX_RETRIES = 4;
 
 interface Type {
   typeId: number,
   typeName: string
 }
 
+const withRetry = async (next: () => any) => {
+  let error;
+  for (const _ in new Array(MAX_RETRIES)) {
+    try {
+      return await next();
+    } catch (e) {
+      error = e;
+      if (e.response?.status === 404) {
+        // Don't bother retrying.
+        throw error;
+      }
+      // If not 404, then try again.
+    }
+  }
+  throw error;
+};
+
 const getMarketableTypes = async (): Promise<Type[]> => {
 
   console.log('Getting marketable types...');
 
-  const marketGroupsResponse = await axios.get('https://esi.evetech.net/latest/markets/groups');
+  let marketGroupsResponse;
+  marketGroupsResponse = await withRetry(() => axios.get('https://esi.evetech.net/latest/markets/groups'));
   const marketGroupIds: number[] = marketGroupsResponse.data;
 
   const marketGroups: any[] = [];
   for (const marketGroupId of marketGroupIds) {
-    const marketGroupResponse = await axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`);
+    let marketGroupResponse;
+    try {
+      marketGroupResponse = await withRetry(() => axios.get(`https://esi.evetech.net/latest/markets/groups/${marketGroupId}`));
+    } catch (error) {
+      console.error(error);
+      continue;
+    }
     const marketGroup = marketGroupResponse.data;
     marketGroups.push(marketGroup);
     console.log(`[GROUP] ${marketGroup.market_group_id}: ${marketGroup.name}`);
@@ -40,7 +68,13 @@ const getMarketableTypes = async (): Promise<Type[]> => {
 
   const types: Type[] = [];
   for (const typeId of typeIds) {
-    const typeResponse = await axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`);
+    let typeResponse;
+    try {
+      typeResponse = await withRetry(() => axios.get(`https://esi.evetech.net/latest/universe/types/${typeId}`));
+    } catch (error) {
+      console.error(error);
+      continue;
+    }
     const typeData = typeResponse.data;
     const type = { typeId: typeData.type_id, typeName: typeData.name };
     types.push(type);
@@ -53,9 +87,6 @@ const getMarketableTypes = async (): Promise<Type[]> => {
 
 const withCollection = async (next: (collection: Collection<any>) => Promise<any>): Promise<void> => {
 
-  if (!DB_URL || DB_URL === '') {
-    throw new Error("Environment variable 'DB_URL' is undefined.");
-  }
   const client = new MongoClient(DB_URL, { useUnifiedTopology: true });
   await client.connect();
   const db = client.db(DB_NAME);
@@ -71,7 +102,11 @@ getMarketableTypes()
   .then((types) => {
     withCollection(async (collection) => {
       for (const type of types) {
-        await collection.updateOne({ typeId: type.typeId }, type);
+        try {
+          await collection.replaceOne({ typeId: type.typeId }, type, { upsert: true });
+        } catch (error) {
+          console.error(error);
+        }
       }
     });
   });
