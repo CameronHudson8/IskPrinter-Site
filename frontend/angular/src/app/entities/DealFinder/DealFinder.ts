@@ -43,12 +43,12 @@ export class DealFinder {
     static readonly MIN_BUY_PRICE = 0.01;
 
     static readonly TYPE_CACHE_DURATION = 14; // days
-    static readonly HISTORICAL_DATA_CACHE_DURATION = 3; // days
+    static readonly HISTORICAL_DATA_CACHE_DURATION = 5; // days
 
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
     types: Type[];
-    historicalData: { [key: number]: any };
+    historicalData: { [key: number]: any } = {};
     structureOrders: Order[];
     suggestedDeals: Deal[];
     verbose: boolean;
@@ -63,20 +63,19 @@ export class DealFinder {
         this.types = await this.getMarketableTypes();
 
         const [
-            historicalData,
             currentPrices,
             _1,
             _2,
             _3,
+            _4,
         ] = await Promise.all<any>([
-            this.getHistoricalData(character.location.regionId, this.types.map((type) => type.typeId)),
             this.getCurrentPrices(character.location.structureId),
+            this.getHistoricalData(character.location.regionId, this.types.map((type) => type.typeId)),
             character.skills ? Promise.resolve() : character.getSkills(),
             character.walletBalance ? Promise.resolve() : character.getWalletBalance(),
             character.orders ? Promise.resolve() : character.getOrders()
         ]);
-        this.historicalData = historicalData;
-        let deals: Deal[] = this.computeDeals(currentPrices, historicalData, character);
+        let deals: Deal[] = this.computeDeals(currentPrices, this.historicalData, character);
         deals = this.scaleOrFilterByAffordability(deals, character.walletBalance);
         return deals
             .filter((deal) => deal.profit > 0)
@@ -95,46 +94,66 @@ export class DealFinder {
         return types;
     }
 
-    private async getHistoricalData(regionId: number, typeIds: number[]): Promise<{ [key: number]: any }> {
-        console.log('Getting historical data...');
+    private async getHistoricalData(regionId: number, typeIds: number[]): Promise<void> {
+        const storedHistoricalDataString = this.localStorage.getItem('historicalData');
+        const storedHistoricalData = storedHistoricalDataString ? JSON.parse(storedHistoricalDataString) : {};
 
-        // Try to load cached data first
-        if (this.historicalData) {
-            return this.historicalData;
-        }
-        const storedHistoricalData = JSON.parse(this.localStorage.getItem('historicalData'));
-        if (storedHistoricalData?.timestamp >= (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.HISTORICAL_DATA_CACHE_DURATION)) {
-            return storedHistoricalData.data;
-        }
+        let progress = -1;
+        for (const [i, typeId] of typeIds.entries()) {
 
-        const historicalData = await typeIds.map(async (typeId) => {
-            let response;
+            let currentProgress = Math.floor(100 * i / typeIds.length);
+            if (currentProgress > progress) {
+                progress = currentProgress;
+                console.log(`Getting historical data (${progress} %)...`);
+            }
+
+            // Check the in-memory data
+            if (this.historicalData?.[typeId]) {
+                continue;
+            }
+
+            // Check the localStorage data
+            if (storedHistoricalData[typeId]?.timestamp > (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.HISTORICAL_DATA_CACHE_DURATION)) {
+                this.historicalData[typeId] = storedHistoricalData[typeId].data;
+                continue;
+            }
+
+            // Fetch fresh data
+            let analyzedHistory;
             try {
-                response = await this.authenticatorService.requestWithAuth(
+                const response = await this.authenticatorService.requestWithAuth(
                     'get',
                     `https://esi.evetech.net/latest/markets/${regionId}/history`,
-                    {
-                        params: { type_id: typeId }
-                    }
+                    { params: { type_id: typeId } }
                 );
+                const history = response.body;
+                analyzedHistory = this.analyzeHistory(history);
             } catch (err) {
                 if (err.status === 404) {
-                    return {};
+                    analyzedHistory = {
+                        maxPrice: 0,
+                        avgDailyBuyVol: 0,
+                        avgDailySellVol: 0,
+                    };
+                } else {
+                    console.log('Unhandled error:');
+                    throw err;
                 }
-                throw err;
             }
-            const history = response.body as number[];
-            return { [typeId]: this.analyzeHistory(history) };
-        }).reduce(async (previousValue, currentValue): Promise<{ [key: number]: any }> => ({
-            ...(await previousValue),
-            ...(await currentValue),
-        }));
 
-        this.localStorage.setItem('historicalData', JSON.stringify({
-            timestamp: Date.now(),
-            data: historicalData,
-        }));
-        return historicalData;
+            this.historicalData[typeId] = analyzedHistory;
+
+            // Save to localStorage
+            const storedHistoryString = this.localStorage.getItem('historicalData');
+            const storedHistory = storedHistoryString ? JSON.parse(storedHistoryString) : {};
+            storedHistory[typeId] = {
+                timestamp: Date.now(),
+                data: analyzedHistory
+            };
+            this.localStorage.setItem('historicalData', JSON.stringify(storedHistory));
+
+        }
+
     }
 
     analyzeHistory(data) {
