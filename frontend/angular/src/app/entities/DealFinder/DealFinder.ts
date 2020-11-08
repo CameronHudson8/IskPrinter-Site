@@ -48,7 +48,7 @@ export class DealFinder {
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
     types: Type[];
-    historicalData: { [key: number]: any };
+    historicalData: { [key: number]: any } = {};
     structureOrders: Order[];
     suggestedDeals: Deal[];
     verbose: boolean;
