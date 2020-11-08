@@ -43,7 +43,7 @@ export class DealFinder {
     static readonly MIN_BUY_PRICE = 0.01;
 
     static readonly TYPE_CACHE_DURATION = 14; // days
-    static readonly HISTORICAL_DATA_CACHE_DURATION = 3; // days
+    static readonly HISTORICAL_DATA_CACHE_DURATION = 5; // days
 
     authenticatorService: AuthenticatorInterface;
     localStorage: LocalStorageInterface;
