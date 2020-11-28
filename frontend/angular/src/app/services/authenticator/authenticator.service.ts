@@ -9,6 +9,8 @@ import { environment } from 'src/environments/environment';
 export class AuthenticatorService implements AuthenticatorInterface {
 
   private accessToken: string;
+  private frontendUrl: string;
+  private backendUrl: string;
   private loginUrl: string;
 
   constructor(
@@ -16,7 +18,12 @@ export class AuthenticatorService implements AuthenticatorInterface {
     private router: Router,
   ) {
     this.accessToken = window.localStorage.getItem('accessToken');
-    this.fetchLoginUrl()
+    this.frontendUrl = `${window.location.protocol}//${window.location.host}`;
+    this.fetchEnvVar('BACKEND_URL')
+      .then((backendUrl) => {
+        this.backendUrl = backendUrl;
+        return this.fetchLoginUrl();
+      })
       .then((loginUrl) => this.loginUrl = loginUrl);
   }
 
@@ -29,10 +36,18 @@ export class AuthenticatorService implements AuthenticatorInterface {
   }
 
   private async fetchLoginUrl(): Promise<string> {
-    const params = { 'callback-url': `${environment.frontendUrl}/code-receiver/` };
-    const response = await this.http.get(`${environment.backendUrl}/login-url`, { observe: 'response', params })
+    const params = { 'callback-url': `${this.frontendUrl}/code-receiver/` };
+    const response = await this.http.get(`${this.backendUrl}/login-url`, { observe: 'response', params })
       .toPromise();
     return (response.body as any).loginUrl;
+  }
+  private async fetchEnvVar(varName: string): Promise<string> {
+    if (!environment.packaged) {
+      return environment[varName];
+    }
+    const response = await this.http.get(`${this.frontendUrl}/env/${varName}`, { observe: 'response' })
+      .toPromise();
+    return (response.body as string);
   }
 
   logOut(): void {
@@ -45,7 +60,7 @@ export class AuthenticatorService implements AuthenticatorInterface {
     const body = {
       code
     };
-    const response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+    const response = await this.http.post(`${this.backendUrl}/tokens`, body, { observe: 'response' })
       .toPromise();
 
     this.setAccessToken((response.body as any).accessToken);
@@ -56,7 +71,7 @@ export class AuthenticatorService implements AuthenticatorInterface {
     const body = { accessToken };
     let response;
     try {
-      response = await this.http.post(`${environment.backendUrl}/tokens`, body, { observe: 'response' })
+      response = await this.http.post(`${this.backendUrl}/tokens`, body, { observe: 'response' })
         .toPromise();
     } catch (error) {
       if (error.status === 404) {
@@ -115,7 +130,7 @@ export class AuthenticatorService implements AuthenticatorInterface {
   async backendRequest(method: string, uri: string, options?: any): Promise<HttpResponse<Object>> {
     return this.http.request(
       method,
-      `${environment.backendUrl}${uri}`,
+      `${this.backendUrl}${uri}`,
       {
         body: options?.body,
         headers: new HttpHeaders({

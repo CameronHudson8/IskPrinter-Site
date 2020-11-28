@@ -21,7 +21,7 @@ backend:
   replicaCount: 2
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
-    tag: 30bb1e2
+    tag: 7c7ebd6
     pullPolicy: Always
   service:
     type: ClusterIP  # default

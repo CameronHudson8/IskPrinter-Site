@@ -19,6 +19,11 @@ npm --prefix backend/express install
 npm --prefix backend/express run webpack-watch
 ```
 
+Port-forward the MongoDB database to localhost.
+```
+kubectl --context docker-desktop -n isk-printer port-forward svc/isk-printer-database 27017:27017
+```
+
 Then, in a separate shell, start the server.
 ```
 export CLIENT_ID='<client-id>'
@@ -79,8 +84,8 @@ docker push "cameronhudson8/isk-printer-weekly-download:${tag}"
 
 1. Deploy the application using `helm`. If necessary, create the namespace using `kubectl` first.
     ```
-    kubectl create namespace <my-namespace>
-    helm install isk-printer ./helm --namespace <my-namespace>
+    kubectl create namespace isk-printer
+    helm -n isk-printer install isk-printer ./helm
     ```
 
 ## How to remove
