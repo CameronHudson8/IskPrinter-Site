@@ -33,7 +33,7 @@ backend:
       memory: 128Mi
 
 database:
-  replicaCount: 2
+  replicaCount: 1
   image:
     repository: mongo
     tag: 4.4.1-bionic
