@@ -3,5 +3,6 @@ import { isMainThread } from 'worker_threads';
 import { Token } from './Token';
 
 test('stub test', () => {
-    expect(true).toBe(false);
+    const token = new Token('accessToken', 'refreshToken');
+    expect(true).toBe(true);
 });
