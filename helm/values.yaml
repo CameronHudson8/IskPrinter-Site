@@ -3,7 +3,7 @@
 # Declare variables to be passed into your templates.
 
 frontend:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
     tag: 6ad44e4
@@ -18,7 +18,7 @@ frontend:
       memory: 128Mi
 
 backend:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: docker.io/cameronhudson8/isk-printer-backend
     tag: 30bb1e2
@@ -33,7 +33,7 @@ backend:
       memory: 128Mi
 
 database:
-  replicaCount: 1
+  replicaCount: 2
   image:
     repository: mongo
     tag: 4.4.1-bionic
