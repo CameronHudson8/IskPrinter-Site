@@ -11,7 +11,7 @@ export class AuthenticatorService implements AuthenticatorInterface {
   private accessToken: string;
   private frontendUrl: string;
   private backendUrl: string;
-  private loginUrl: string;
+  public loginUrl: string;
 
   constructor(
     private http: HttpClient,
@@ -31,16 +31,13 @@ export class AuthenticatorService implements AuthenticatorInterface {
     return !!this.accessToken;
   }
 
-  getLoginUrl(): string {
-    return this.loginUrl;
-  }
-
   private async fetchLoginUrl(): Promise<string> {
     const params = { 'callback-url': `${this.frontendUrl}/code-receiver/` };
     const response = await this.http.get(`${this.backendUrl}/login-url`, { observe: 'response', params })
       .toPromise();
     return (response.body as any).loginUrl;
   }
+
   private async fetchEnvVar(varName: string): Promise<string> {
     if (!environment.packaged) {
       return environment[varName];

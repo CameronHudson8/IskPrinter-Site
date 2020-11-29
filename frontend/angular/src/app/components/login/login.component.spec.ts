@@ -16,9 +16,7 @@ describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
 
-  let authenticatorServiceStub: Partial<AuthenticatorService> = {
-    getLoginUrl: () => 'login_url',
-  };
+  let authenticatorServiceStub: Partial<AuthenticatorService> = { };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

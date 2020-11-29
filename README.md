@@ -85,7 +85,21 @@ docker push "cameronhudson8/isk-printer-weekly-download:${tag}"
 1. Deploy the application using `helm`. If necessary, create the namespace using `kubectl` first.
     ```
     kubectl create namespace isk-printer
-    helm -n isk-printer install isk-printer ./helm
+    helm --kube-context docker-desktop -n isk-printer install isk-printer ./helm
+    ```
+
+## How to upgrade
+
+1. After building and pushing new images, update the image tags in `./helm/values.yaml`.
+
+1. Upgrade the deployed chart.
+    ```
+    helm upgrade isk-printer ./helm \
+        --kube-context docker-desktop \
+        -n isk-printer \
+        --set CLIENT_ID=<client-id> \
+        --set CLIENT_SECRET=<client-secret> \
+        --set BACKEND_URL=<backend-url>
     ```
 
 ## How to remove
