@@ -1,4 +1,5 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatCardModule } from '@angular/material/card';
 
 import { PageNotFoundComponent } from './page-not-found.component';
 
@@ -8,7 +9,10 @@ describe('PageNotFoundComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ PageNotFoundComponent ]
+      declarations: [ PageNotFoundComponent ],
+      imports: [
+        MatCardModule
+      ]
     })
     .compileComponents();
   }));

@@ -1,5 +1,6 @@
 import { HttpResponse } from '@angular/common/http';
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatCardModule } from '@angular/material/card';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
@@ -19,6 +20,9 @@ describe('ProfileComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ ProfileComponent ],
+      imports: [
+        MatCardModule
+      ],
       providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
     })
     .compileComponents();

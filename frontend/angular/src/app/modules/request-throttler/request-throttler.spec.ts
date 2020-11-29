@@ -3,10 +3,18 @@ import { TestBed } from '@angular/core/testing';
 import { RequestThrottler } from './request-throttler';
 
 describe('RequestThrottler', () => {
-  beforeEach(() => TestBed.configureTestingModule({}));
+  let module: RequestThrottler;
+
+  beforeEach(() => {
+    TestBed.configureTestingModule({
+      imports: [
+        RequestThrottler
+      ]
+    });
+    module = TestBed.inject(RequestThrottler);
+  });
 
   it('should be created', () => {
-    const service: RequestThrottler = TestBed.get(RequestThrottler);
-    expect(service).toBeTruthy();
+    expect(module).toBeTruthy();
   });
 });
