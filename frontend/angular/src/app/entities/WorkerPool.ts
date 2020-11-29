@@ -1,5 +1,4 @@
-import { Observable, Subscriber, Subscribable, PartialObserver, Unsubscribable } from 'rxjs';
-import { AssertionError } from 'assert';
+import { Observable, Subscriber } from 'rxjs';
 
 export class WorkerPool {
 
@@ -49,7 +48,7 @@ export class WorkerPool {
             // Get a new task from the queue.
             const request = this.queue.pop();
             if (request === undefined) {
-                throw new AssertionError();
+                throw new Error('Reached impossible condition.');
             }
             const { observer, task } = request;
 
