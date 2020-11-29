@@ -2,10 +2,11 @@
 import { AuthenticatorInterface } from 'src/app/services/authenticator/authenticator.interface';
 import { Character } from 'src/app/entities/Character';
 import { Deal } from 'src/app/entities/DealFinder/Deal';
-import { Type } from 'src/app/entities/Type';
 import { FakeLocalStorage } from './FakeLocalStorage';
 import { LocalStorageInterface } from './LocalStorageInterface';
 import { Order } from 'src/app/entities/Order';
+import { Type } from 'src/app/entities/Type';
+import { WorkerPool } from 'src/app/entities/WorkerPool';
 
 // Establish a global state.
 const ip: any = { charData: {} };
@@ -94,28 +95,22 @@ export class DealFinder {
         return types;
     }
 
-    private async getHistoricalData(regionId: number, typeIds: number[]): Promise<void> {
+    private async getHistoricalData(regionId: number, typeIds: number[]): Promise<PromiseSettledResult<any>[]> {
         const storedHistoricalDataString = this.localStorage.getItem('historicalData');
         const storedHistoricalData = storedHistoricalDataString ? JSON.parse(storedHistoricalDataString) : {};
 
-        let progress = -1;
-        for (const [i, typeId] of typeIds.entries()) {
-
-            let currentProgress = Math.floor(100 * i / typeIds.length);
-            if (currentProgress > progress) {
-                progress = currentProgress;
-                console.log(`Getting historical data (${progress} %)...`);
-            }
+        const workerPool = new WorkerPool();
+        return Promise.allSettled(typeIds.map((typeId) => workerPool.runTask(async () => {
 
             // Check the in-memory data
             if (this.historicalData?.[typeId]) {
-                continue;
+                return;
             }
 
             // Check the localStorage data
             if (storedHistoricalData[typeId]?.timestamp > (Date.now() - 1000 * 60 * 60 * 24 * DealFinder.HISTORICAL_DATA_CACHE_DURATION)) {
                 this.historicalData[typeId] = storedHistoricalData[typeId].data;
-                continue;
+                return;
             }
 
             // Fetch fresh data
@@ -152,7 +147,7 @@ export class DealFinder {
             };
             this.localStorage.setItem('historicalData', JSON.stringify(storedHistory));
 
-        }
+        })));
 
     }
 
