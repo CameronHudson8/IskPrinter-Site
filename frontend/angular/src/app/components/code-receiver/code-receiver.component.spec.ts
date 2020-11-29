@@ -1,9 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
+import { MatCardModule } from '@angular/material/card';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
 import { CodeReceiverComponent } from './code-receiver.component';
+import { Router, UrlTree } from '@angular/router';
 
 describe('CodeReceiverComponent', () => {
   let component: CodeReceiverComponent;
@@ -11,15 +13,39 @@ describe('CodeReceiverComponent', () => {
 
   let authenticatorServiceStub: Partial<AuthenticatorService> = {
     isLoggedIn: () => true,
+    getAccessTokenFromCode: (code: string) => Promise.resolve('some-code')
+  };
+
+  let routerStub: Partial<Router> = {
+    parseUrl: (_: string) => {
+      const urlTree = new UrlTree();
+      urlTree.queryParams = {
+        code: 'some-code'
+      };
+      return urlTree;
+    },
+    navigate: () => Promise.resolve(true)
   };
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ CodeReceiverComponent ],
-      imports: [ RouterTestingModule ],
-      providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
+      declarations: [CodeReceiverComponent],
+      imports: [
+        MatCardModule,
+        MatProgressSpinnerModule,
+      ],
+      providers: [
+        {
+          provide: AuthenticatorService,
+          useValue: authenticatorServiceStub
+        },
+        {
+          provide: Router,
+          useValue: routerStub
+        }
+      ]
     })
-    .compileComponents();
+      .compileComponents();
   }));
 
   beforeEach(() => {
@@ -29,6 +55,7 @@ describe('CodeReceiverComponent', () => {
   });
 
   it('should create', () => {
+
     expect(component).toBeTruthy();
   });
 

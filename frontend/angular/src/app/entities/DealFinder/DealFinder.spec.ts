@@ -11,6 +11,9 @@ describe('DealFinder', () => {
   let stubAuthenticatorService: AuthenticatorInterface = {
     requestWithAuth: (method: string, url: string, options?: any) =>  {
       return new Promise<HttpResponse<Object>>((resolve: (value?: HttpResponse<Object>) => void, reject: (reason?: any) => void) => {});
+    },
+    backendRequest: (method: string, url: string, options?: any) =>  {
+      return new Promise<HttpResponse<Object>>((resolve: (value?: HttpResponse<Object>) => void, reject: (reason?: any) => void) => {});
     }
   };
 
@@ -24,9 +27,6 @@ describe('DealFinder', () => {
 
   it('should properly categorize historical volume', () => {
     const analyzedHistory = dealFinder.analyzeHistory(happyVolumeHistory);
-    console.log(analyzedHistory);
-    happyVolumeHistory.forEach((day) => console.log(`${day.date}\t${day.volume.toLocaleString()}`));
-    console.log(happyVolumeHistory.map((day) => day.volume).reduce((total, daily) => total + daily, 0));
     expect(dealFinder).toBeTruthy();
   });
 

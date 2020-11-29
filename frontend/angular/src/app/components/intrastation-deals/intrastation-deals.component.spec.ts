@@ -1,4 +1,8 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 
 import { AuthenticatorService } from 'src/app/services/authenticator/authenticator.service';
 
@@ -15,6 +19,12 @@ describe('IntrastationDealsComponent', () => {
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [ IntrastationDealsComponent ],
+      imports: [
+        MatCardModule,
+        MatPaginatorModule,
+        MatProgressSpinnerModule,
+        MatTableModule
+      ],
       providers: [ { provide: AuthenticatorService, useValue: authenticatorServiceStub } ]
     })
     .compileComponents();
