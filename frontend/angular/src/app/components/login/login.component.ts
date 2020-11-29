@@ -11,10 +11,14 @@ import { RequestInformerService } from 'src/app/services/request-informer/reques
 })
 export class LoginComponent {
 
+  loginUrl: string;
+
   constructor(
     public authenticatorService: AuthenticatorService, 
     public requestInformer: RequestInformerService,
-  ) { }
+  ) {
+    this.authenticatorService.fetchLoginUrl().then((loginUrl) => this.loginUrl = loginUrl);
+  }
 
   // onSubmit(): void {
   //   this.http.post(`${location.origin}/api/tokens`, this.loginForm.value, { observe: 'response' })
