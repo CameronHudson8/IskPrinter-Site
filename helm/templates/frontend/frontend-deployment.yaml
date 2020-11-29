@@ -24,6 +24,9 @@ spec:
         - name: {{ .Chart.Name }}-frontend
           image: "{{ .Values.frontend.image.repository }}:{{ .Values.frontend.image.tag }}"
           imagePullPolicy: {{ .Values.frontend.image.pullPolicy }}
+          envFrom:
+          - configMapRef:
+              name: {{ include "isk-printer.fullname" . }}-frontend
           ports:
             - name: http
               containerPort: {{ .Values.frontend.service.port }}

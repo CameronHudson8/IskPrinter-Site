@@ -28,12 +28,12 @@ spec:
             - name: CLIENT_ID
               valueFrom:
                 secretKeyRef:
-                  name: backend-secret
+                  name: isk-printer-backend
                   key: CLIENT_ID
             - name: CLIENT_SECRET
               valueFrom:
                 secretKeyRef:
-                  name: backend-secret
+                  name: isk-printer-backend
                   key: CLIENT_SECRET
             - name: DB_URL
               value: mongodb://isk-printer-database:27017

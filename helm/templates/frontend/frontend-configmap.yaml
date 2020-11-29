@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "isk-printer.fullname" . }}-frontend
+  labels:
+{{ include "isk-printer.labels" . | indent 4 }}
+data:
+  BACKEND_URL: {{ required "Argument --set BACKEND_URL=<url> is required." .Values.BACKEND_URL }}
