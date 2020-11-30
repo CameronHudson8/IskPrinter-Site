@@ -2,7 +2,6 @@ FROM node:14.9.0-alpine3.12 AS install
 WORKDIR /app
 COPY ./express/package.json ./express/package-lock.json ./
 RUN npm ci
-COPY ./express/. ./
 
 # This is repetitive due to a bug in docker.
 # The bug fix was recently merged in, but has not yet been released.
@@ -24,7 +23,7 @@ WORKDIR /app
 COPY ./express/package.json ./express/package-lock.json ./
 RUN npm ci
 COPY ./express/. ./
-RUN npm run webpack -- --mode production
+RUN npm run build
 FROM node:14.9.0-alpine3.12 as package
 WORKDIR /app
 COPY --from=package-0 /app/dist/* ./

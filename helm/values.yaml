@@ -53,7 +53,7 @@ database:
 weeklyDownload:
   image:
     repository: docker.io/cameronhudson8/isk-printer-weekly-download
-    tag: 30bb1e2
+    tag: 84565dc
     pullPolicy: IfNotPresent  # default
   resources:
     limits:

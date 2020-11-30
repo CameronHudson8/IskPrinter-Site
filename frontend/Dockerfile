@@ -2,7 +2,6 @@ FROM node:14.9.0-alpine3.12 AS install
 WORKDIR /app
 COPY ./angular/package.json ./angular/package-lock.json ./
 RUN npm ci
-COPY ./angular/. ./
 
 # This is repetitive due to a bug in docker.
 # The bug fix was recently merged in, but has not yet been released.
