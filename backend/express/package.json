@@ -6,11 +6,11 @@
     "url": "git://github.com/cameronhudson8/isk-printer.git"
   },
   "scripts": {
-    "webpack": "webpack",
-    "webpack-watch": "npm run webpack -- --mode development --watch",
+    "build": "npm run webpack -- --mode production",
     "serve": "nodemon dist/app.js",
     "test": "jest --silent --coverage",
-    "build": "npm run webpack -- --mode production"
+    "webpack-watch": "npm run webpack -- --mode development --watch",
+    "webpack": "webpack"
   },
   "author": "Cameron Hudson",
   "license": "SEE LICENSE IN ../LICENSE",
