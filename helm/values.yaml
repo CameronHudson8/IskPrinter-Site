@@ -6,10 +6,10 @@ frontend:
   replicaCount: 2
   image:
     repository: docker.io/cameronhudson8/isk-printer-frontend
-    tag: 679fe64
+    tag: e595ef1
     pullPolicy: Always
   service:
-    type: ClusterIP  # default
+    type: ClusterIP # default
     port: 80
   resources:
     limits:
@@ -24,7 +24,7 @@ backend:
     tag: fc10303
     pullPolicy: Always
   service:
-    type: ClusterIP  # default
+    type: ClusterIP # default
     port: 3000
   resources:
     limits:
@@ -37,9 +37,9 @@ database:
   image:
     repository: mongo
     tag: 4.4.1-bionic
-    pullPolicy: IfNotPresent  # default
+    pullPolicy: IfNotPresent # default
   service:
-    type: ClusterIP  # default
+    type: ClusterIP # default
     port: 27017
   volume:
     capacity: 8Gi
@@ -54,7 +54,7 @@ weeklyDownload:
   image:
     repository: docker.io/cameronhudson8/isk-printer-weekly-download
     tag: 84565dc
-    pullPolicy: IfNotPresent  # default
+    pullPolicy: IfNotPresent # default
   resources:
     limits:
       memory: 256Mi
@@ -71,18 +71,21 @@ ingress:
     kubernetes.io/ingress.class: nginx
     nginx.ingress.kubernetes.io/ssl-redirect: "true"
   hosts:
-    - host: iskprinter.com
-      paths:
-      - path: /api
-        backend:
-          serviceName: backend
-          servicePort: 3000
-      - path: /
-        backend:
-          serviceName: frontend
-          servicePort: 80
+    - paths:
+        - path: /api
+          backend:
+            serviceName: isk-printer-backend
+            servicePort: 3000
+        - path: /cicd
+          backend:
+            serviceName: jenkins
+            servicePort: 8080
+        - path: /
+          backend:
+            serviceName: isk-printer-frontend
+            servicePort: 80
   tls:
-   - secretName: tls-iskprinter.com
+    - secretName: isk-printer-tls
 
 nodeSelector: {}
 

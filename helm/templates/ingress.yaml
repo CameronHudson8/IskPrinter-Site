@@ -23,14 +23,14 @@ spec:
 {{- end }}
   rules:
   {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
+    - host: {{ required "Argument --set HOSTNAME=<url> is required." $.Values.HOSTNAME | quote }}
       http:
         paths:
         {{- range .paths }}
           - path: {{ .path }}
             backend:
-              serviceName: {{ $fullName }}-{{ .backend.serviceName }}
-              servicePort: http
+              serviceName: {{ .backend.serviceName }}
+              servicePort: {{ .backend.servicePort }}
         {{- end }}
   {{- end }}
 {{- end }}
