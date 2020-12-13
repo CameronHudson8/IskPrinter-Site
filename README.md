@@ -111,8 +111,20 @@ kubectl delete namespace isk-printer
 
 # Jenkins setup
 
-Jenkins can be installed to the cluster via helm:
+Jenkins can be installed to the cluster via helm.
+First, create a secret for the username + oauth token credentials that Jenkins will use to connect to the GitHub repository.
 ```
-helm --kube-context <context> -n <namespace> install jenkins jenkinsci/jenkins --set controller.jenkinsUriPrefix='/cicd'
+kubectl create secret generic jenkins-github \
+    --context gcp-cameronhudson8 \
+    -n isk-printer \
+    --from-literal=github_token='<github-token>'
 ```
-The current configuration is stored in `./helm/templates/cicd/jcasc-config.yaml`, and can be used to restore the configuration upon installation/reinstallation.
+
+Then, deploy jenkins with helm.
+```
+helm install jenkins jenkinsci/jenkins \
+    --kube-context <context> \
+    -n <namespace> \
+    -f ./helm/templates/cicd/values.yaml \
+    -f ./helm/templates/cicd/jcasc-config.yaml
+```
