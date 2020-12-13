@@ -59,7 +59,7 @@ docker push "cameronhudson8/isk-printer-weekly-download:${tag}"
 
 **Assumptions:**
 * You already have a Kubernetes cluster running.
-* The cluster has an nginx ingress controller running in it. If not, see [these instructions](https://cloud.google.com/community/tutorials/nginx-ingress-gke) to set one up.
+* The cluster has an nginx ingress controller running in it. Refer to the [Installation Guide](https://kubernetes.github.io/ingress-nginx/deploy/) for your particular platform.
 
 1. Create certificate resource files. Examples are provided that you should copy in the following way.
 ```
@@ -108,3 +108,11 @@ docker push "cameronhudson8/isk-printer-weekly-download:${tag}"
 helm del isk-printer
 kubectl delete namespace isk-printer
 ```
+
+# Jenkins setup
+
+Jenkins can be installed to the cluster via helm:
+```
+helm --kube-context <context> -n <namespace> install jenkins jenkinsci/jenkins --set controller.jenkinsUriPrefix='/cicd'
+```
+The current configuration is stored in `./helm/templates/cicd/jcasc-config.yaml`, and can be used to restore the configuration upon installation/reinstallation.

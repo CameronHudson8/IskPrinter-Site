@@ -5,4 +5,4 @@ metadata:
   labels:
 {{ include "isk-printer.labels" . | indent 4 }}
 data:
-  BACKEND_URL: {{ required "Argument --set BACKEND_URL=<url> is required." .Values.BACKEND_URL }}
+  BACKEND_URL: "{{ required "Argument --set HOSTNAME=<url> is required." .Values.HOSTNAME }}/api"
